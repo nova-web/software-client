@@ -126,7 +126,7 @@ export default {
             url: `${url}/${id}`,
             method: 'put',
             timeout: 5000,
-            data: JSON.stringify(data),
+            params: data,
             responseType: 'json',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',

@@ -8,11 +8,11 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button>
+        <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
         <el-button type="primary" icon="search" @click="adduser">新增用户</el-button>
       </div>
       <el-table :data="tableData" border style="width: 100%" ref="multipleTable" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55"></el-table-column>
+        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column prop="num" label="序号" sortable width="150">
         </el-table-column>
         <el-table-column prop="roleName" label="角色" width="120">
@@ -242,11 +242,6 @@
       },
       // 保存编辑
       saveEdit() {
-        this.getRoleName(this.form.RoleID);
-        this.form.UpdateTime = getNowFormatDate();
-        this.$set(this.tableData, this.index, this.form);
-        this.editVisible = false;
-        this.$message.success(`修改第 ${this.index + 1} 行成功`);
         let data = {
           Name: this.form.Name,
           DisplayName: this.form.DisplayName,
@@ -255,7 +250,15 @@
           PhoneNumber: this.form.PhoneNumber,
           RoleID: this.form.RoleID
         }
-
+        htp.put('api/users', this.form.ID, data).then(res => {
+          if(res) {
+            this.getRoleName(this.form.RoleID);
+            this.form.UpdateTime = getNowFormatDate();
+            this.$set(this.tableData, this.index, this.form);
+            this.editVisible = false;
+            this.$message.success(`修改第 ${this.index + 1} 行成功`);
+          }
+        })
       },
       getRoleName(roldId) {
         switch(roldId) {

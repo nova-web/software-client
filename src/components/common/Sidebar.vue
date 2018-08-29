@@ -40,6 +40,11 @@
             title: '用户管理'
           },
           {
+            icon: 'el-icon-tickets',
+            index: 'download',
+            title: '下载管理'
+          },
+          {
             icon: 'el-icon-message',
             index: 'tabs',
             title: 'tab选项卡'

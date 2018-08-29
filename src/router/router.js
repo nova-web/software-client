@@ -16,7 +16,12 @@ const routes = [
             {
                 path: '/table',
                 component: resolve => require(['../components/page/BaseTable.vue'], resolve),
-                meta: { title: '基础表格' }
+                meta: { title: '用户管理' }
+            },
+            {
+                path: '/download',
+                component: resolve => require(['../components/page/Download.vue'], resolve),
+                meta: { title: '下载管理' }
             },
             {
                 path: '/tabs',

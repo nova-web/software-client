@@ -11,7 +11,7 @@
         <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
         <el-button type="primary" icon="search" @click="adduser">新增用户</el-button>
       </div>
-      <el-table :data="tableData" border style="width: 100%" ref="multipleTable" @selection-change="handleSelectionChange">
+      <el-table :data="tableData" border style="width: 100%" ref="multipleTable" @selection-change="handleSelectionChange" height="550">
         <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column prop="num" label="序号" sortable width="150">
         </el-table-column>
@@ -229,9 +229,10 @@
               break;
           }
           this.tableData.push(this.addnewUser);
-          this.tableData.forEach((item, index) => {
-            item.num = index + 1;
-          });
+          // this.tableData.forEach((item, index) => {
+          //   item.num = index + 1;
+          // });
+          this.getUser();
         });
       },
       //编辑

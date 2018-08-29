@@ -45,6 +45,11 @@
             title: '下载管理'
           },
           {
+            icon: 'el-icon-tickets',
+            index: 'permissionObz',
+            title: '权限管理'
+          },
+          {
             icon: 'el-icon-message',
             index: 'tabs',
             title: 'tab选项卡'

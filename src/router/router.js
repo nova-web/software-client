@@ -24,6 +24,11 @@ const routes = [
                 meta: { title: '下载管理' }
             },
             {
+                path: '/permissionObz',
+                component: resolve => require(['../components/page/permissionObz.vue'], resolve),
+                meta: { title: '权限管理' }
+            },
+            {
                 path: '/tabs',
                 component: resolve => require(['../components/page/Tabs.vue'], resolve),
                 meta: { title: 'tab选项卡' }

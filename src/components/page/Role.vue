@@ -3,15 +3,14 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i> 权限管理</el-breadcrumb-item>
+          <i class="el-icon-tickets"></i> 角色管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
         <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
         <el-button type="primary" icon="search" @click="adduser">新增角色</el-button>
-        <el-button type="primary" icon="search" @click="" disabled>删除角色</el-button>
-        <el-button type="primary" icon="search" @click="" disabled>修改角色</el-button>
+        <el-button type="primary" icon="search" @click="" :disabled="disabled">删除角色</el-button>
       </div>
       <!-- <el-table :data="" border style="width: 100%" ref="multipleTable">
         <el-table-column label="操作" width="180">
@@ -27,7 +26,9 @@
 <script>
   export default {
     data() {
-      return {};
+      return {
+        disabled: false
+      };
     },
     methods: {
       adduser() { },

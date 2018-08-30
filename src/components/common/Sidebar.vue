@@ -46,8 +46,8 @@
           },
           {
             icon: 'el-icon-tickets',
-            index: 'permissionObz',
-            title: '权限管理'
+            index: 'Role',
+            title: '角色管理'
           },
           {
             icon: 'el-icon-message',

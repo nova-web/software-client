@@ -3,34 +3,35 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i> 角色管理</el-breadcrumb-item>
+          <i class="el-icon-tickets"></i> 角色操作</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
         <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
-        <el-button type="primary" icon="search" @click="addRole">新增角色</el-button>
-        <el-button type="primary" icon="search" @click="deleteRole" :disabled="disabled">删除角色</el-button>
+        <el-button type="primary" icon="search" @click="saveRole">保存</el-button>
+        <el-button type="primary" icon="search" @click="saveRole">复位</el-button>
+        <el-button type="primary" icon="search" @click="saveRole">保存并关闭</el-button>
       </div>
-      <el-table :data="RoleList" border style="width: 100%" ref="multipleTable" height="550">
-        <el-table-column prop="num" label="序号" width="180">
-        </el-table-column>
-        <el-table-column prop="name" label="名称" width="240">
-        </el-table-column>
-        <el-table-column prop="remark" label="备注" width="240">
-        </el-table-column>
-        <el-table-column prop="operator" label="操作" width="240">
-        </el-table-column>
-        <el-table-column prop="update_time" label="更新时间">
-        </el-table-column>
-        <el-table-column label="操作" width="180">
-          <template slot-scope="scope">
-            <el-button size="small" @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <el-form :inline="true" :model="editRole" class="form-inline">
+        <div>
+          <el-form-item label="角色名称">
+            <el-input v-model="editRole.name" placeholder="请输入角色名"></el-input>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="editRole.remark" placeholder="请输入备注"></el-input>
+          </el-form-item>
+        </div>
+
+        <div>
+          <el-form-item label="权限管理">
+
+          </el-form-item>
+        </div>
+
+      </el-form>
     </div>
+
     <!-- 删除提示框 -->
     <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
       <div class="del-dialog-cnt">删除不可恢复，收确定删除？</div>
@@ -48,9 +49,10 @@
   export default {
     data() {
       return {
-        disabled: false,
+        name: '',
+        remark: '',
         RoleList: [],
-        editRoleRow: {
+        editRole: {
           name: '',
           remark: '',
         },
@@ -75,12 +77,13 @@
           }
         })
       },
-      addRole() {
-        this.$router.push({ path: '/Role/RoleOperation' });
+      saveRole() {
+
       },
       handleEdit(row, index) {
         this.index = index;
         this.editRoleRow = row;
+        console.log(this.editRoleRow);
       },
       // 删除
       handleDelete(row, index) {
@@ -114,6 +117,7 @@
 
   .handle-input {
     width: 300px;
+    margin: 0 10px;
     display: inline-block;
   }
   .del-dialog-cnt {

@@ -212,3 +212,12 @@ export function getNowFormatDate() {
     var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
     return currentdate;
 }
+//格式化日期
+export function formatDate(nS, format) {
+    //日期格式化
+    if (!nS) {
+        return '';
+    }
+    format = format || 'yyyy-MM-dd hh:mm:ss';
+    return new Date(nS).format(format);
+}

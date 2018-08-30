@@ -11,23 +11,19 @@
         <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
         <el-button type="primary" icon="search" @click="adduser">新增用户</el-button>
       </div>
-      <el-table :data="tableData" border style="width: 100%" ref="multipleTable" @selection-change="handleSelectionChange" height="550">
+      <el-table :data="tableData" border style="width: 100%" ref="multipleTable" height="550">
         <!-- <el-table-column type="selection" width="55"></el-table-column> -->
-        <el-table-column prop="num" label="序号" sortable width="150">
+        <el-table-column prop="index" label="序号" sortable width="150">
         </el-table-column>
-        <el-table-column prop="roleName" label="角色" width="120">
+        <el-table-column prop="operator" label="角色" width="120">
         </el-table-column>
-        <el-table-column prop="Name" label="姓名" width="120">
+        <el-table-column prop="username" label="用户名" width="120">
         </el-table-column>
-        <el-table-column prop="DisplayName" label="别称" width="120">
+        <el-table-column prop="password" label="密码">
         </el-table-column>
-        <el-table-column prop="Gender" label="性别" width="120">
+        <el-table-column prop="remark" label="备注">
         </el-table-column>
-        <el-table-column prop="Password" label="密码" width="120">
-        </el-table-column>
-        <el-table-column prop="PhoneNumber" label="电话">
-        </el-table-column>
-        <el-table-column prop="UpdateTime" label="更新时间">
+        <el-table-column prop="update_time" label="更新时间">
         </el-table-column>
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
@@ -44,27 +40,21 @@
 
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="50px">
+      <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="角色">
-          <el-select v-model="form.RoleID" placeholder="请选择角色">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="form.num" :placeholder="form.operator">
+            <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="姓名">
-          <el-input v-model="form.Name"></el-input>
-        </el-form-item>
-        <el-form-item label="别称">
-          <el-input v-model="form.DisplayName"></el-input>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-input v-model="form.Gender"></el-input>
+        <el-form-item label="用户名">
+          <el-input v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="form.Password"></el-input>
+          <el-input v-model="form.password"></el-input>
         </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="form.PhoneNumber"></el-input>
+        <el-form-item label="备注">
+          <el-input v-model="form.remark"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -84,27 +74,21 @@
 
     <!-- 新增用户 -->
     <el-dialog title="新增用户" :visible.sync="newUser" width="30%">
-      <el-form :model="addnewUser" label-width="50px">
+      <el-form :model="addnewUser" label-width="80px">
         <el-form-item label="角色">
-          <el-select v-model="addnewUser.RoleID" placeholder="请选择角色">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="addnewUser.operator" placeholder="请选择角色">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="姓名">
-          <el-input v-model="addnewUser.Name"></el-input>
-        </el-form-item>
-        <el-form-item label="别称">
-          <el-input v-model="addnewUser.DisplayName"></el-input>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-input v-model="addnewUser.Gender"></el-input>
+        <el-form-item label="用户名">
+          <el-input v-model="addnewUser.username"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="addnewUser.Password"></el-input>
+          <el-input v-model="addnewUser.password"></el-input>
         </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="addnewUser.PhoneNumber"></el-input>
+        <el-form-item label="备注">
+          <el-input v-model="addnewUser.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -134,20 +118,17 @@
         editVisible: false,
         delVisible: false,
         form: {
-          Name: '',
-          DisplayName: '',
-          Gender: '',
-          Password: '',
-          PhoneNumber: '',
-          RoleID: ''
+          username: '',
+          password: '',
+          remark: '',
+          num: ''
         },
         addnewUser: {
-          Name: '',
-          DisplayName: '',
-          Gender: '',
-          Password: '',
-          PhoneNumber: '',
-          RoleID: ''
+          username: '',
+          operator: '',
+          remark: '',
+          password: '',
+          roleId: ''
         },
         options: [{
           value: 1,
@@ -184,26 +165,15 @@
       },
       getUser() {
         htp.get('api/users').then(res => {
+          console.log(res);
           if(res.status === 200) {
-            if(res.data.errorCode === 1) {
-              res.data.data.forEach((item, index) => {
-                switch(item.RoleID) {
-                  case 1:
-                    item.roleName = '超级管理员'
-                    break;
-                  case 2:
-                    item.roleName = '管理员'
-                    break;
-                  case 3:
-                    item.roleName = '用户'
-                  default:
-                    break;
-                }
-                item.num = index + 1;
-              });
-              this.tableData = res.data.data;
-              this.num = this.tableData.length;
-            }
+            this.tableData = res.data.data;
+            this.tableData.forEach((item, index) => {
+              item.index = index + 1;
+              item.num = 2;
+            });
+
+            this.num = this.tableData.length; //分页
           }
         })
       },
@@ -215,23 +185,8 @@
         this.newUser = false;
         htp.post('api/users', this.addnewUser).then(res => {
           this.addnewUser.del = false;
-          this.addnewUser.ID = res.data.data.userId;
-          switch(this.addnewUser.RoleID) {
-            case 1:
-              this.addnewUser.roleName = '超级管理员'
-              break;
-            case 2:
-              this.addnewUser.roleName = '管理员'
-              break;
-            case 3:
-              this.addnewUser.roleName = '用户'
-            default:
-              break;
-          }
-          this.tableData.push(this.addnewUser);
-          // this.tableData.forEach((item, index) => {
-          //   item.num = index + 1;
-          // });
+          // this.addnewUser.id = res.data.data.userId;
+          // this.tableData.push(this.addnewUser);
           this.getUser();
         });
       },
@@ -244,19 +199,17 @@
       // 保存编辑
       saveEdit() {
         let data = {
-          Name: this.form.Name,
-          DisplayName: this.form.DisplayName,
-          Gender: this.form.Gender,
-          Password: this.form.Password,
-          PhoneNumber: this.form.PhoneNumber,
-          RoleID: this.form.RoleID
+          username: this.form.username,
+          operator: this.form.operator,
+          password: this.form.password,
+          num: this.form.num
         }
-        htp.put('api/users', this.form.ID, data).then(res => {
+        htp.put('api/users', this.form.id, data).then(res => {
           if(res) {
-            this.getRoleName(this.form.RoleID);
-            this.form.UpdateTime = getNowFormatDate();
-            this.$set(this.tableData, this.index, this.form);
-            this.editVisible = false;
+            // this.form.UpdateTime = getNowFormatDate();
+            // this.$set(this.tableData, this.index, this.form);
+            // this.editVisible = false;
+            this.getUser();
             this.$message.success(`修改第 ${this.index + 1} 行成功`);
           }
         })
@@ -277,7 +230,7 @@
       },
       //删除
       handleDelete(row, index) {
-        this.idx = row.ID;
+        this.idx = row.id;
         this.delVisible = true;
         this.delIndex = index;
 
@@ -287,25 +240,25 @@
         htp.delete('api/users', { id: this.idx }).then(res => {
           this.tableData.splice(this.delIndex, 1);
           this.tableData.forEach((item, index) => {
-            item.num = index + 1;
+            item.index = index + 1;
           });
           this.$message.success('删除成功');
           this.delVisible = false;
         });
-      },
-      delAll() {
-        const length = this.multipleSelection.length;
-        let str = '';
-        this.del_list = this.del_list.concat(this.multipleSelection);
-        for(let i = 0; i < length; i++) {
-          str += this.multipleSelection[i].name + ' ';
-        }
-        this.$message.error('删除了' + str);
-        this.multipleSelection = [];
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
       }
+      // delAll() {
+      //   const length = this.multipleSelection.length;
+      //   let str = '';
+      //   this.del_list = this.del_list.concat(this.multipleSelection);
+      //   for(let i = 0; i < length; i++) {
+      //     str += this.multipleSelection[i].name + ' ';
+      //   }
+      //   this.$message.error('删除了' + str);
+      //   this.multipleSelection = [];
+      // },
+      // handleSelectionChange(val) {
+      //   this.multipleSelection = val;
+      // }
     }
   }
 

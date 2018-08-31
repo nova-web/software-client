@@ -29,11 +29,6 @@ const routes = [
                 meta: { title: '角色管理' }
             },
             {
-                path: '/Role/RoleOperation',
-                component: resolve => require(['../components/page/RoleOperation.vue'], resolve),
-                meta: { title: '角色操作' }
-            },
-            {
                 path: '/tabs',
                 component: resolve => require(['../components/page/Tabs.vue'], resolve),
                 meta: { title: 'tab选项卡' }

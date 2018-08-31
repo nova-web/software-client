@@ -8,9 +8,8 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
-        <el-button type="primary" icon="search" @click="addRole">新增角色</el-button>
-        <el-button type="primary" icon="search" @click="deleteRole" :disabled="disabled">删除角色</el-button>
+        <el-button type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
+        <!-- <el-button type="primary" icon="search" @click="deleteRole" :disabled="disabled">删除角色</el-button> -->
       </div>
       <el-table :data="RoleList" border style="width: 100%" ref="multipleTable" height="550">
         <el-table-column prop="num" label="序号" width="180">
@@ -31,19 +30,57 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 新增对话框 -->
+    <el-dialog title="新增角色" :visible.sync="addVisible" center width="30%">
+      <el-form :model="addRole">
+        <div>
+          <el-form-item label="角色名称">
+            <el-input v-model="addRole.name" placeholder="请输入角色名"></el-input>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="addRole.remark" placeholder="请输入备注"></el-input>
+          </el-form-item>
+        </div>
+        <el-form-item label="权限管理">
+        </el-form-item>
+        <el-form-item class="btn">
+          <el-button type="primary" @click="addVisible=false">取消</el-button>
+          <el-button @click="saveAdd">确定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <!-- 编辑对话框 -->
+    <el-dialog title="修改角色" :visible.sync="editVisible" center width="30%">
+      <el-form :model="editRole">
+        <div>
+          <el-form-item label="角色名称">
+            <el-input v-model="editRole.name" placeholder="请输入角色名"></el-input>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="editRole.remark" placeholder="请输入备注"></el-input>
+          </el-form-item>
+        </div>
+        <el-form-item label="权限管理">
+        </el-form-item>
+        <el-form-item class="btn">
+          <el-button type="primary" @click="cancelEdit">取消</el-button>
+          <el-button @click="saveEdit">确定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <!-- 删除提示框 -->
     <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
       <div class="del-dialog-cnt">删除不可恢复，收确定删除？</div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="delVisible=false">取消</el-button>
-        <el-button type="primary" @click="deleteRole">确定</el-button>
+        <el-button @click="delVisible=false">取 消</el-button>
+        <el-button type="primary" @click="deleteRole">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script>
   import htp from '../../api/http';
-  import { getNowFormatDate } from '../../utils';
+  import { getNowFormatDate, serialize } from '../../utils';
 
   export default {
     data() {
@@ -54,6 +91,10 @@
           name: '',
           remark: '',
         },
+        addVisible: false,
+        addRole: {},
+        editVisible: false,
+        editRole: {},
         idx: -1,
         delVisible: false,
         delIndex: Number
@@ -75,12 +116,27 @@
           }
         })
       },
-      addRole() {
-        this.$router.push({ path: '/Role/RoleOperation' });
+      saveAdd() {
+        this.addVisible = false;
+        this.addRole.update_time = getNowFormatDate();
+        this.addRole.num = this.RoleList.length + 1;
+        let obj = serialize(this.addRole);
+        this.RoleList.push(obj);
       },
       handleEdit(row, index) {
+        this.editVisible = true;
         this.index = index;
-        this.editRoleRow = row;
+        this.editRole = row;
+        this.editRoleRow = serialize(row);
+      },
+      saveEdit() {
+        this.editVisible = false;
+        this.editRole.update_time = getNowFormatDate();
+        this.$set(this.RoleList, this.index, this.editRole);
+      },
+      cancelEdit() {
+        this.editVisible = false;
+        this.$set(this.RoleList, this.index, this.editRoleRow);
       },
       // 删除
       handleDelete(row, index) {

@@ -20,7 +20,7 @@
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
-            <el-button type="success">查看固件包</el-button>
+            <el-button type="success" @click="handleselect(scope.row, scope.$index)">查看固件包</el-button>
             <el-button type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
           </template>
         </el-table-column>
@@ -38,16 +38,16 @@
     <el-dialog title="编辑" :visible.sync="editVisible" center width="30%">
       <el-form ref="form" :model="visible" label-width="80px">
         <el-form-item label="设备名称">
-          <el-input v-model="visible.name"></el-input>
+          <el-input v-model.lazy="visible.name"></el-input>
         </el-form-item>
         <el-form-item label="版本号">
-          <el-input v-model="visible.version"></el-input>
+          <el-input v-model.lazy="visible.version"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="visible.remark"></el-input>
+          <el-input v-model.lazy="visible.remark"></el-input>
         </el-form-item>
         <el-form-item class="btn">
-          <el-button type="primary" @click="editVisible=false">取消</el-button>
+          <el-button type="primary" @click="cancelEdit">取消</el-button>
           <el-button @click="saveEdit">确定</el-button>
         </el-form-item>
       </el-form>
@@ -70,6 +70,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
   </div>
 </template>
 <script>
@@ -85,10 +86,11 @@
         visible: {},
         newVisible: false,
         addVisibles: {
-          name: '',
-          version: '',
-          remark: ''
-        }
+          name: null,
+          version: null,
+          remark: null
+        },
+        cancelvisible: {}
       };
     },
     created() {
@@ -189,12 +191,20 @@
         this.visible = row;
         this.editVisible = true;
         this.index = index;
+        this.cancelvisible = serialize(row);
       },
       //确认编辑
       saveEdit() {
         this.editVisible = false;
         this.visible.update_time = getNowFormatDate();
         this.$set(this.tableData, this.index, this.visible);
+      },
+      cancelEdit() {
+        this.editVisible = false;
+        this.$set(this.tableData, this.index, this.cancelvisible);
+      },
+      handleselect(row, index) {
+        this.$router.push({ name: 'Firmware' });
       }
     }
   }

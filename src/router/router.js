@@ -34,6 +34,12 @@ const routes = [
                 meta: { title: '角色操作' }
             },
             {
+                name: 'Firmware',
+                path: '/Firmware',
+                component: resolve => require(['../components/page/Firmware.vue'], resolve),
+                meta: { title: '固件包' }
+            },
+            {
                 path: '/tabs',
                 component: resolve => require(['../components/page/Tabs.vue'], resolve),
                 meta: { title: 'tab选项卡' }

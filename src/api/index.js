@@ -1,6 +1,9 @@
 import axios from 'axios';
 import api from './api';
-import { Loading, Message } from 'element-ui';
+import {
+    Loading,
+    Message
+} from 'element-ui';
 import store from '../store';
 import qs from 'qs';
 
@@ -89,17 +92,17 @@ axios.interceptors.response.use(
 //检查接口请求状态
 function checkStatus(resolve, reject, response, config) {
     if (response && response.status === 200) {
-        if (response.data.status === 0) {
+        if (response.data.errorCode === 1) {
             resolve(response.data.data);
         } else {
             if (!config.error) {
-                Message(response.errorMsg);
+                Message(response.data.errorMsg);
             }
             reject(response.data);
         }
     } else {
-        Message(response.errorMsg || '请求失败');
-        reject(response.msg);
+        Message(response.message || '请求失败');
+        reject(response.message);
     }
 }
 
@@ -117,16 +120,20 @@ let xhr = config => {
     } else {
         let name = config.name;
         let data = config.data || {};
-        let { url, method = 'post', isJson } = api[name];
+        let {
+            url,
+            method = 'post',
+            isForm
+        } = api[name];
         if (/:id/.test(url)) {
             url = url.replace(':id', config.id);
         }
 
         if (method === 'post') {
             if (isForm) {
-                data = JSON.stringify(data);
-            } else {
                 data = qs.stringify(data);
+            } else {
+                data = JSON.stringify(data);
             }
         }
 
@@ -168,4 +175,7 @@ let xhr = config => {
     }
 };
 
-export { xhr, api };
+export {
+    xhr,
+    api
+};

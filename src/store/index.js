@@ -8,14 +8,22 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     strict: process.env.NODE_ENV !== 'production', //在非生产环境下，使用严格模式
     state: {
+        common: getSen('common') || {
+            session: ''
+        },
         cacheData: getSen('cacheData') || {},
         lang: getLoc('lang') || 'zh'
     },
     getters: {
+        getCommon: state => state.common,
         getCacheData: state => serialize(state.cacheData),
         getLang: state => state.lang
     },
     mutations: {
+        setCommon(state, data) {
+            state.common = { ...state.common, ...data };
+            setSen('common', state.common);
+        },
         setCacheData(state, data) {
             state.cacheData = { ...state.cacheData, ...data };
             setSen('cacheData', state.cacheData);

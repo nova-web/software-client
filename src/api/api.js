@@ -1,8 +1,9 @@
 let api = {
-    getUsers: { url: 'api/users', method: 'get' },
-    getRoles: { url: 'api/roles', method: 'get' },
-    deleteRole: { url: 'api/roles/:id', method: 'get' },
-    postRole: { url: 'api/roles' }
+    postLogin: { url: 'login' },
+    getUsers: { url: 'users', method: 'get' },
+    getRoles: { url: 'roles', method: 'get' },
+    deleteRole: { url: 'roles/:id', method: 'get' },
+    postRole: { url: 'roles' }
 };
 
 for (var k in api) {

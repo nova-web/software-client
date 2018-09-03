@@ -99,8 +99,9 @@
   </div>
 </template>
 <script>
-  import htp from '../../api/http';
+  import { mapActions } from 'vuex';
   import { getNowFormatDate } from '../../utils';
+
   export default {
     name: 'basetable',
     data() {
@@ -125,10 +126,8 @@
         },
         addnewUser: {
           username: '',
-          operator: '',
           remark: '',
-          password: '',
-          roleId: ''
+          password: ''
         },
         options: [{
           value: 1,
@@ -184,9 +183,6 @@
       updateNewuser() {
         this.newUser = false;
         htp.post('api/users', this.addnewUser).then(res => {
-          this.addnewUser.del = false;
-          // this.addnewUser.id = res.data.data.userId;
-          // this.tableData.push(this.addnewUser);
           this.getUser();
         });
       },
@@ -233,7 +229,6 @@
         this.idx = row.id;
         this.delVisible = true;
         this.delIndex = index;
-
       },
       // 确定删除
       deleteRow() {

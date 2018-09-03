@@ -19,8 +19,9 @@
 </template>
 
 <script>
+    import { mapActions } from 'vuex';
     export default {
-        data: function(){
+        data: function() {
             return {
                 ruleForm: {
                     username: 'admin',
@@ -37,11 +38,27 @@
             }
         },
         methods: {
+            postLogin() {
+                htp.post('api/login', this.ruleForm).then(res => {
+                    console.log(res);
+                    if(res.data.errorCode !== 0) {
+                        console.log(res);
+                        this.$router.push({ path: "/" });
+                    }
+                })
+            },
+            getUser() {
+                htp.get('api/users').then(res => {
+                    console.log(res);
+                    if(res.status === 200) {
+
+                    }
+                })
+            },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        localStorage.setItem('ms_username',this.ruleForm.username);
-                        this.$router.push('/');
+                    if(valid) {
+                        this.postLogin();
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -53,37 +70,36 @@
 </script>
 
 <style scoped>
-    .login-wrap{
-        position: relative;
-        width:100%;
-        height:100%;
+    .login-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
     }
-    .ms-title{
-        position: absolute;
-        top:50%;
-        width:100%;
-        margin-top: -230px;
-        text-align: center;
-        font-size:30px;
-        color: #fff;
-
+    .ms-title {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      margin-top: -230px;
+      text-align: center;
+      font-size: 30px;
+      color: #fff;
     }
-    .ms-login{
-        position: absolute;
-        left:50%;
-        top:50%;
-        width:300px;
-        height:160px;
-        margin:-150px 0 0 -190px;
-        padding:40px;
-        border-radius: 5px;
-        background: #fff;
+    .ms-login {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 300px;
+      height: 160px;
+      margin: -150px 0 0 -190px;
+      padding: 40px;
+      border-radius: 5px;
+      background: #fff;
     }
-    .login-btn{
-        text-align: center;
+    .login-btn {
+      text-align: center;
     }
-    .login-btn button{
-        width:100%;
-        height:36px;
+    .login-btn button {
+      width: 100%;
+      height: 36px;
     }
 </style>

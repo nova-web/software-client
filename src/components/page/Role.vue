@@ -79,8 +79,8 @@
   </div>
 </template>
 <script>
-  import htp from '../../api/http';
-  import { getNowFormatDate, serialize } from '../../utils';
+  import { mapActions } from 'vuex';
+  import { serialize } from '../../utils';
 
   export default {
     data() {
@@ -118,10 +118,13 @@
       },
       saveAdd() {
         this.addVisible = false;
-        this.addRole.update_time = getNowFormatDate();
-        this.addRole.num = this.RoleList.length + 1;
-        let obj = serialize(this.addRole);
-        this.RoleList.push(obj);
+        // this.addRole.update_time = getNowFormatDate();
+        // this.addRole.num = this.RoleList.length + 1;
+        // let obj = serialize(this.addRole);
+        // this.RoleList.push(obj);
+        htp.post('api/roles', this.addRole).then(res => {
+          this.getRole();
+        });
       },
       handleEdit(row, index) {
         this.editVisible = true;
@@ -131,7 +134,6 @@
       },
       saveEdit() {
         this.editVisible = false;
-        this.editRole.update_time = getNowFormatDate();
         this.$set(this.RoleList, this.index, this.editRole);
       },
       cancelEdit() {
@@ -140,7 +142,7 @@
       },
       // 删除
       handleDelete(row, index) {
-        this.idx = row.ID;
+        this.idx = row.id;
         this.delVisible = true;
         this.delIndex = index;
       },

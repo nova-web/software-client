@@ -74,7 +74,7 @@
   </div>
 </template>
 <script>
-  import { getNowFormatDate, serialize } from '../../utils';
+  import { serialize } from '../../utils';
   export default {
     data() {
       return {
@@ -167,7 +167,7 @@
       },
       saveVisible() {
         this.newVisible = false;
-        this.addVisibles.update_time = getNowFormatDate();
+        // this.addVisibles.update_time = getNowFormatDate();
         this.addVisibles.num = this.tableData.length + 1;
         let obj = serialize(this.addVisibles);
         this.tableData.push(obj);
@@ -196,7 +196,7 @@
       //确认编辑
       saveEdit() {
         this.editVisible = false;
-        this.visible.update_time = getNowFormatDate();
+        // this.visible.update_time = ;
         this.$set(this.tableData, this.index, this.visible);
       },
       cancelEdit() {

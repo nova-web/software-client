@@ -22,7 +22,6 @@
   import bus from './bus';
   import { mapGetters } from 'vuex';
   import { getLoc } from '../../utils';
-  import htp from '../../api/http';
   export default {
     data() {
       return {

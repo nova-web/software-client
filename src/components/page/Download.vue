@@ -15,7 +15,6 @@
         <el-table-column width="80px" fixed="left" prop="num" label="序号"></el-table-column>
         <el-table-column prop="name" label="设备名称"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column prop="version" label="版本号"></el-table-column>
         <el-table-column prop="update_time" label="更新时间"></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
@@ -58,9 +57,6 @@
         <el-form-item :model="addVisibles" label="设备名称">
           <el-input v-model="addVisibles.name"></el-input>
         </el-form-item>
-        <el-form-item label="版本号">
-          <el-input v-model="addVisibles.version"></el-input>
-        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="addVisibles.remark"></el-input>
         </el-form-item>
@@ -74,6 +70,7 @@
   </div>
 </template>
 <script>
+  import { mapActions } from 'vuex';
   import { serialize } from '../../utils';
   export default {
     data() {
@@ -97,74 +94,23 @@
       this.getEquipment();
     },
     methods: {
+      ...mapActions(['ajax']),
+      //获取产品列表
       getEquipment() {
-        setTimeout(() => {
-          this.tableData = [
-            {
-              id: 1,
-              name: '设备1',
-              remark: '这是个好设备',
-              version: '1.0.0',
-              module_id: '',
-              update_time: ''
-            },
-            {
-              id: 2,
-              name: '设备2',
-              remark: '',
-              version: '',
-              module_id: '',
-              update_time: ''
-            },
-            {
-              id: 3,
-              name: '设备3',
-              remark: '',
-              version: '',
-              module_id: '',
-              update_time: ''
-            },
-            {
-              id: 4,
-              name: '设备4',
-              remark: '',
-              version: '',
-              module_id: '',
-              update_time: ''
-            },
-            {
-              id: 5,
-              name: '设备5',
-              remark: '',
-              version: '',
-              module_id: '',
-              update_time: ''
-            },
-            {
-              id: 6,
-              name: '设备6',
-              remark: '',
-              version: '',
-              module_id: '',
-              update_time: ''
-            },
-            {
-              id: 7,
-              name: '设备7',
-              remark: '',
-              version: '',
-              module_id: '',
-              update_time: ''
-            }
-          ];
+        this.ajax({
+          name: 'getProduct'
+        }).then(res => {
+          this.tableData = res;
           this.tableData.forEach((item, index) => {
             item.num = index + 1;
           })
-        }, 500)
+        });
       },
+      //新增设备模态框
       addVisible() {
         this.newVisible = true;
       },
+      //新增设备确认
       saveVisible() {
         this.newVisible = false;
         // this.addVisibles.update_time = getNowFormatDate();

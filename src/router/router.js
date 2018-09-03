@@ -11,33 +11,33 @@ const routes = [
             {
                 path: '/dashboard',
                 component: resolve => require(['../components/page/Dashboard.vue'], resolve),
-                meta: { title: '系统首页' }
+                meta: { title: '系统首页', keepAlive: false }
             },
             {
                 path: '/table',
                 component: resolve => require(['../components/page/BaseTable.vue'], resolve),
-                meta: { title: '用户管理' }
+                meta: { title: '用户管理', keepAlive: false }
             },
             {
                 path: '/download',
                 component: resolve => require(['../components/page/Download.vue'], resolve),
-                meta: { title: '下载管理' }
+                meta: { title: '下载管理', keepAlive: false }
             },
             {
                 path: '/Role',
                 component: resolve => require(['../components/page/Role.vue'], resolve),
-                meta: { title: '角色管理' }
+                meta: { title: '角色管理', keepAlive: false }
             },
             {
                 path: '/Role/RoleOperation',
                 component: resolve => require(['../components/page/RoleOperation.vue'], resolve),
-                meta: { title: '角色操作' }
+                meta: { title: '角色操作', keepAlive: false }
             },
             {
                 name: 'Firmware',
                 path: '/Firmware',
                 component: resolve => require(['../components/page/Firmware.vue'], resolve),
-                meta: { title: '固件包' }
+                meta: { title: '固件包', keepAlive: false }
             },
             {
                 path: '/tabs',
@@ -65,7 +65,7 @@ const routes = [
                 // 图片上传组件
                 path: '/upload',
                 component: resolve => require(['../components/page/Upload.vue'], resolve),
-                meta: { title: '文件上传' }
+                meta: { title: '文件上传', keepAlive: false }
             },
             {
                 // vue-schart组件

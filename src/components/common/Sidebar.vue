@@ -36,7 +36,7 @@
           },
           {
             icon: 'el-icon-tickets',
-            index: 'table',
+            index: 'user',
             title: '用户管理'
           },
           {

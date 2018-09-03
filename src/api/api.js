@@ -12,7 +12,9 @@ let api = {
     editRole: { url: 'roles/:id', method: 'put' },
     //产品
     getProduct: { url: 'products' },
-    postProduct: { url: 'products', method: 'post' }
+    postProduct: { url: 'products', method: 'post' },
+    deleteProduct: { url: 'products/:id', method: 'delete' },
+    editProduct: { url: 'products/:id', method: 'put' }
 };
 
 for (var k in api) {

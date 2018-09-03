@@ -29,11 +29,6 @@ const routes = [
                 meta: { title: '角色管理' }
             },
             {
-                path: '/Role/RoleOperation',
-                component: resolve => require(['../components/page/RoleOperation.vue'], resolve),
-                meta: { title: '角色操作' }
-            },
-            {
                 name: 'Firmware',
                 path: '/Firmware',
                 component: resolve => require(['../components/page/Firmware.vue'], resolve),

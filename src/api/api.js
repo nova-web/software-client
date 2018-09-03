@@ -2,8 +2,9 @@ let api = {
     postLogin: { url: 'login' },
     getUsers: { url: 'users', method: 'get' },
     getRoles: { url: 'roles', method: 'get' },
-    deleteRole: { url: 'roles/:id', method: 'get' },
-    addRole: { url: 'roles' }
+    deleteRole: { url: 'roles/:id', method: 'delete' },
+    addRole: { url: 'roles' },
+    editRole: { url: 'roles/:id', method: 'put' }
 };
 
 for (var k in api) {

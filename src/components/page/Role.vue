@@ -126,17 +126,26 @@
       },
       handleEdit(row, index) {
         this.editVisible = true;
-        this.index = index;
         this.editRole = row;
-        this.editRoleRow = serialize(row);
+        this.idx = row.id;
       },
       saveEdit() {
         this.editVisible = false;
-        this.$set(this.RoleList, this.index, this.editRole);
+        let data = {
+          name: this.editRole.name,
+          remark: this.editRole.remark
+        }
+        this.ajax({
+          name: 'editRole',
+          data: data,
+          id: this.idx
+        }).then(res => {
+          this.getRoles();
+        });
       },
       cancelEdit() {
         this.editVisible = false;
-        this.$set(this.RoleList, this.index, this.editRoleRow);
+        this.getRoles();
       },
       // 删除
       handleDelete(row, index) {
@@ -146,14 +155,16 @@
       },
       // 确认删除
       deleteRole() {
-        htp.delete('api/roles', { id: this.idx }).then(res => {
-          this.RoleList.splice(this.delIndex, 1);
-          this.RoleList.forEach((item, index) => {
-            item.num = index + 1;
-          });
+        this.delVisible = false;
+        this.ajax({
+          name: 'deleteRole',
+          id: this.idx
+        }).then(res => {
           this.$message.success('删除成功');
-          this.delVisible = false;
+          this.getRoles();
         });
+
+
       }
     }
   }

@@ -1,9 +1,6 @@
 import axios from 'axios';
 import api from './api';
-import {
-    Loading,
-    Message
-} from 'element-ui';
+import { Loading, Message } from 'element-ui';
 import store from '../store';
 import qs from 'qs';
 
@@ -120,11 +117,7 @@ let xhr = config => {
     } else {
         let name = config.name;
         let data = config.data || {};
-        let {
-            url,
-            method = 'post',
-            isForm
-        } = api[name];
+        let { url, method = 'post', isForm } = api[name];
         if (/:id/.test(url)) {
             url = url.replace(':id', config.id);
         }
@@ -170,12 +163,37 @@ let xhr = config => {
                             reject(res);
                         });
                 });
+            case 'delete':
+                return new Promise((resolve, reject) => {
+                    axios
+                        .delete(url, {
+                            params: data,
+                            headers
+                        })
+                        .then(res => {
+                            checkStatus(resolve, reject, res, config);
+                        })
+                        .catch(res => {
+                            reject(res);
+                        });
+                });
+            case 'put':
+                return new paramise((resolve, reject) => {
+                    axios
+                        .put(url, {
+                            params: data,
+                            headers
+                        })
+                        .then(res => {
+                            checkStatus(resolve, reject, res, config);
+                        })
+                        .catch(res => {
+                            reject(res);
+                        });
+                });
             default:
         }
     }
 };
 
-export {
-    xhr,
-    api
-};
+export { xhr, api };

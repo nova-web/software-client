@@ -28,7 +28,7 @@
     </div>
     <!-- 删除对话框 -->
     <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
-      <div class="del-dialog-cnt">删除不可恢复，是否确定删除a？</div>
+      <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="delVisible = false">取 消</el-button>
                 <el-button type="primary" @click="deleteRow">确 定</el-button>
@@ -74,7 +74,7 @@
   </div>
 </template>
 <script>
-  import { getNowFormatDate, serialize } from '../../utils';
+  import { serialize } from '../../utils';
   export default {
     data() {
       return {
@@ -167,7 +167,7 @@
       },
       saveVisible() {
         this.newVisible = false;
-        this.addVisibles.update_time = getNowFormatDate();
+        // this.addVisibles.update_time = getNowFormatDate();
         this.addVisibles.num = this.tableData.length + 1;
         let obj = serialize(this.addVisibles);
         this.tableData.push(obj);
@@ -196,7 +196,7 @@
       //确认编辑
       saveEdit() {
         this.editVisible = false;
-        this.visible.update_time = getNowFormatDate();
+        // this.visible.update_time = ;
         this.$set(this.tableData, this.index, this.visible);
       },
       cancelEdit() {

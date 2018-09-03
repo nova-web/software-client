@@ -117,7 +117,7 @@ let xhr = config => {
     } else {
         let name = config.name;
         let data = config.data || {};
-        let { url, method = 'post', isForm } = api[name];
+        let { url, method = 'get', isForm } = api[name];
         if (/:id/.test(url)) {
             url = url.replace(':id', config.id);
         }

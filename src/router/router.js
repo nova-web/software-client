@@ -29,14 +29,6 @@ const routes = [
                 meta: { title: '角色管理', keepAlive: false }
             },
             {
-<<<<<<< HEAD
-                path: '/Role/RoleOperation',
-                component: resolve => require(['../components/page/RoleOperation.vue'], resolve),
-                meta: { title: '角色操作', keepAlive: false }
-            },
-            {
-=======
->>>>>>> d91c6a853d32317d01bee6df85af1e9218dfe90b
                 name: 'Firmware',
                 path: '/Firmware',
                 component: resolve => require(['../components/page/Firmware.vue'], resolve),

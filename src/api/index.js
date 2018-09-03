@@ -117,7 +117,7 @@ let xhr = config => {
     } else {
         let name = config.name;
         let data = config.data || {};
-        let { url, method = 'post', isForm } = api[name];
+        let { url, method = 'get', isForm } = api[name];
         if (/:id/.test(url)) {
             url = url.replace(':id', config.id);
         }
@@ -137,12 +137,12 @@ let xhr = config => {
 
         switch (method) {
             case 'get':
+            case 'delete':
                 return new Promise((resolve, reject) => {
-                    axios
-                        .get(url, {
-                            params: data,
-                            headers
-                        })
+                    axios[method](url, {
+                        params: data,
+                        headers
+                    })
                         .then(res => {
                             checkStatus(resolve, reject, res, config);
                         })
@@ -151,11 +151,11 @@ let xhr = config => {
                         });
                 });
             case 'post':
+            case 'put':
                 return new Promise((resolve, reject) => {
-                    axios
-                        .post(url, data, {
-                            headers
-                        })
+                    axios[method](url, data, {
+                        headers
+                    })
                         .then(res => {
                             checkStatus(resolve, reject, res, config);
                         })
@@ -177,21 +177,8 @@ let xhr = config => {
                             reject(res);
                         });
                 });
-            case 'put':
-                return new paramise((resolve, reject) => {
-                    axios
-                        .put(url, {
-                            params: data,
-                            headers
-                        })
-                        .then(res => {
-                            checkStatus(resolve, reject, res, config);
-                        })
-                        .catch(res => {
-                            reject(res);
-                        });
-                });
             default:
+                break;
         }
     }
 };

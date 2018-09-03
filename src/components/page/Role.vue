@@ -101,44 +101,51 @@
       };
     },
     created() {
-      this.getRole();
+      this.getRoles();
     },
     methods: {
-      getRole() {
-        htp.get('api/roles').then(res => {
-          if(res.status === 200) {
-            if(res.data.errorCode === 1) {
-              res.data.data.forEach((item, index) => {
-                item.num = index + 1;
-              });
-              this.RoleList = res.data.data;
-            }
-          }
-        })
+      ...mapActions(['ajax']),
+      getRoles() {
+        this.ajax({
+          name: 'getRoles'
+        }).then(res => {
+          res.forEach((item, index) => {
+            item.num = index + 1;
+          });
+          this.RoleList = res;
+        });
       },
       saveAdd() {
         this.addVisible = false;
-        // this.addRole.update_time = getNowFormatDate();
-        // this.addRole.num = this.RoleList.length + 1;
-        // let obj = serialize(this.addRole);
-        // this.RoleList.push(obj);
-        htp.post('api/roles', this.addRole).then(res => {
-          this.getRole();
+        this.ajax({
+          name: 'addRole',
+          data: this.addRole
+        }).then(res => {
+          this.getRoles();
         });
       },
       handleEdit(row, index) {
         this.editVisible = true;
-        this.index = index;
         this.editRole = row;
-        this.editRoleRow = serialize(row);
+        this.idx = row.id;
       },
       saveEdit() {
         this.editVisible = false;
-        this.$set(this.RoleList, this.index, this.editRole);
+        let data = {
+          name: this.editRole.name,
+          remark: this.editRole.remark
+        }
+        this.ajax({
+          name: 'editRole',
+          data: data,
+          id: this.idx
+        }).then(res => {
+          this.getRoles();
+        });
       },
       cancelEdit() {
         this.editVisible = false;
-        this.$set(this.RoleList, this.index, this.editRoleRow);
+        this.getRoles();
       },
       // 删除
       handleDelete(row, index) {
@@ -148,14 +155,16 @@
       },
       // 确认删除
       deleteRole() {
-        htp.delete('api/roles', { id: this.idx }).then(res => {
-          this.RoleList.splice(this.delIndex, 1);
-          this.RoleList.forEach((item, index) => {
-            item.num = index + 1;
-          });
+        this.delVisible = false;
+        this.ajax({
+          name: 'deleteRole',
+          id: this.idx
+        }).then(res => {
           this.$message.success('删除成功');
-          this.delVisible = false;
+          this.getRoles();
         });
+
+
       }
     }
   }

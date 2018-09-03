@@ -63,7 +63,7 @@
         <el-form-item label="权限管理">
         </el-form-item>
         <el-form-item class="btn">
-          <el-button type="primary" @click="cancelEdit">取消</el-button>
+          <el-button type="primary" @click="editVisible=false">取消</el-button>
           <el-button @click="saveEdit">确定</el-button>
         </el-form-item>
       </el-form>
@@ -115,6 +115,7 @@
           this.RoleList = res;
         });
       },
+      // 新增
       saveAdd() {
         this.addVisible = false;
         this.ajax({
@@ -126,26 +127,23 @@
       },
       handleEdit(row, index) {
         this.editVisible = true;
-        this.editRole = row;
+        this.editRole = {
+          name: row.name,
+          remark: row.remark
+        };
         this.idx = row.id;
       },
+      // 修改
       saveEdit() {
         this.editVisible = false;
-        let data = {
-          name: this.editRole.name,
-          remark: this.editRole.remark
-        }
         this.ajax({
           name: 'editRole',
-          data: data,
+          data: this.editRole,
           id: this.idx
         }).then(res => {
+          this.$message.success('修改成功');
           this.getRoles();
         });
-      },
-      cancelEdit() {
-        this.editVisible = false;
-        this.getRoles();
       },
       // 删除
       handleDelete(row, index) {
@@ -163,8 +161,6 @@
           this.$message.success('删除成功');
           this.getRoles();
         });
-
-
       }
     }
   }

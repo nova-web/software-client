@@ -14,8 +14,8 @@ const routes = [
                 meta: { title: '系统首页', keepAlive: false }
             },
             {
-                path: '/table',
-                component: resolve => require(['../components/page/BaseTable.vue'], resolve),
+                path: '/user',
+                component: resolve => require(['../components/page/User.vue'], resolve),
                 meta: { title: '用户管理', keepAlive: false }
             },
             {

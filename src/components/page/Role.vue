@@ -101,29 +101,27 @@
       };
     },
     created() {
-      this.getRole();
+      this.getRoles();
     },
     methods: {
-      getRole() {
-        htp.get('api/roles').then(res => {
-          if(res.status === 200) {
-            if(res.data.errorCode === 1) {
-              res.data.data.forEach((item, index) => {
-                item.num = index + 1;
-              });
-              this.RoleList = res.data.data;
-            }
-          }
-        })
+      ...mapActions(['ajax']),
+      getRoles() {
+        this.ajax({
+          name: 'getRoles'
+        }).then(res => {
+          res.forEach((item, index) => {
+            item.num = index + 1;
+          });
+          this.RoleList = res;
+        });
       },
       saveAdd() {
         this.addVisible = false;
-        // this.addRole.update_time = getNowFormatDate();
-        // this.addRole.num = this.RoleList.length + 1;
-        // let obj = serialize(this.addRole);
-        // this.RoleList.push(obj);
-        htp.post('api/roles', this.addRole).then(res => {
-          this.getRole();
+        this.ajax({
+          name: 'addRole',
+          data: this.addRole
+        }).then(res => {
+          this.getRoles();
         });
       },
       handleEdit(row, index) {

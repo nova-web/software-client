@@ -3,7 +3,7 @@ let api = {
     getUsers: { url: 'users', method: 'get' },
     getRoles: { url: 'roles', method: 'get' },
     deleteRole: { url: 'roles/:id', method: 'get' },
-    postRole: { url: 'roles' }
+    addRole: { url: 'roles' }
 };
 
 for (var k in api) {

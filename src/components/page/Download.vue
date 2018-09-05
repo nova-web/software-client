@@ -1,9 +1,12 @@
 <template>
   <div class="download">
     <div class="crumbs">
-      <el-breadcrumb separator="/">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i> 下载管理</el-breadcrumb-item>
+          <i class="el-icon-tickets"></i>产品管理</el-breadcrumb-item>
+        <el-breadcrumb-item>
+          视频产品线
+        </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">

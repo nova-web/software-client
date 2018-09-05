@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157" text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened :router="true">
+    <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157" text-color="#bfcbd9" active-text-color="#20a0ff" :router="true">
       <template v-for="item in items">
         <template v-if="item.subs">
           <el-submenu :index="item.index" :key="item.index">
@@ -8,7 +8,7 @@
               <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
             </template>
             <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
-              {{ subItem.title }}
+              <i :class="subItem.icon"></i> {{ subItem.title }}
             </el-menu-item>
           </el-submenu>
         </template>
@@ -31,28 +31,57 @@
         items: [
           {
             icon: 'el-icon-setting',
-            index: 'dashboard',
-            title: '系统首页'
+            index: '1',
+            title: '产品管理',
+            subs: [
+              {
+                index: 'download',
+                title: '视频产品线'
+              },
+              {
+                index: '',
+                title: '同步产品线'
+              },
+              {
+                index: '',
+                title: '云显产品线'
+              }
+            ]
           },
           {
-            icon: 'el-icon-tickets',
-            index: 'user',
-            title: '用户管理'
+            icon: 'el-icon-setting',
+            index: '2',
+            title: '权限管理',
+            subs: [
+              {
+                index: 'Role',
+                title: '角色管理'
+              },
+              {
+                index: 'user',
+                title: '用户管理'
+              },
+              {
+                index: '',
+                title: '功能管理'
+              }
+            ]
           },
           {
-            icon: 'el-icon-tickets',
-            index: 'download',
-            title: '下载管理'
+            icon: 'el-icon-setting',
+            index: '3',
+            title: '系统管理',
+            subs: [
+              {
+                index: '',
+                title: '操作审计'
+              }
+            ]
           },
           {
-            icon: 'el-icon-tickets',
-            index: 'Role',
-            title: '角色管理'
-          },
-          {
-            icon: 'el-icon-tickets',
-            index: 'upload',
-            title: '文件上传'
+            icon: 'el-icon-setting',
+            index: 'Statistics',
+            title: '统计分析'
           }
         ]
       }
@@ -67,6 +96,8 @@
       bus.$on('collapse', msg => {
         this.collapse = msg;
       })
+    },
+    methods: {
     }
   }
 </script>

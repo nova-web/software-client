@@ -1,9 +1,10 @@
 <template>
   <div class="table">
     <div class="crumbs">
-      <el-breadcrumb separator="/">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i> 用户管理</el-breadcrumb-item>
+          <i class="el-icon-tickets"></i>权限管理</el-breadcrumb-item>
+        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
@@ -139,6 +140,14 @@
     },
     created() {
       this.getUsers();
+      let d = 2; //当前页
+      let m = 10; //每页显示条数
+      let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+      let count = (d - 1) * 10;
+      arr.forEach(item => {
+        count++
+        console.log(item, '!!!!!!', count);
+      });
     },
     methods: {
       ...mapActions(['ajax']),

@@ -18,7 +18,7 @@ axios.interceptors.request.use(
     },
     error => {
         loading = false;
-        loadingInstance.close;
+        loadingInstance.close();
         return Promise.reject(error);
     }
 );
@@ -28,14 +28,14 @@ axios.interceptors.response.use(
     response => {
         loading = false;
         if (loadingInstance) {
-            loadingInstance.close;
+            loadingInstance.close();
         }
         return response;
     },
     error => {
         loading = false;
         if (loadingInstance) {
-            loadingInstance.close;
+            loadingInstance.close();
         }
 
         if (error && error.response) {

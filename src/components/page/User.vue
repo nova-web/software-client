@@ -10,23 +10,49 @@
     <div class="container">
       <div class="handle-box">
         <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
-        <el-button type="primary" icon="search" @click="addVisible=true">新增用户</el-button>
+        <el-button type="primary" icon="search" @click="addUsers">新增用户</el-button>
       </div>
-      <el-table :data="UserList" border style="width: 100%" ref="multipleTable" height="550">
+      <div class="search-box">
+        <el-form ref="search" :model="userSearch" class="demo-form-inline" :inline="true">
+          <el-form-item label="状态">
+            <el-select v-model="userSearch.status">
+              <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="角色">
+            <el-select v-model="userSearch.roles">
+              <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="用户名称">
+            <el-input v-model="userSearch.username"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary">搜索</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table :data="UserList" border style="width: 100%;" ref="multipleTable" height="542">
         <!-- <el-table-column type="selection" width="55"></el-table-column> -->
-        <el-table-column prop="index" label="序号" sortable width="150">
+        <el-table-column prop="index" label="序号" sortable width="80">
         </el-table-column>
-        <el-table-column prop="operator" label="角色" width="120">
+        <el-table-column prop="username" label="用户名称" width="120">
         </el-table-column>
-        <el-table-column prop="username" label="用户名" width="120">
+        <el-table-column prop="Status" label="状态" width="80">
         </el-table-column>
-        <el-table-column prop="password" label="密码">
+        <el-table-column prop="roleName" label="角色">
         </el-table-column>
         <el-table-column prop="remark" label="备注">
         </el-table-column>
-        <el-table-column prop="update_time" label="更新时间">
+        <el-table-column prop="phone" label="联系电话">
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column prop="email" label="邮箱">
+        </el-table-column>
+        <el-table-column prop="updatedAt" label="更新时间">
+        </el-table-column>
+        <el-table-column label="操作" width="280">
           <template slot-scope="scope">
             <el-button size="small" @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
             <el-button size="small" type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
@@ -34,28 +60,40 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :total="num?num:10">
+        <el-pagination background @current-change="handleCurrentChange" :page-size="10" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
         </el-pagination>
       </div>
     </div>
-
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="editUser" :model="editUser" label-width="80px">
-        <el-form-item label="角色">
-          <el-select v-model="editUser.num" :placeholder="editUser.operator">
-            <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="用户名">
+
+        <el-form-item label="用户名称">
           <el-input v-model="editUser.username"></el-input>
         </el-form-item>
         <el-form-item label="密码">
           <el-input v-model="editUser.password"></el-input>
         </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="editUser.status">
+            <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="角色">
+          <el-select v-model="editUser.roles" multiple collapse-tags>
+            <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="editUser.remark"></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话">
+          <el-input v-model="editUser.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="editUser.email"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -75,10 +113,10 @@
 
     <!-- 新增用户 -->
     <el-dialog title="新增用户" :visible.sync="addVisible" width="30%">
-      <el-form :model="addUser" label-width="80px">
+      <el-form :model="addUser" label-width="80px" ref="adduser" :rules="addUserRule" class="demo-ruleForm">
         <el-form-item label="角色">
-          <el-select v-model="addUser.operator" placeholder="请选择角色">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label">
+          <el-select v-model="addUser.operator" placeholder="请选择角色" multiple collapse-tags>
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
@@ -88,12 +126,18 @@
         <el-form-item label="密码">
           <el-input v-model="addUser.password"></el-input>
         </el-form-item>
+        <el-form-item label="联系方式">
+          <el-input v-model="addUser.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="电子邮箱">
+          <el-input v-model="addUser.email"></el-input>
+        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="addUser.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addVisible=false">取 消</el-button>
+        <el-button @click="()=>{addVisible=false;addUser = Object.assign({}, newAddUser);}">取 消</el-button>
         <el-button type="primary" @click="saveAdd">确 定</el-button>
       </div>
     </el-dialog>
@@ -107,7 +151,7 @@
     name: 'user',
     data() {
       return {
-        num: null,
+        count: 0,
         UserList: [],
         editUserRow: {
           username: '',
@@ -115,39 +159,61 @@
           remark: '',
         },
         addVisible: false,
-        addUser: {},
+        addUser: {
+          operator: [],
+          username: '',
+          password: '',
+          phone: '',
+          email: '',
+          remark: ''
+        },
+        addUserRule: {
+          phone: [
+            { required: true, trigger: 'blur', message: '联系方式格式不正确' },
+          ],
+          email: [
+            { required: true, trigger: 'blur', message: '邮箱格式不正确' }
+          ]
+        },
+        newAddUser: {
+          operator: [],
+          username: '',
+          password: '',
+          phone: '',
+          email: '',
+          remark: ''
+        },
+        //状态
+        status: [
+          {
+            value: 0,
+            label: '无效'
+          },
+          {
+            value: 1,
+            label: '有效'
+          },
+          {
+            value: 2,
+            label: '删除'
+          }
+        ],
         editVisible: false,
         editUser: {},
-        options: [{
-          value: 1,
-          label: '超级管理员'
-        }, {
-          value: 2,
-          label: '管理员'
-        }, {
-          value: 3,
-          label: '用户'
-        }],
+        options: [],
         idx: -1,
         delIndex: Number,
         delVisible: false,
         RoleID: Number,
         cur_page: 1,
         multipleSelection: [],
-        select_cate: '',
-        select_word: ''
+        userSearch: {}
       }
     },
     created() {
       this.getUsers();
-      let d = 2; //当前页
-      let m = 10; //每页显示条数
-      let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-      let count = (d - 1) * 10;
-      arr.forEach(item => {
-        count++
-        console.log(item, '!!!!!!', count);
-      });
+      this.getrole();
+
     },
     methods: {
       ...mapActions(['ajax']),
@@ -157,17 +223,55 @@
         this.getUsers();
       },
       getUsers() {
+        let d = this.cur_page; //当前页
+        let m = 10; //每页显示条数
+        let count = (d - 1) * 10 === 0 ? 1 : (d - 1) * 10;
         this.ajax({
-          name: 'getUsers'
+          name: 'getUsers',
+          data: { pageNum: this.cur_page }
         }).then(res => {
-          res.forEach((item, index) => {
-            item.index = index + 1;
+          res.rows.forEach((item, index) => {
+            switch(item.status) {
+              case 0:
+                item.Status = '无效'
+                break;
+              case 1:
+                item.Status = '有效'
+                break;
+              case 2:
+                item.Status = '删除'
+                break;
+              default:
+                break;
+            }
+            let str = '';
+            item.roles.forEach((item, index) => {
+              str += item.name + ' ,'
+            });
+            item.roleName = str.substr(0, str.length - 1);;
+            item.index = count++;
           });
-          this.UserList = res;
-          this.num = this.UserList.length; //分页
+          this.UserList = res.rows;
+          this.count = res.count; //分页
+
         });
       },
+      getrole() {
+        this.ajax({
+          name: 'getRoles'
+        }).then(res => {
+          res.forEach(item => {
+            let obj = {}
+            obj.value = item.id;
+            obj.label = item.name;
+            this.options.push(obj);
+          });
+        })
+      },
       //新增用户
+      addUsers() {
+        this.addVisible = true;
+      },
       saveAdd() {
         this.addVisible = false;
         this.ajax({
@@ -175,15 +279,24 @@
           data: this.addUser
         }).then(res => {
           this.getUsers();
+          this.addUser = Object.assign({}, this.newAddUser)
         });
       },
       //编辑
       handleEdit(row, index) {
+        let arr = [];
+        row.roles.forEach(item => {
+          arr.push(item.id);
+        });
         this.editVisible = true;
         this.editUser = {
           username: row.username,
-          password: row.password,
+          password: null,
           remark: row.remark,
+          phone: row.phone,
+          status: row.status,
+          email: row.email,
+          roles: arr
         }
         this.idx = row.id;
       },
@@ -264,5 +377,10 @@
   .del-dialog-cnt {
     font-size: 16px;
     text-align: center;
+  }
+  .search-box {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
   }
 </style>

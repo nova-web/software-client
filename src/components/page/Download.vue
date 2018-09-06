@@ -1,9 +1,12 @@
 <template>
   <div class="download">
     <div class="crumbs">
-      <el-breadcrumb separator="/">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i> 下载管理</el-breadcrumb-item>
+          <i class="el-icon-tickets"></i>产品管理</el-breadcrumb-item>
+        <el-breadcrumb-item>
+          视频产品线
+        </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
@@ -12,14 +15,16 @@
         <el-button type="primary" icon="search" @click="addVisible">新增设备</el-button>
       </div>
       <el-table :data="tableData" border height="550" style="width: 100%">
-        <el-table-column width="80px" fixed="left" prop="num" label="序号"></el-table-column>
-        <el-table-column prop="name" label="设备名称"></el-table-column>
+        <el-table-column width="60px" fixed="left" prop="num" label="序号"></el-table-column>
+        <el-table-column width="200px" prop="name" label="设备名称"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column prop="update_time" label="更新时间"></el-table-column>
+        <el-table-column width="200px" prop="create_time" label="创建时间"></el-table-column>
+        <el-table-column width="200px" prop="update_time" label="更新时间"></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
             <el-button type="success" @click="handleselect(scope.row, scope.$index)">查看固件包</el-button>
+            <el-button type="success" @click="handleselectdevice(scope.row, scope.$index)">查看设备</el-button>
             <el-button type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
           </template>
         </el-table-column>
@@ -37,13 +42,10 @@
     <el-dialog title="编辑" :visible.sync="editVisible" center width="30%">
       <el-form ref="form" :model="visible" label-width="80px">
         <el-form-item label="设备名称">
-          <el-input v-model.lazy="visible.name"></el-input>
-        </el-form-item>
-        <el-form-item label="版本号">
-          <el-input v-model.lazy="visible.version"></el-input>
+          <el-input v-model="visible.name"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model.lazy="visible.remark"></el-input>
+          <el-input v-model="visible.remark"></el-input>
         </el-form-item>
         <el-form-item class="btn">
           <el-button type="primary" @click="cancelEdit">取消</el-button>
@@ -80,11 +82,13 @@
         delVisible: false,
         index: Number,
         editVisible: false,
-        visible: {},
+        visible: {
+          name: null,
+          remark: null
+        },
         newVisible: false,
         addVisibles: {
           name: null,
-          version: null,
           remark: null
         },
         cancelvisible: {}
@@ -113,41 +117,54 @@
       //新增设备确认
       saveVisible() {
         this.newVisible = false;
-        // this.addVisibles.update_time = getNowFormatDate();
-        this.addVisibles.num = this.tableData.length + 1;
-        let obj = serialize(this.addVisibles);
-        this.tableData.push(obj);
+        this.ajax({
+          name: 'postProduct',
+          data: this.addVisibles
+        }).then(res => {
+          this.getEquipment();
+          this.$message.success('新增成功');
+        });
       },
       //删除
       handleDelete(row, index) {
         this.delVisible = true;
-        this.index = index;
+        this.idx = row.id;
       },
       //确认删除
       deleteRow() {
         this.delVisible = false;
-        this.tableData.splice(this.index, 1);
-        this.tableData.forEach((item, index) => {
-          item.num = index + 1;
+        this.ajax({
+          name: 'deleteProduct',
+          id: this.idx
+        }).then(res => {
+          this.getEquipment()
+          this.$message.success('删除成功');
         })
-        this.$message.success('删除成功');
       },
       //编辑
       handleEdit(row, index) {
-        this.visible = row;
+        this.visible = {
+          name: row.name,
+          remark: row.remark
+        };
         this.editVisible = true;
-        this.index = index;
-        this.cancelvisible = serialize(row);
+        this.idx = row.id;
       },
       //确认编辑
       saveEdit() {
         this.editVisible = false;
-        // this.visible.update_time = ;
-        this.$set(this.tableData, this.index, this.visible);
+
+        this.ajax({
+          name: 'editProduct',
+          data: this.visible,
+          id: this.idx
+        }).then(res => {
+          this.$message.success('编辑完成');
+          this.getEquipment()
+        })
       },
       cancelEdit() {
         this.editVisible = false;
-        this.$set(this.tableData, this.index, this.cancelvisible);
       },
       handleselect(row, index) {
         this.$router.push({ name: 'Firmware' });

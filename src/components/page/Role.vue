@@ -1,10 +1,12 @@
 <template>
   <div class="table">
     <div class="crumbs">
-      <el-breadcrumb separator="/">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i> 角色管理</el-breadcrumb-item>
+          <i class="el-icon-tickets"></i>权限管理</el-breadcrumb-item>
+        <el-breadcrumb-item>角色管理</el-breadcrumb-item>
       </el-breadcrumb>
+
     </div>
     <div class="container">
       <div class="handle-box">

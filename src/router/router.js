@@ -79,6 +79,12 @@ const routes = [
                 path: '/permission',
                 component: resolve => require(['../components/page/Permission.vue'], resolve),
                 meta: { title: '权限测试', permission: true }
+            },
+            {
+                // 权限页面
+                path: '/ExportExcel',
+                component: resolve => require(['../components/page/ExportExcel.vue'], resolve),
+                meta: { title: '导出Excel', permission: true }
             }
         ]
     },

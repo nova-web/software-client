@@ -53,6 +53,11 @@
             icon: 'el-icon-tickets',
             index: 'upload',
             title: '文件上传'
+          },
+          {
+            icon: 'el-icon-tickets',
+            index: 'ExportExcel',
+            title: '导出Excel'
           }
         ]
       }

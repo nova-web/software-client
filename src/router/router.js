@@ -1,7 +1,7 @@
 const routes = [
     {
         path: '/',
-        redirect: '/download'
+        redirect: '/product'
     },
     {
         path: '/',
@@ -14,9 +14,9 @@ const routes = [
                 meta: { title: '用户管理', keepAlive: false }
             },
             {
-                path: '/download',
-                component: resolve => require(['../components/page/Download.vue'], resolve),
-                meta: { title: '视频产品线', keepAlive: false }
+                path: '/product',
+                component: resolve => require(['../components/page/product.vue'], resolve),
+                meta: { title: '产品管理', keepAlive: false }
             },
             {
                 path: '/Role',

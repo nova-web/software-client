@@ -21,7 +21,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="角色">
-            <el-select v-model="userSearch.roles">
+            <el-select v-model="userSearch.roleId" clearable>
               <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
@@ -30,7 +30,7 @@
             <el-input v-model="userSearch.username"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">搜索</el-button>
+            <el-button type="primary" @click="search">搜索</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -55,7 +55,7 @@
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
             <el-button size="small" @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
+            <el-button :disabled="!scope.row.isButtonShow" size="small" type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -66,7 +66,7 @@
     </div>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="editUser" :model="editUser" label-width="80px">
+      <el-form ref="editUser" :model="editUser" label-width="80px" :rules="addUserRule">
 
         <el-form-item label="用户名称">
           <el-input v-model="editUser.username"></el-input>
@@ -89,10 +89,10 @@
         <el-form-item label="备注">
           <el-input v-model="editUser.remark"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话">
+        <el-form-item label="联系电话" prop="phone">
           <el-input v-model="editUser.phone"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱">
+        <el-form-item label="邮箱" prop="email">
           <el-input v-model="editUser.email"></el-input>
         </el-form-item>
       </el-form>
@@ -115,7 +115,7 @@
     <el-dialog title="新增用户" :visible.sync="addVisible" width="30%">
       <el-form :model="addUser" label-width="80px" ref="adduser" :rules="addUserRule" class="demo-ruleForm">
         <el-form-item label="角色">
-          <el-select v-model="addUser.operator" placeholder="请选择角色" multiple collapse-tags>
+          <el-select v-model="addUser.roles" placeholder="请选择角色" multiple collapse-tags>
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -126,10 +126,10 @@
         <el-form-item label="密码">
           <el-input v-model="addUser.password"></el-input>
         </el-form-item>
-        <el-form-item label="联系方式">
-          <el-input v-model="addUser.phone"></el-input>
+        <el-form-item label="联系方式" prop="phone">
+          <el-input v-model.number="addUser.phone" maxlength="11" minlength="7"></el-input>
         </el-form-item>
-        <el-form-item label="电子邮箱">
+        <el-form-item label="电子邮箱" prop="email">
           <el-input v-model="addUser.email"></el-input>
         </el-form-item>
         <el-form-item label="备注">
@@ -150,6 +150,23 @@
   export default {
     name: 'user',
     data() {
+      var checkPhone = (rule, value, callback) => {
+        const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/
+        if(!value) {
+          return callback(new Error('电话号码不能为空'))
+        }
+        setTimeout(() => {
+          if(!Number.isInteger(+value)) {
+            callback(new Error('请输入数字值'))
+          } else {
+            if(phoneReg.test(value)) {
+              callback()
+            } else {
+              callback(new Error('电话号码格式不正确'))
+            }
+          }
+        }, 100)
+      }
       return {
         count: 0,
         UserList: [],
@@ -160,7 +177,7 @@
         },
         addVisible: false,
         addUser: {
-          operator: [],
+          roles: [],
           username: '',
           password: '',
           phone: '',
@@ -169,14 +186,15 @@
         },
         addUserRule: {
           phone: [
-            { required: true, trigger: 'blur', message: '联系方式格式不正确' },
+            { validator: checkPhone, trigger: 'blur' }
           ],
           email: [
-            { required: true, trigger: 'blur', message: '邮箱格式不正确' }
+            { message: '请输入邮箱地址', trigger: 'blur' },
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
           ]
         },
         newAddUser: {
-          operator: [],
+          roles: [],
           username: '',
           password: '',
           phone: '',
@@ -192,10 +210,6 @@
           {
             value: 1,
             label: '有效'
-          },
-          {
-            value: 2,
-            label: '删除'
           }
         ],
         editVisible: false,
@@ -207,7 +221,9 @@
         RoleID: Number,
         cur_page: 1,
         multipleSelection: [],
-        userSearch: {}
+        userSearch: {
+          status: 1
+        }
       }
     },
     created() {
@@ -228,15 +244,20 @@
         let count = (d - 1) * 10 === 0 ? 1 : (d - 1) * 10;
         this.ajax({
           name: 'getUsers',
-          data: { pageNum: this.cur_page }
+          data: {
+            pageNum: this.cur_page,
+            ...this.userSearch
+          }
         }).then(res => {
           res.rows.forEach((item, index) => {
             switch(item.status) {
               case 0:
-                item.Status = '无效'
+                item.Status = '无效';
+                item.isButtonShow = true;
                 break;
               case 1:
-                item.Status = '有效'
+                item.Status = '有效';
+                item.isButtonShow = false;
                 break;
               case 2:
                 item.Status = '删除'
@@ -246,7 +267,7 @@
             }
             let str = '';
             item.roles.forEach((item, index) => {
-              str += item.name + ' ,'
+              str += item.name + ','
             });
             item.roleName = str.substr(0, str.length - 1);;
             item.index = count++;
@@ -342,6 +363,10 @@
           this.$message.success('删除成功');
           this.getUsers();
         });
+      },
+      //搜索
+      search() {
+        this.getUsers();
       }
       // delAll() {
       //   const length = this.multipleSelection.length;

@@ -4,9 +4,9 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>
           <i class="el-icon-tickets"></i>产品管理</el-breadcrumb-item>
-        <el-breadcrumb-item>
+        <!-- <el-breadcrumb-item>
           视频产品线
-        </el-breadcrumb-item>
+        </el-breadcrumb-item> -->
       </el-breadcrumb>
     </div>
     <div class="container">
@@ -14,17 +14,27 @@
         <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
         <el-button type="primary" icon="search" @click="addVisible">新增设备</el-button>
       </div>
-      <el-table :data="tableData" border height="550" style="width: 100%">
+      <el-table :data="tableData" border height="550" style="width: 100%" :cell-style="cellStyle">
         <el-table-column width="60px" fixed="left" prop="num" label="序号"></el-table-column>
-        <el-table-column width="200px" prop="name" label="设备名称"></el-table-column>
-        <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column width="200px" prop="create_time" label="创建时间"></el-table-column>
-        <el-table-column width="200px" prop="update_time" label="更新时间"></el-table-column>
-        <el-table-column fixed="right" label="操作">
+        <el-table-column label="产品名称">
           <template slot-scope="scope">
-            <el-button @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
-            <el-button type="success" @click="handleselect(scope.row, scope.$index)">查看固件包</el-button>
-            <el-button type="success" @click="handleselectdevice(scope.row, scope.$index)">查看设备</el-button>
+            <div @click="handleselect(scope.row, scope.$index)" class="active">
+              <span>{{scope.row.name}}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="产品类型"></el-table-column>
+        <el-table-column prop="create_time" label="最新版本"></el-table-column>
+        <el-table-column width="60px" prop="update_time" label="状态"></el-table-column>
+        <el-table-column prop="update_time" label="产品阶段"></el-table-column>
+        <el-table-column prop="update_time" label="所属业务区域"></el-table-column>
+        <el-table-column prop="update_time" label="所属产品线"></el-table-column>
+        <el-table-column prop="update_time" label="更新时间"></el-table-column>
+        <el-table-column width="300px" fixed="right" label="操作">
+          <template slot-scope="scope">
+            <el-button @click="handleEdit(scope.row, scope.$index)">修改</el-button>
+            <el-button type="success" @click="handleselect(scope.row, scope.$index)">试用</el-button>
+            <el-button type="success" @click="handleselectdevice(scope.row, scope.$index)">发布</el-button>
             <el-button type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
           </template>
         </el-table-column>
@@ -68,11 +78,10 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
   </div>
 </template>
 <script>
-  import { mapActions } from 'vuex';
+  import { mapActions, mapMutations } from 'vuex';
   import { serialize } from '../../utils';
   export default {
     data() {
@@ -99,6 +108,7 @@
     },
     methods: {
       ...mapActions(['ajax']),
+      ...mapMutations(['setProductId']),
       //获取产品列表
       getEquipment() {
         this.ajax({
@@ -167,7 +177,18 @@
         this.editVisible = false;
       },
       handleselect(row, index) {
-        this.$router.push({ name: 'Firmware' });
+        console.log(row);
+        this.setProductId(row.id);
+        setTimeout(() => {
+          this.$router.push({ name: 'Firmware' });
+        }, 100)
+      },
+      cellStyle({ row, column, rowIndex, columnIndex }) {
+        if(columnIndex == 1) {
+          return '';
+        } else {
+          return '';
+        }
       }
     }
   }
@@ -194,5 +215,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .active {
+    text-decoration: underline;
+    color: blue;
+    padding: none;
+  }
+  .active:active {
+  }
+  .active:hover {
+    cursor: pointer;
   }
 </style>

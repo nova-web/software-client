@@ -31,22 +31,22 @@
         items: [
           {
             icon: 'el-icon-setting',
-            index: '1',
+            index: 'product',
             title: '产品管理',
-            subs: [
-              {
-                index: 'download',
-                title: '视频产品线'
-              },
-              {
-                index: '',
-                title: '同步产品线'
-              },
-              {
-                index: '',
-                title: '云显产品线'
-              }
-            ]
+            // subs: [
+            //   {
+            //     index: 'download',
+            //     title: '视频产品线'
+            //   },
+            //   {
+            //     index: '',
+            //     title: '同步产品线'
+            //   },
+            //   {
+            //     index: '',
+            //     title: '云显产品线'
+            //   }
+            // ]
           },
           {
             icon: 'el-icon-setting',

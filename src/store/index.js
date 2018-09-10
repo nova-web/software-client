@@ -12,12 +12,14 @@ export default new Vuex.Store({
             session: ''
         },
         cacheData: getSen('cacheData') || {},
-        lang: getLoc('lang') || 'zh'
+        lang: getLoc('lang') || 'zh',
+        productId: getSen('productId') || null
     },
     getters: {
         getCommon: state => state.common,
         getCacheData: state => serialize(state.cacheData),
-        getLang: state => state.lang
+        getLang: state => state.lang,
+        getproductId: state => state.productId
     },
     mutations: {
         setCommon(state, data) {
@@ -31,6 +33,10 @@ export default new Vuex.Store({
         setLang(state, data) {
             state.lang = data;
             setLoc('lang', data);
+        },
+        setProductId(state, data) {
+            state.productId = data;
+            setSen('productId', data);
         }
     },
     actions: {

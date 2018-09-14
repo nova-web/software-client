@@ -9,7 +9,6 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
         <el-button type="primary" icon="search" @click="addUsers">新增用户</el-button>
       </div>
       <div class="search-box">
@@ -35,7 +34,6 @@
         </el-form>
       </div>
       <el-table :data="UserList" border style="width: 100%;" ref="multipleTable" height="542">
-        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column prop="index" label="序号" sortable width="80">
         </el-table-column>
         <el-table-column prop="username" label="用户名称" width="120">

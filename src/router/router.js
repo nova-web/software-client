@@ -24,6 +24,11 @@ const routes = [
                 meta: { title: '角色管理', keepAlive: false }
             },
             {
+                path: '/alc',
+                component: resolve => require(['../components/page/alc.vue'], resolve),
+                meta: { title: '功能管理', keepAlive: false }
+            },
+            {
                 name: 'Firmware',
                 path: '/Firmware',
                 component: resolve => require(['../components/page/Firmware.vue'], resolve),

@@ -7,13 +7,13 @@
             <template slot="title">
               <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
             </template>
-            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
+            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index" class="active">
               <i :class="subItem.icon"></i> {{ subItem.title }}
             </el-menu-item>
           </el-submenu>
         </template>
         <template v-else>
-          <el-menu-item :index="item.index" :key="item.index">
+          <el-menu-item :index="item.index" :key="item.index" class="active">
             <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </template>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import bus from '../common/bus';
+  import bus from './bus';
   export default {
     data() {
       return {
@@ -62,7 +62,7 @@
                 title: '用户管理'
               },
               {
-                index: '',
+                index: 'alc',
                 title: '功能管理'
               }
             ]
@@ -107,7 +107,7 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
   .sidebar {
     display: block;
     position: absolute;
@@ -115,6 +115,11 @@
     top: 70px;
     bottom: 0;
     overflow-y: scroll;
+    .sidebar-el-menu {
+      .el-menu-item:active {
+        background: rgba(0, 0, 0, 0.6);
+      }
+    }
   }
   .sidebar::-webkit-scrollbar {
     width: 0;

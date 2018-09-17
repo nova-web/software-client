@@ -64,7 +64,7 @@
     </div>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="editUser" :model="editUser" label-width="80px" :rules="addUserRule">
+      <el-form ref="editUser" :model="editUser" label-width="80px" :rules="UserRule">
 
         <el-form-item label="用户名称">
           <el-input v-model="editUser.username"></el-input>
@@ -111,60 +111,17 @@
 
     <!-- 新增用户 -->
     <el-dialog title="新增用户" :visible.sync="addVisible" width="30%">
-      <el-form :model="addUser" label-width="80px" ref="adduser" :rules="addUserRule" class="demo-ruleForm">
-        <el-form-item label="角色">
-          <el-select v-model="addUser.roles" placeholder="请选择角色" multiple collapse-tags>
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="用户名">
-          <el-input v-model="addUser.username"></el-input>
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="addUser.password"></el-input>
-        </el-form-item>
-        <el-form-item label="联系方式" prop="phone">
-          <el-input v-model.number="addUser.phone" maxlength="11" minlength="7"></el-input>
-        </el-form-item>
-        <el-form-item label="电子邮箱" prop="email">
-          <el-input v-model="addUser.email"></el-input>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="addUser.remark"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="()=>{addVisible=false;addUser = Object.assign({}, newAddUser);}">取 消</el-button>
-        <el-button type="primary" @click="saveAdd">确 定</el-button>
-      </div>
+      <ve-from-model @cancel="cancelAddUser" :User="addUser" :UserRule="UserRule" @save="saveAdd"></ve-from-model>
     </el-dialog>
   </div>
 </template>
 <script>
   import { mapActions } from 'vuex';
   import { getNowFormatDate } from '../../utils';
-
+  import { checkPhone, checkUsername } from '../../utils/rules';
   export default {
     name: 'user',
     data() {
-      var checkPhone = (rule, value, callback) => {
-        const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/
-        if(!value) {
-          return callback(new Error('电话号码不能为空'))
-        }
-        setTimeout(() => {
-          if(!Number.isInteger(+value)) {
-            callback(new Error('请输入数字值'))
-          } else {
-            if(phoneReg.test(value)) {
-              callback()
-            } else {
-              callback(new Error('电话号码格式不正确'))
-            }
-          }
-        }, 100)
-      }
       return {
         count: 0,
         UserList: [],
@@ -180,15 +137,18 @@
           password: '',
           phone: '',
           email: '',
-          remark: ''
+          remark: '',
+          workNumber: '',
+          name: ''
         },
-        addUserRule: {
+        UserRule: {
+          username: [{ validator: checkUsername, trigger: 'blur' }],
           phone: [
             { validator: checkPhone, trigger: 'blur' }
           ],
           email: [
             { message: '请输入邮箱地址', trigger: 'blur' },
-            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+            { type: 'email', message: '请按正确的邮箱格式输入', trigger: ['blur', 'change'] }
           ]
         },
         newAddUser: {
@@ -227,7 +187,6 @@
     created() {
       this.getUsers();
       this.getrole();
-
     },
     methods: {
       ...mapActions(['ajax']),
@@ -293,13 +252,19 @@
       },
       saveAdd() {
         this.addVisible = false;
-        this.ajax({
-          name: 'addUser',
-          data: this.addUser
-        }).then(res => {
-          this.getUsers();
-          this.addUser = Object.assign({}, this.newAddUser)
-        });
+        // this.ajax({
+        //   name: 'addUser',
+        //   data: this.addUser
+        // }).then(res => {
+        //   this.getUsers();
+        //   this.addUser = Object.assign({}, this.newAddUser)
+        // });
+        console.log(this.addUser);
+      },
+      //取消
+      cancelAddUser() {
+        this.addVisible = false;
+        this.addUser = Object.assign({}, this.newAddUser);
       },
       //编辑
       handleEdit(row, index) {

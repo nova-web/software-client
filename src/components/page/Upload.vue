@@ -110,7 +110,6 @@
       }
     },
     created() {
-      console.log(bus.name);
       this.cropImg = this.defaultSrc;
     }
   }

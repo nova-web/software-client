@@ -36,8 +36,10 @@
 </template>
 <script>
   import { treeToArray } from '../../utils'
+  import bus from '../common/bus';
   export default {
     created() {
+      console.log(bus.addUserRule);
     },
     data() {
       return {

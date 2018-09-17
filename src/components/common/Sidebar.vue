@@ -7,13 +7,13 @@
             <template slot="title">
               <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
             </template>
-            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index" class="active">
+            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
               <i :class="subItem.icon"></i> {{ subItem.title }}
             </el-menu-item>
           </el-submenu>
         </template>
         <template v-else>
-          <el-menu-item :index="item.index" :key="item.index" class="active">
+          <el-menu-item :index="item.index" :key="item.index">
             <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </template>
@@ -33,20 +33,20 @@
             icon: 'el-icon-setting',
             index: 'product',
             title: '产品管理',
-            // subs: [
-            //   {
-            //     index: 'download',
-            //     title: '视频产品线'
-            //   },
-            //   {
-            //     index: '',
-            //     title: '同步产品线'
-            //   },
-            //   {
-            //     index: '',
-            //     title: '云显产品线'
-            //   }
-            // ]
+            subs: [
+              {
+                index: '',
+                title: '产品列表'
+              },
+              {
+                index: '',
+                title: '版本列表'
+              }
+              // {
+              //   index: '',
+              //   title: '云显产品线'
+              // }
+            ]
           },
           {
             icon: 'el-icon-setting',
@@ -78,11 +78,11 @@
               }
             ]
           },
-          {
-            icon: 'el-icon-tickets',
-            index: 'upload',
-            title: '文件上传'
-          },
+          // {
+          //   icon: 'el-icon-tickets',
+          //   index: 'upload',
+          //   title: '文件上传'
+          // },
           {
             icon: 'el-icon-tickets',
             index: 'Statistics',
@@ -129,5 +129,10 @@
   }
   .sidebar > ul {
     height: 100%;
+  }
+  //点击后样式覆盖
+  .el-menu-item.is-active {
+    border-left: 3px solid rgb(32, 160, 255);
+    background: rgba(0, 0, 0, 0.6) !important;
   }
 </style>

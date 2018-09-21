@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex';
+  import { mapActions, mapMutations } from 'vuex';
   export default {
     data: function() {
       return {
@@ -39,13 +39,14 @@
     },
     methods: {
       ...mapActions(['ajax']),
+      ...mapMutations(['setCommon']),
       postLogin() {
         this.ajax({
           name: 'postLogin',
           data: this.ruleForm
         }).then(res => {
-          console.log(res);
           localStorage.setItem('ms_username', this.ruleForm.username);
+          this.setCommon({ token: res.token })
           this.$router.push({ path: "/" });
         });
       },

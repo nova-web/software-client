@@ -39,15 +39,16 @@
     },
     methods: {
       ...mapActions(['ajax']),
-      ...mapMutations(['setCommon']),
+      ...mapMutations(['setCommon', 'setUserName']),
       postLogin() {
         this.ajax({
           name: 'postLogin',
           data: this.ruleForm
         }).then(res => {
-          localStorage.setItem('ms_username', this.ruleForm.username);
+          this.setUserName(res.username);
           this.setCommon({ token: res.token })
           this.$router.push({ path: "/" });
+
         });
       },
       getUser() {

@@ -14,19 +14,25 @@
       <div class="search-box">
         <el-form ref="search" :model="userSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态">
-            <el-select v-model="userSearch.status">
+            <el-select v-model="userSearch.status" @change="search">
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="角色">
-            <el-select v-model="userSearch.roleId" clearable>
+            <el-select v-model="userSearch.roleId" clearable @change="search">
               <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="用户名称">
-            <el-input v-model="userSearch.username"></el-input>
+            <el-input v-model="userSearch.username" @change="search"></el-input>
+          </el-form-item>
+          <el-form-item label="工号">
+            <el-input v-model="userSearch.code" @change="search"></el-input>
+          </el-form-item>
+          <el-form-item label="真实姓名">
+            <el-input v-model="userSearch.name" @change="search"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -53,7 +59,9 @@
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
             <el-button size="small" @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
-            <el-button :disabled="!scope.row.isButtonShow" size="small" type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
+            <el-button v-show="scope.row.isButtonShow" size="small" type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
+            <el-button v-show="scope.row.isButtonShow" @click="handleEffective(scope.row, scope.$index)" size="small">置为有效</el-button>
+            <el-button v-show="!scope.row.isButtonShow" @click="handleInvalid(scope.row, scope.$index)" size="small">置为无效</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -111,7 +119,7 @@
 
     <!-- 新增用户 -->
     <el-dialog title="新增用户" :visible.sync="addVisible" width="30%">
-      <ve-from-model @cancel="cancelAddUser" :User="addUser" :UserRule="UserRule" @save="saveAdd"></ve-from-model>
+      <ve-from-model :options='options' @cancel="cancelAddUser" :data="addUser" :UserRule="UserRule" @save="saveAdd('addUser')"></ve-from-model>
     </el-dialog>
   </div>
 </template>
@@ -142,7 +150,16 @@
           name: ''
         },
         UserRule: {
-          username: [{ validator: checkUsername, trigger: 'blur' }],
+          username: [
+            { required: true, validator: checkUsername, trigger: 'blur' },
+            { required: true, trigger: 'blur', message: '用户名不能为空' }],
+          name: [
+            { validator: checkUsername, trigger: 'blur' },
+            { required: true, message: '真实姓名不能为空', trigger: 'blur' }],
+          code: [{ validator: checkUsername, trigger: 'blur' }],
+          password: [
+            { max: 30, trigger: 'blur' },
+            { required: true, trigger: 'blur', message: '密码不可为空' }],
           phone: [
             { validator: checkPhone, trigger: 'blur' }
           ],
@@ -238,7 +255,7 @@
         this.ajax({
           name: 'getRoles'
         }).then(res => {
-          res.forEach(item => {
+          res.rows.forEach(item => {
             let obj = {}
             obj.value = item.id;
             obj.label = item.name;
@@ -250,18 +267,17 @@
       addUsers() {
         this.addVisible = true;
       },
-      saveAdd() {
+      saveAdd(ruleName) {
         this.addVisible = false;
-        // this.ajax({
-        //   name: 'addUser',
-        //   data: this.addUser
-        // }).then(res => {
-        //   this.getUsers();
-        //   this.addUser = Object.assign({}, this.newAddUser)
-        // });
-        console.log(this.addUser);
+        this.ajax({
+          name: 'addUser',
+          data: this.addUser
+        }).then(res => {
+          this.getUsers();
+          this.addUser = Object.assign({}, this.newAddUser)
+        });
       },
-      //取消
+      //取消 
       cancelAddUser() {
         this.addVisible = false;
         this.addUser = Object.assign({}, this.newAddUser);
@@ -330,6 +346,14 @@
       //搜索
       search() {
         this.getUsers();
+      },
+      //置为有效
+      handleEffective(row, index) {
+        console.log(row.status);
+      },
+      //置为无效
+      handleInvalid(row, index) {
+        console.log(row.status);
       }
       // delAll() {
       //   const length = this.multipleSelection.length;

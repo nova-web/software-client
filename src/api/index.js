@@ -99,15 +99,7 @@ function checkStatus(resolve, reject, response, config) {
             resolve(response.data.data);
         } else {
             if (!config.error) {
-                if (isArray(response.data.errorMsg)) {
-                    response.data.errorMsg.forEach((item, index) => {
-                        tipStr += item + ',';
-                    });
-                    tipStr = tipStr.substr(0, tipStr.length - 1);
-                    Message(tipStr);
-                } else {
-                    Message(response.data.errorMsg);
-                }
+                Message(response.data.errorMsg);
             }
             reject(response.data);
         }

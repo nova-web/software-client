@@ -10,6 +10,16 @@ let api = {
     deleteRole: { url: 'roles/:id', method: 'delete' },
     addRole: { url: 'roles', method: 'post' },
     editRole: { url: 'roles/:id', method: 'put' },
+    setRoleStatus: { url: 'setRoleStatus', method: 'post' },
+    acls: { url: 'acls', method: 'get' },
+    setAuthorize: { url: 'setAuthorize', method: 'post' },
+    //权限
+    getRoleAcls: { url: 'getRoleAcls', method: 'get' },
+    getAcls: { url: 'acls', method: 'get' },
+    putAcls: { url: 'acls/:id', method: 'put' },
+    postAclsParent: { url: 'acls', method: 'post' },
+    setAclStatus: { url: 'setAclStatus', method: 'post' },
+    delectAcls: { url: 'acls/:id', method: 'delete' },
     //产品
     getProduct: { url: 'products' },
     postProduct: { url: 'products', method: 'post' },

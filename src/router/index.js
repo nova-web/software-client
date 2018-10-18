@@ -11,9 +11,9 @@ const router = new Router({
 });
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
-    const role = localStorage.getItem('ms_username');
+    const userName = store.getters.getUsername;
     const token = store.getters.getCommon.token;
-    if (!role && to.path !== '/login' && !token) {
+    if (!userName && to.path !== '/login' && !token) {
         next('/login');
     } else {
         next();

@@ -13,28 +13,59 @@
         <el-button type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
         <!-- <el-button type="primary" icon="search" @click="deleteRole" :disabled="disabled">删除角色</el-button> -->
       </div>
-      <el-table :data="RoleList" border style="width: 100%" ref="multipleTable" height="550">
-        <el-table-column prop="num" label="序号" width="180">
+      <div class="search-box">
+        <el-form ref="search" :model="roleSearch" class="demo-form-inline" :inline="true">
+          <el-form-item label="状态">
+            <el-select v-model="roleSearch.status" @change="search">
+              <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="角色名称">
+            <el-input v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索"></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="search">搜索</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table :data="RoleList" border style="width: 100%" ref="multipleTable" height="550" fit>
+        <el-table-column prop="num" label="序号" width="60">
         </el-table-column>
-        <el-table-column prop="name" label="名称" width="240">
+        <el-table-column prop="name" label="角色名称">
         </el-table-column>
-        <el-table-column prop="remark" label="备注" width="240">
+        <el-table-column prop="remark" label="备注">
         </el-table-column>
-        <el-table-column prop="operator" label="操作" width="240">
+        <el-table-column prop="Status" label="状态">
         </el-table-column>
-        <el-table-column prop="update_time" label="更新时间">
+
+        <el-table-column prop="updatedAt" label="更新时间">
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="310">
           <template slot-scope="scope">
-            <el-button size="small" @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
+            <el-button size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
+            <el-button size="small" @click="handleSetAuthorize(scope.row, scope.$index)">授权</el-button>
+            <el-button v-show="scope.row.isButtonShow" size="small" type="danger" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
+            <el-button v-show="!scope.row.isButtonShow" size="small" @click="handleEffective(scope.row, scope.$index)">置为有效</el-button>
+            <el-button v-show="!scope.row.isButtonShow" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <!-- 授权对话框 -->
+    <el-dialog title="授权" :visible.sync="showAcls" center width="30%">
+      <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="true" :expand-on-click-node="true">
+      </el-tree>
+      <div class="buttons">
+        <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
+        <el-button type="primary" @click="getCheckedKeys">确定</el-button>
+      </div>
+    </el-dialog>
     <!-- 新增对话框 -->
     <el-dialog title="新增角色" :visible.sync="addVisible" center width="30%">
-      <el-form :model="addRole">
+      <el-form :model="addRole" label-width="80px">
         <div>
           <el-form-item label="角色名称">
             <el-input v-model="addRole.name" placeholder="请输入角色名"></el-input>
@@ -43,8 +74,6 @@
             <el-input v-model="addRole.remark" placeholder="请输入备注"></el-input>
           </el-form-item>
         </div>
-        <el-form-item label="权限管理">
-        </el-form-item>
         <el-form-item class="btn">
           <el-button type="primary" @click="addVisible=false">取消</el-button>
           <el-button @click="saveAdd">确定</el-button>
@@ -53,7 +82,7 @@
     </el-dialog>
     <!-- 编辑对话框 -->
     <el-dialog title="修改角色" :visible.sync="editVisible" center width="30%">
-      <el-form :model="editRole">
+      <el-form :model="editRole" label-width="80px">
         <div>
           <el-form-item label="角色名称">
             <el-input v-model="editRole.name" placeholder="请输入角色名"></el-input>
@@ -62,20 +91,18 @@
             <el-input v-model="editRole.remark" placeholder="请输入备注"></el-input>
           </el-form-item>
         </div>
-        <el-form-item label="权限管理">
-        </el-form-item>
         <el-form-item class="btn">
-          <el-button type="primary" @click="editVisible=false">取消</el-button>
+          <el-button type="primary" @click="editVisible=false;">取消</el-button>
           <el-button @click="saveEdit">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
-    <!-- 删除提示框 -->
-    <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
-      <div class="del-dialog-cnt">删除不可恢复，收确定删除？</div>
+    <!-- 删除对话框 -->
+    <el-dialog title="提示" :visible.sync="deleteRoleVisible" width="300px" center>
+      <div class="del-dialog-cnt">删除角色{{roleName}}，是否确定？</div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="delVisible=false">取 消</el-button>
-        <el-button type="primary" @click="deleteRole">确 定</el-button>
+        <el-button @click="deleteRoleVisible=false">取 消</el-button>
+        <el-button type="primary" @click="handleDeleteRoles">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -87,6 +114,7 @@
   export default {
     data() {
       return {
+        roleName: String,
         disabled: false,
         RoleList: [],
         editRoleRow: {
@@ -99,23 +127,103 @@
         editRole: {},
         idx: -1,
         delVisible: false,
-        delIndex: Number
+        delIndex: Number,
+        //角色搜索
+        roleSearch: {
+          status: 1
+        },
+        //状态
+        status: [
+          {
+            value: 0,
+            label: '无效'
+          },
+          {
+            value: 1,
+            label: '有效'
+          }
+        ],
+        showAcls: false, //权限树对话框
+        aclsTree: [], //权限树
+        effectiveVisible: false, //置为无效对话框
+        deleteRoleVisible: false //删除对话框
       };
     },
     created() {
       this.getRoles();
+      this.getAcls();
     },
     methods: {
       ...mapActions(['ajax']),
+      //获取角色列表
       getRoles() {
         this.ajax({
-          name: 'getRoles'
+          name: 'getRoles',
+          data: { ...this.roleSearch }
         }).then(res => {
-          res.forEach((item, index) => {
+          res.rows.forEach((item, index) => {
+            switch(item.status) {
+              case 0:
+                item.Status = '无效';
+                item.isButtonShow = false;
+                break;
+              case 1:
+                item.Status = '有效';
+                item.isButtonShow = true;
+                break;
+              case 2:
+                item.Status = '删除'
+                break;
+              default:
+                break;
+            }
             item.num = index + 1;
           });
-          this.RoleList = res;
+          this.RoleList = res.rows;
         });
+      },
+      //获取权限数
+      getAcls() {
+        this.ajax({
+          name: 'acls'
+        }).then(res => {
+          this.aclsTree = this.pageAclsTree(res);
+        })
+      },
+      //配置权限树
+      pageAclsTree(data) {
+        data.forEach(item => {
+          item.label = item.name;
+          if(item.children) {
+            this.pageAclsTree(item.children);
+          }
+        });
+        return data;
+      },
+      //授权方法
+      getCheckedKeys() {
+        let aclsArr = this.$refs.tree.getCheckedKeys();
+        this.ajax({
+          name: 'setAuthorize',
+          data: { id: this.idx, acls: aclsArr }
+        }).then(res => {
+          if(res.status === 1) {
+            this.showAcls = false;
+            this.$message.success('操作成功');
+          }
+        })
+
+      },
+      handleSetAuthorize(row, index) {
+        this.idx = row.id;
+        this.showAcls = true;
+        this.ajax({
+          name: 'getRoleAcls',
+          data: { id: this.idx }
+        }).then(res => {
+          this.$refs.tree.setCheckedKeys(res);
+        });
+
       },
       // 新增
       saveAdd() {
@@ -124,6 +232,7 @@
           name: 'addRole',
           data: this.addRole
         }).then(res => {
+          this.$message.success('操作成功');
           this.getRoles();
         });
       },
@@ -147,28 +256,57 @@
           this.getRoles();
         });
       },
-      // 删除
-      handleDelete(row, index) {
-        this.idx = row.id;
-        this.delVisible = true;
-        this.delIndex = index;
+      // 置为无效
+      deleteRole(row, index) {
+        this.ajax({
+          name: 'setRoleStatus',
+          data: { id: row.id, status: 0 }
+        }).then(res => {
+          this.$message.success('操作成功');
+          this.getRoles();
+        });
       },
-      // 确认删除
-      deleteRole() {
-        this.delVisible = false;
+      //置为有效
+      handleEffective(row, index) {
+        this.ajax({
+          name: 'setRoleStatus',
+          data: { id: row.id, status: 1 }
+        }).then(res => {
+          this.$message.success('操作成功');
+          this.getRoles();
+        });
+      },
+      //删除
+      handledeleteRole(row, index) {
+        this.deleteRoleVisible = true;
+        this.idx = row.id;
+        this.roleName = row.name;
+      },
+      handleDeleteRoles() {
+        this.deleteRoleVisible = false;
         this.ajax({
           name: 'deleteRole',
           id: this.idx
         }).then(res => {
-          this.$message.success('删除成功');
+          this.$message.success('操作成功');
           this.getRoles();
         });
+      },
+      //搜索
+      search() {
+        this.getRoles();
       }
     }
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+  .buttons {
+    width: 30%;
+    margin: auto;
+    display: flex;
+    justify-content: space-around;
+  }
   .handle-box {
     margin-bottom: 20px;
   }
@@ -184,5 +322,10 @@
   .del-dialog-cnt {
     font-size: 16px;
     text-align: center;
+  }
+  .search-box {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
   }
 </style>

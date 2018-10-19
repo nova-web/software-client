@@ -1,5 +1,6 @@
 let api = {
     postLogin: { url: 'login', method: 'post' },
+    getUserAclCodes: { url: 'getUserAclCodes', method: 'get' },
     // 用户
     getUsers: { url: 'users' },
     deleteUser: { url: 'users/:id', method: 'delete' },

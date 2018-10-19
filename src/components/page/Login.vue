@@ -12,7 +12,7 @@
         <div class="login-btn">
           <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
         </div>
-        <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名和密码随便填。</p>
+        <!-- <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名和密码随便填。</p> -->
       </el-form>
     </div>
   </div>
@@ -39,7 +39,7 @@
     },
     methods: {
       ...mapActions(['ajax']),
-      ...mapMutations(['setCommon', 'setUserName']),
+      ...mapMutations(['setCommon', 'setUserName', 'setAlcs']),
       postLogin() {
         this.ajax({
           name: 'postLogin',
@@ -47,17 +47,17 @@
         }).then(res => {
           this.setUserName(res.username);
           this.setCommon({ token: res.token })
+          // window.location.href = 'http://localhost:8080/#/  '
           this.$router.push({ path: "/" });
-
+          this.getUserAclCodes();
         });
       },
-      getUser() {
-        // htp.get('api/users').then(res => {
-        //     console.log(res);
-        //     if(res.status === 200) {
-
-        //     }
-        // })
+      getUserAclCodes() {
+        this.ajax({
+          name: 'getUserAclCodes'
+        }).then(res => {
+          this.setAlcs(res);
+        })
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {

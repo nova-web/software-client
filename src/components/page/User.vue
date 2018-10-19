@@ -215,7 +215,7 @@
       getUsers() {
         let d = this.cur_page; //当前页
         let m = 10; //每页显示条数
-        let count = (d - 1) * 10 === 0 ? 1 : (d - 1) * 10;
+        let count = (d - 1) * m + 1 === 0 ? 1 : (d - 1) * m + 1;
         this.ajax({
           name: 'getUsers',
           data: {
@@ -243,7 +243,7 @@
             item.roles.forEach((item, index) => {
               str += item.name + ','
             });
-            item.roleName = str.substr(0, str.length - 1);;
+            item.roleName = str.substr(0, str.length - 1);
             item.index = count++;
           });
           this.UserList = res.rows;

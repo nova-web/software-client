@@ -14,14 +14,16 @@ export default new Vuex.Store({
         cacheData: getSen('cacheData') || {},
         lang: getLoc('lang') || 'zh',
         productId: getSen('productId') || null,
-        userName: getLoc('userName') || null
+        userName: getLoc('userName') || null,
+        Alcs: getSen('Alcs') || {}
     },
     getters: {
         getCommon: state => state.common,
         getCacheData: state => serialize(state.cacheData),
         getLang: state => state.lang,
         getproductId: state => state.productId,
-        getUsername: state => state.userName
+        getUsername: state => state.userName,
+        getAlcs: state => state.Alcs
     },
     mutations: {
         setCommon(state, data) {
@@ -43,6 +45,10 @@ export default new Vuex.Store({
         setUserName(state, data) {
             state.userName = data;
             setLoc('userName', data);
+        },
+        setAlcs(state, data) {
+            state.Alcs = data;
+            setSen('Alcs', data);
         }
     },
     actions: {

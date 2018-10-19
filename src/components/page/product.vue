@@ -114,10 +114,11 @@
         this.ajax({
           name: 'getProduct'
         }).then(res => {
-          this.tableData = res;
-          this.tableData.forEach((item, index) => {
-            item.num = index + 1;
-          })
+          // console.log(res)
+          // this.tableData = res.rows;
+          // this.tableData.forEach((item, index) => {
+          //   item.num = index + 1;
+          // })
         });
       },
       //新增设备模态框

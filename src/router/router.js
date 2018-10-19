@@ -1,7 +1,10 @@
+import { serialize, getSen } from '../utils';
+import store from '../store';
+import router from '.';
 const routes = [
     {
         path: '/',
-        redirect: '/product'
+        redirect: '/index'
     },
     {
         path: '/',
@@ -9,35 +12,35 @@ const routes = [
         meta: { title: '自述文件' },
         children: [
             {
+                path: '/index',
+                component: resolve => require(['../components/page/Tabs.vue'], resolve),
+                meta: { title: '首页', keepAlive: false, code: '' }
+            },
+            {
                 path: '/user',
                 component: resolve => require(['../components/page/User.vue'], resolve),
-                meta: { title: '用户管理', keepAlive: false }
+                meta: { title: '用户管理', keepAlive: false, code: 'YHGL' }
             },
             {
                 path: '/product',
                 component: resolve => require(['../components/page/product.vue'], resolve),
-                meta: { title: '产品管理', keepAlive: false }
+                meta: { title: '产品管理', keepAlive: false, code: 'CPGL' }
             },
             {
                 path: '/Role',
                 component: resolve => require(['../components/page/Role.vue'], resolve),
-                meta: { title: '角色管理', keepAlive: false }
+                meta: { title: '角色管理', keepAlive: false, code: 'JSGL' }
             },
             {
                 path: '/alc',
                 component: resolve => require(['../components/page/alc.vue'], resolve),
-                meta: { title: '功能管理', keepAlive: false }
+                meta: { title: '功能管理', keepAlive: false, code: 'GNGL' }
             },
             {
                 name: 'Firmware',
                 path: '/Firmware',
                 component: resolve => require(['../components/page/Firmware.vue'], resolve),
-                meta: { title: '固件包', keepAlive: false }
-            },
-            {
-                path: '/tabs',
-                component: resolve => require(['../components/page/Tabs.vue'], resolve),
-                meta: { title: 'tab选项卡' }
+                meta: { title: '固件包', keepAlive: false, code: 'GJB' }
             }
         ]
     },
@@ -59,4 +62,50 @@ const routes = [
     }
 ];
 
+let routerArr = [
+    {
+        path: '/index',
+        component: resolve => require(['../components/page/index.vue'], resolve),
+        meta: { title: '首页', keepAlive: false, code: 'YHGL' }
+    },
+    {
+        path: '/user',
+        component: resolve => require(['../components/page/User.vue'], resolve),
+        meta: { title: '用户管理', keepAlive: false, code: 'YHGL' }
+    },
+    {
+        path: '/product',
+        component: resolve => require(['../components/page/product.vue'], resolve),
+        meta: { title: '产品管理', keepAlive: false, code: 'CPGL' }
+    },
+    {
+        path: '/Role',
+        component: resolve => require(['../components/page/Role.vue'], resolve),
+        meta: { title: '角色管理', keepAlive: false, code: 'JSGL' }
+    },
+    {
+        path: '/alc',
+        component: resolve => require(['../components/page/alc.vue'], resolve),
+        meta: { title: '功能管理', keepAlive: false, code: 'GNGL' }
+    },
+    {
+        name: 'Firmware',
+        path: '/Firmware',
+        component: resolve => require(['../components/page/Firmware.vue'], resolve),
+        meta: { title: '固件包', keepAlive: false, code: 'GJB' }
+    }
+];
+
+if (store.getters.getAlcs.length) {
+    routerArr = routerArr.filter(item => {
+        return store.getters.getAlcs.findIndex(alcs => alcs.code === item.meta.code) > -1;
+    });
+    routes.forEach(item => {
+        if (item.children) {
+            item.children = routerArr;
+        }
+    });
+}
+
+console.log(routes);
 export default routes;

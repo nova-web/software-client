@@ -53,6 +53,10 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination">
+        <el-pagination background @current-change="handleCurrentChange" :page-size="9" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
+        </el-pagination>
+      </div>
     </div>
     <!-- 授权对话框 -->
     <el-dialog title="授权" :visible.sync="showAcls" center width="30%">
@@ -114,6 +118,8 @@
   export default {
     data() {
       return {
+        cur_page: 1,
+        count: 0,
         roleName: String,
         disabled: false,
         RoleList: [],
@@ -150,17 +156,21 @@
       };
     },
     created() {
-      this.getRoles();
-      this.getAcls();
+      this.getRoles(); //获取权限表
+      this.getAcls();  //获取功能
     },
     methods: {
       ...mapActions(['ajax']),
       //获取角色列表
       getRoles() {
+        let d = this.cur_page; //当前页
+        let m = 10; //每页显示条数
+        let count = (parseInt(d) - 1) * m + 1 === 0 ? 1 : (parseInt(d) - 1) * m + 1;
         this.ajax({
           name: 'getRoles',
-          data: { ...this.roleSearch }
+          data: { pageNum: this.cur_page, ...this.roleSearch }
         }).then(res => {
+          console.log(res);
           res.rows.forEach((item, index) => {
             switch(item.status) {
               case 0:
@@ -177,10 +187,15 @@
               default:
                 break;
             }
-            item.num = index + 1;
+            item.num = count++;
           });
           this.RoleList = res.rows;
+          this.count = res.count;
         });
+      },
+      handleCurrentChange(val) {
+        this.cur_page = val;
+        this.getRoles()
       },
       //获取权限数
       getAcls() {

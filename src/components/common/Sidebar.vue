@@ -1,14 +1,22 @@
 <template>
   <div class="sidebar">
-    <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157" text-color="#bfcbd9" active-text-color="#20a0ff" :router="true">
+    <el-menu class="sidebar-el-menu" @close="close" @open="open" @select="select" :default-active="onRoutes" :collapse="collapse" background-color="#2f2f38" text-color="#fff" active-text-color="#43a3fb" :router="true">
+      <template>
+        <el-menu-item index="index">
+          <!-- <i class="el-icon-tickets"></i> -->
+          <span slot="title">首页</span>
+        </el-menu-item>
+      </template>
       <template v-for="item in items">
         <template v-if="item.subs">
           <el-submenu :index="item.index" :key="item.index" v-show="item.isShow">
             <template slot="title">
-              <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
+              <img class="checkImg" :src="item.preicon" alt="" v-if="item.isClose">
+              <img class="checkImg" :src="item.noicon" alt="" v-else>
+              <span slot="title">{{ item.title }}</span>
             </template>
-            <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index" v-show="subItem.isShow">
-              <i :class="subItem.icon"></i> {{ subItem.title }}
+            <el-menu-item class="rel" v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index" v-show="subItem.isShow">
+              <img class="imgs" src="../../assets/sidebar/icon_pressed.png" alt="" v-show="subItem.index == path"> {{ subItem.title }}
             </el-menu-item>
           </el-submenu>
         </template>
@@ -19,42 +27,51 @@
         </template>
       </template>
     </el-menu>
+
   </div>
+
 </template>
 
 <script>
   import bus from './bus';
-  import { getSen } from '../../utils';
+  import { getSen, setSen } from '../../utils';
   import { mapGetters } from 'vuex';
   export default {
     data() {
       return {
+        isOpen: "",
+        isClose: '',
+        path: '',
         collapse: false,
         routeArr: [],
         items: [
           {
-            icon: 'el-icon-setting',
+            isClose: false,
+            noicon: require('../../assets/sidebar/icon_product_normal.png'),
+            preicon: require('../../assets/sidebar/icon_product_pressed.png'),
             index: '1',
             title: '产品管理',
             isShow: false,
             code: 'CPGL',
             subs: [
               {
-                index: '',
+                index: 'product',
                 title: '产品列表',
                 isShow: false,
-                code: ''
+                code: 'CPLB'
               },
               {
-                index: '',
+                index: 'edition',
                 title: '版本列表',
                 isShow: false,
-                code: ''
+                code: 'BBLB'
               }
             ]
           },
           {
-            icon: 'el-icon-setting',
+            isClose: false,
+            noicon: require('../../assets/sidebar/icon_admin_normal.png'),
+            preicon: require('../../assets/sidebar/icon_admin_pressed.png'),
             index: '2',
             title: '权限管理',
             isShow: false,
@@ -81,7 +98,8 @@
             ]
           },
           {
-            icon: 'el-icon-setting',
+            noicon: require('../../assets/sidebar/icon_admin_normal.png'),
+            preicon: require('../../assets/sidebar/icon_admin_pressed.png'),
             index: '3',
             title: '系统管理',
             code: 'XTGL',
@@ -113,6 +131,9 @@
       }
     },
     created() {
+      this.getFathenIndex(this.onRoutes); //渲染icon
+
+      this.select(this.onRoutes); //渲染路由
       // 通过 Event Bus 进行组件间通信，来折叠侧边栏
       bus.$on('collapse', msg => {
         this.collapse = msg;
@@ -141,6 +162,41 @@
 
     },
     methods: {
+      select(index) {
+        this.path = index;
+      },
+      open(index) {
+
+        this.items.forEach(item => {
+          if(item.index == index) {
+            item.isClose = true;
+          }
+        });
+      },
+      close(index) {
+        this.items.forEach(item => {
+          if(item.index == index) {
+            item.isClose = false;
+          }
+        })
+      },
+      getFathenIndex(childIndex) {
+        let index;
+        this.items.forEach((i, ifi) => {
+
+          if(i.subs) {
+            i.subs.forEach((item, ins) => {
+              if(item.index == childIndex) {
+                index = ifi;
+              }
+            })
+          }
+        });
+        if(index || index === 0) {
+
+          this.open(this.items[index].index);
+        }
+      }
     }
   }
 </script>
@@ -169,8 +225,28 @@
     height: 100%;
   }
   //点击后样式覆盖
+
   .el-menu-item.is-active {
-    border-left: 3px solid rgb(32, 160, 255);
-    background: rgba(0, 0, 0, 0.6) !important;
+    background: #23232b !important;
+  }
+  .rel {
+    position: relative;
+    padding-left: 62px !important;
+    .imgs {
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
+  .checkImg {
+    margin-right: 10px;
+  }
+  .el-submenu.is-opened {
+    .el-submenu__title {
+      > span {
+        color: #43a3fb !important;
+      }
+    }
   }
 </style>

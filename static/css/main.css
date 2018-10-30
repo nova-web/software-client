@@ -118,7 +118,7 @@ a {
     height: 45px;
 }
 
-.el-upload--text {
+/* .el-upload--text {
     background-color: #fff;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -129,7 +129,7 @@ a {
     cursor: pointer;
     position: relative;
     overflow: hidden;
-}
+} */
 
 .el-upload--text .el-icon-upload {
     font-size: 67px;
@@ -171,4 +171,14 @@ a {
 /* active */
 .active:active {
     background: rgba(0, 0, 0, 0.6) !important;
+}
+
+.el-dialog__body {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+.el-dialog__title {
+    color: #000;
+    font-size: 16px;
+    font-weight: 800;
 }

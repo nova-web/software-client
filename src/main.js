@@ -4,7 +4,7 @@ import router from './router';
 import ElementUI from 'element-ui';
 import store from './store';
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
-// import '../static/css/theme-green/index.css';       // 浅绿色主题
+// import '../static/css/theme-green/index.css'; // 浅绿色主题
 import 'babel-polyfill';
 import Blob from './utils/Blob.js';
 import Export2Excel from './utils/Export2Excel.js';
@@ -14,6 +14,19 @@ Object.keys(components).forEach(key => {
     Vue.component(`ve${name}`, components[key]);
 });
 Vue.use(ElementUI, { size: 'small' });
+
+// Vue.directive('permissionButton', {
+//     bind: function(el, binding) {
+//         let flag = store.getters.getAlcs.some(item => {
+//             return binding.value === item.code;
+//         });
+//         if (flag) {
+//             el.style.display = '';
+//         } else {
+//             el.style.display = 'none';
+//         }
+//     }
+// });
 
 new Vue({
     router,

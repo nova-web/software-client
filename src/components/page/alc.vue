@@ -11,16 +11,17 @@
 
       </div>
       <div class="search-box">
-        <el-form :model="alcSearch" ref="search" class="demo-form-inline" :inline="true">
+
+        <el-form highlight-current-row @current-change="handleCurrentChange" :model="alcSearch" ref="search" class="demo-form-inline" :inline="true">
           <el-form-item label="状态">
-            <el-select v-model="alcSearch.status">
+            <el-select v-model="alcSearch.status" @change="search" clearable>
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="功能名称">
-            <el-input v-model="alcSearch.name" placeholder="按功能名称搜索"></el-input>
+            <el-input v-model="alcSearch.name" placeholder="按功能名称搜索" @input="search"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -29,12 +30,9 @@
         </el-form>
       </div>
       <div class="search-table">
-        <el-table :data="formatData" :row-style="showRow" v-bind="$attrs" border style="width: 100%" max-height="550">
+        <el-table ref="table" @current-change="handleCurrentChange" highlight-current-row :data="formatData" :row-style="showRow" v-bind="$attrs" border style="width: 100%" max-height="550">
 
-          <el-table-column label="序号" width="80">
-            <template slot-scope="scope">
-              <span>{{scope.$index}}</span>
-            </template>
+          <el-table-column type="index" width="50" label="序号">
           </el-table-column>
           <el-table-column width="100">
             <template slot-scope="scope">
@@ -62,16 +60,20 @@
           </el-table-column>
           <el-table-column label="描述" prop="remark">
           </el-table-column>
+          <el-table-column label="URL" prop="url">
+          </el-table-column>
+          <el-table-column label="CODE" prop="code">
+          </el-table-column>
           <el-table-column label="更新时间" prop="updatedAt">
           </el-table-column>
-          <el-table-column label="操作" width="500">
+          <el-table-column label="操作" width="330">
             <template slot-scope="scope">
-              <el-button @click="handelModify(scope.row)">修改</el-button>
-              <el-button @click="handleDelete(scope.row)" v-show="scope.row.status === 0">删除</el-button>
-              <el-button @click="handlePeerMenus(scope.row)">新增同级菜单</el-button>
-              <el-button @click="handleLowerLevelMenu(scope.row)">新增下级菜单</el-button>
-              <el-button @click="nullAndVoid(scope.row, scope.$index)" v-show="scope.row.status === 1">置为无效</el-button>
-              <el-button @click="setUpToBeValid(scope.row, scope.$index)" v-show="scope.row.status === 0">置为有效</el-button>
+              <el-button v-if="getAlcsObj.GNXG" type="text" @click="handelModify(scope.row)">修改</el-button>
+              <el-button v-if="getAlcsObj.GNSC" type="text" @click="handleDelete(scope.row)" v-show="scope.row.status === 0">删除</el-button>
+              <el-button v-if="getAlcsObj.GNXZ" type="text" @click="handlePeerMenus(scope.row)">新增同级菜单</el-button>
+              <el-button v-if="getAlcsObj.GNXZ" type="text" @click="handleLowerLevelMenu(scope.row)">新增下级菜单</el-button>
+              <el-button v-if="getAlcsObj.GNSZZT" type="text" @click="nullAndVoid(scope.row, scope.$index)" v-show="scope.row.status === 1">置为无效</el-button>
+              <el-button v-if="getAlcsObj.GNSZZT" type="text" @click="setUpToBeValid(scope.row, scope.$index)" v-show="scope.row.status === 0">置为有效</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -84,7 +86,7 @@
           <el-input v-model="editFunction.name"></el-input>
         </el-form-item>
         <el-form-item label="URL">
-          <el-input v-model="editFunction.password"></el-input>
+          <el-input v-model="editFunction.url"></el-input>
         </el-form-item>
         <el-form-item label="code">
           <el-input v-model="editFunction.code"></el-input>
@@ -152,7 +154,7 @@
 </template>
 <script>
   import { treeToArray, serialize } from '../../utils';
-  import { mapActions } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
   export default {
     data() {
       return {
@@ -160,11 +162,11 @@
         indexArr: [],
         status: [
           {
-            value: 0,
+            value: '0',
             label: '无效'
           },
           {
-            value: 1,
+            value: '1',
             label: '有效'
           }
         ],
@@ -177,9 +179,7 @@
         addLeaverModel: false,
         addLeaverObj: {},
         delVisible: false, //删除提示框
-        alcSearch: {
-          status: 1
-        },
+        currentRow: null,
         columns: {
           type: Array,
           default: () => []
@@ -192,6 +192,7 @@
     },
     created() {
       this.initData();
+
     },
     methods: {
       ...mapActions(['ajax']),
@@ -312,6 +313,10 @@
           this.initData();
         })
       },
+      handleCurrentChange(val) {
+
+        this.currentRow = val;
+      },
       //搜索
       search() {
         this.initData();
@@ -335,9 +340,20 @@
       // 图标显示
       iconShow(index, record) {
         return (index === 0 && record.children && record.children.length > 0)
+      },
+      //数组去重
+      uniq(array) {
+        var temp = []; //一个新的临时数组
+        for(var i = 0; i < array.length; i++) {
+          if(temp.indexOf(array[i]) == -1) {
+            temp.push(array[i]);
+          }
+        }
+        return temp;
       }
     },
     computed: {
+      ...mapGetters(['getAlcs', 'getAlcsObj']),
       formatData: function() {
         let tmp
         if(!Array.isArray(this.acls)) {
@@ -346,6 +362,74 @@
           tmp = this.acls
         }
         const func = treeToArray
+        let searchArr = [];
+        let childrenArrs = []
+        if(this.alcSearch.status || this.alcSearch.name) {
+          if(this.alcSearch.status) {
+            tmp.forEach(item => {
+              if(item.status == this.alcSearch.status) {
+                searchArr.push(item);
+                searchArr.forEach(item => {
+                  if(item.children) {
+                    item.children.forEach(items => {
+                      if(items.status == this.alcSearch.status) {
+                        childrenArrs.push(items);
+                      }
+                    })
+                  }
+                  item.children = serialize(childrenArrs);
+                  childrenArrs = [];
+                })
+              } else {
+                if(item.children) {
+                  item.children.forEach(itemChild => {
+                    if(itemChild.status == this.alcSearch.status) {
+                      searchArr.push(itemChild);
+                    }
+                  })
+                }
+              }
+
+            })
+            tmp = serialize(searchArr);
+
+            searchArr = [];
+          }
+          if(this.alcSearch.name) {
+            tmp.forEach(item => {
+              if(item.name == this.alcSearch.name) {
+                searchArr.push(item);
+              } else {
+                if(item.children) {
+                  item.children.forEach(itemChild => {
+                    if(itemChild.name == this.alcSearch.name) {
+                      searchArr.push(itemChild);
+                    }
+                  })
+                }
+              }
+            })
+            tmp = serialize(searchArr);
+            searchArr = [];
+          }
+          if(this.alcSearch.name && this.alcSearch.status) {
+            tmp.forEach(item => {
+              if(item.name == this.alcSearch.name && item.status == this.alcSearch.status) {
+                searchArr.push(item);
+              } else {
+                if(item.children) {
+                  item.children.forEach(itemChild => {
+                    if(itemChild.name == this.alcSearch.name && itemChild.status == this.alcSearch.status) {
+                      searchArr.push(itemChild);
+                    }
+                  })
+                }
+              }
+            })
+            tmp = serialize(searchArr);
+            searchArr = [];
+          }
+        }
         return func.apply(null, [tmp, this.expandAll.default])
       }
     }

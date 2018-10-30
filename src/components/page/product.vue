@@ -4,85 +4,205 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>
           <i class="el-icon-tickets"></i>产品管理</el-breadcrumb-item>
-        <!-- <el-breadcrumb-item>
-          视频产品线
-        </el-breadcrumb-item> -->
+        <el-breadcrumb-item>
+          产品列表
+        </el-breadcrumb-item>
+
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <!-- <el-button type="primary" icon="delete" class="handle-del mr10" @click="delAll">批量删除</el-button> -->
-        <el-button type="primary" icon="search" @click="addVisible">新增设备</el-button>
+        <el-button type="primary" icon="search" @click="addVisible">新增产品</el-button>
       </div>
-      <el-table :data="tableData" border height="550" style="width: 100%" :cell-style="cellStyle">
+
+      <div class="search-box">
+        <el-form ref="search" :model="productSearch" class="demo-form-inline" :inline="true">
+          <el-form-item label="状态">
+            <el-select clearable v-model="productSearch.publishStatus" @change="search">
+              <el-option v-for=" item in pro_status" :key="item.id" :value="item.code" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="产品类型">
+            <el-select clearable v-model="productSearch.type" @change="search">
+              <el-option v-for=" item in package" :key="item.id" :value="item.code" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="产品名称">
+            <el-input clearable v-model="productSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="search">搜索</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table :data="tableData" border height="531" style="width: 100%" :cell-style="cellStyle">
         <el-table-column width="60px" fixed="left" prop="num" label="序号"></el-table-column>
         <el-table-column label="产品名称">
           <template slot-scope="scope">
-            <div @click="handleselect(scope.row, scope.$index)" class="active">
+            <div class="active" @click="handleselect(scope.row, scope.$index)">
               <span>{{scope.row.name}}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="产品类型"></el-table-column>
-        <el-table-column prop="create_time" label="最新版本"></el-table-column>
-        <el-table-column width="60px" prop="update_time" label="状态"></el-table-column>
-        <el-table-column prop="update_time" label="产品阶段"></el-table-column>
-        <el-table-column prop="update_time" label="所属业务区域"></el-table-column>
-        <el-table-column prop="update_time" label="所属产品线"></el-table-column>
-        <el-table-column prop="update_time" label="更新时间"></el-table-column>
+        <el-table-column prop="model" label="产品型号"></el-table-column>
+        <el-table-column prop="type" label="产品类型"></el-table-column>
+        <el-table-column prop="version" label="最新版本"></el-table-column>
+        <el-table-column prop="publishStateName" label="状态"></el-table-column>
+        <el-table-column prop="stage" label="产品阶段"></el-table-column>
+        <el-table-column prop="area" label="所属业务区域"></el-table-column>
+        <el-table-column prop="dept" label="所属产品线"></el-table-column>
+        <el-table-column width="160" prop="updatedAt" label="更新时间"></el-table-column>
         <el-table-column width="300px" fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button @click="handleEdit(scope.row, scope.$index)">修改</el-button>
-            <el-button type="success" @click="handleselect(scope.row, scope.$index)">试用</el-button>
-            <el-button type="success" @click="handleselectdevice(scope.row, scope.$index)">发布</el-button>
-            <el-button type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
+            <el-button size="small" type="text" @click="handleEdit(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">修改</el-button>
+            <el-button size="small" type="text" @click="handleOnTrial(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">试用</el-button>
+            <el-button size="small" type="text" @click="handleselectdevice(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04' || scope.row.publishStatus === 'pro_status_02'">发布</el-button>
+            <el-button size="small" type="text" @click="handleDelete(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">删除</el-button>
+            <el-button size="small" type="text" @click="handleObtained(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_03'">下架</el-button>
+            <el-button size="small" type="text" @click="productWithdraw(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_02'">撤回</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination">
+        <el-pagination background @current-change="handleCurrentChange" :page-size="9" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
+        </el-pagination>
+      </div>
     </div>
     <!-- 删除对话框 -->
-    <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
-      <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="delVisible = false">取 消</el-button>
-                <el-button type="primary" @click="deleteRow">确 定</el-button>
-            </span>
+    <el-dialog title="提示" :visible.sync="delVisible" width="600px">
+      <div class="del-dialog-cnt">
+        <div class="ic">
+          <i class="el-icon-info icon-css"></i>
+        </div>
+        <div>删除不可恢复，是否确定删除？</div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="delVisible = false">取 消</el-button>
+        <el-button type="primary" @click="deleteRow">确 定</el-button>
+      </div>
     </el-dialog>
+    <!-- 发布对话框 -->
     <!-- 编辑对话框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" center width="30%">
-      <el-form ref="form" :model="visible" label-width="80px">
-        <el-form-item label="设备名称">
-          <el-input v-model="visible.name"></el-input>
+    <el-dialog title="编辑" :visible.sync="editProductModel" width="30%">
+
+      <el-form ref="editFrom" :model="editProduct" label-width="90px">
+        <el-form-item label="产品ID:">
+          <el-input v-model="editProduct.modelId"></el-input>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="visible.remark"></el-input>
+        <el-form-item label="产品名称:">
+          <el-input v-model="editProduct.name"></el-input>
         </el-form-item>
-        <el-form-item class="btn">
-          <el-button type="primary" @click="cancelEdit">取消</el-button>
-          <el-button @click="saveEdit">确定</el-button>
+        <el-form-item label="产品型号:">
+          <el-input v-model="editProduct.model"></el-input>
+        </el-form-item>
+        <el-form-item label="产品类型:">
+          <el-select class="inputs" clearable v-model="editProduct.type">
+            <el-option v-for=" item in package" :key="item.id" :value="item.code" :label="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="产品阶段:">
+          <el-select class="inputs" clearable v-model="editProduct.stage">
+            <el-option v-for="item in editStage(editProduct.type)" :key="item.id" :value="item.code" :label="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="适配产品:">
+          <el-select class="inputs" filterable multiple clearable collapse-tags v-model="editProduct.fitPro">
+            <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="业务区域:">
+          <el-select class="inputs" clearable v-model="editProduct.area">
+            <el-option v-for="item in area" :key="item.id" :value="item.code" :label="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属产品线:">
+          <el-select class="inputs" clearable v-model="editProduct.dept">
+            <el-option v-for="item in dept" :key="item.id" :value="item.code" :label="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="项目经理:">
+          <el-input v-model="editProduct.projectManager"></el-input>
+        </el-form-item>
+        <el-form-item label="产品介绍:">
+          <el-input v-model="editProduct.productDesc" type="textarea" :rows="2"></el-input>
+        </el-form-item>
+        <el-form-item label="示意图:">
+          <el-upload class="upload-demo" ref="uploadEdit" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editProductModel = false">取 消</el-button>
+        <el-button type="primary" @click="saveEditProductModel">确 定</el-button>
+      </div>
     </el-dialog>
-    <!-- 新增设备对话框 -->
-    <el-dialog title="新增设备" :visible.sync="newVisible" center width="30%">
-      <el-form label-width="80px">
-        <el-form-item :model="addVisibles" label="设备名称">
-          <el-input v-model="addVisibles.name"></el-input>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="addVisibles.remark"></el-input>
-        </el-form-item>
-        <el-form-item class="btn">
-          <el-button type="primary" @click="newVisible=false">取消</el-button>
-          <el-button @click="saveVisible">确定</el-button>
-        </el-form-item>
-      </el-form>
+    <!-- 新增产品对话框 -->
+    <el-dialog title="新增产品" :visible.sync="addProductModel" width="30%">
+      <div class="add-product">
+        <el-form label-width="90px" :model="addProduct">
+          <el-form-item label="产品ID:">
+            <el-input v-model="addProduct.modelId"></el-input>
+          </el-form-item>
+          <el-form-item label="产品名称:">
+            <el-input v-model="addProduct.name"></el-input>
+          </el-form-item>
+          <el-form-item label="产品型号:">
+            <el-input v-model="addProduct.model"></el-input>
+          </el-form-item>
+          <el-form-item label="产品类型:">
+            <el-select class="inputs" clearable v-model="addProduct.type">
+              <el-option v-for=" item in package" :key="item.id" :value="item.code" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="产品阶段:">
+            <el-select class="inputs" clearable v-model="addProduct.stage">
+              <el-option v-for="item in stage" :key="item.id" :value="item.code" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="适配产品:">
+            <el-select class="inputs" filterable multiple clearable collapse-tags v-model="addProduct.fitPro">
+              <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="业务区域:">
+            <el-select class="inputs" clearable v-model="addProduct.area">
+              <el-option v-for="item in area" :key="item.id" :value="item.code" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="所属产品线:">
+            <el-select class="inputs" clearable v-model="addProduct.dept">
+              <el-option v-for="item in dept" :key="item.id" :value="item.code" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="项目经理:">
+            <el-input v-model="addProduct.projectManager"></el-input>
+          </el-form-item>
+          <el-form-item label="产品介绍:">
+            <el-input v-model="addProduct.productDesc" type="textarea" :rows="2"></el-input>
+          </el-form-item>
+          <el-form-item label="示意图:">
+            <el-upload class="upload-demo" ref="upload" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+
+      </div>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addProductModel=false">取消</el-button>
+        <el-button type="primary" @click="saveAddProduct">确定</el-button>
+      </div>
     </el-dialog>
+
   </div>
 </template>
 <script>
-  import { mapActions, mapMutations } from 'vuex';
+  import { mapActions, mapMutations, mapGetters } from 'vuex';
   import { serialize } from '../../utils';
+  import axios from 'axios';
+  import { api } from '../../api';
   export default {
     data() {
       return {
@@ -90,51 +210,130 @@
         tableData: [],
         delVisible: false,
         index: Number,
-        editVisible: false,
-        visible: {
-          name: null,
-          remark: null
+        editProductModel: false,
+        editProduct: {}, //修改产品
+        addProductModel: false,
+        addProduct: {},
+        cancelvisible: {
+          fitPro: []
         },
-        newVisible: false,
-        addVisibles: {
-          name: null,
-          remark: null
-        },
-        cancelvisible: {}
+        count: 0,
+        cur_page: 1,
+        package: [], //产品类型
+        stage: [], //产品阶段
+        fitPro: [], //适配产品
+        area: [], //业务区域
+        dept: [], //所属产品线
+        pro_status: [], //产品状态
+        productSearch: {}, //产品搜索
+        file: null //文件
       };
+    },
+    computed: {
+      ...mapGetters(['getDict', 'getCommon'])
     },
     created() {
       this.getEquipment();
+      this.getAllProduct(); //获取所有产品
     },
     methods: {
       ...mapActions(['ajax']),
       ...mapMutations(['setProductId']),
       //获取产品列表
       getEquipment() {
+        let d = this.cur_page; //当前页
+        let m = 10; //每页显示条数
+        let count = (parseInt(d) - 1) * m + 1 === 0 ? 1 : (parseInt(d) - 1) * m + 1;
         this.ajax({
-          name: 'getProduct'
+          name: 'getProduct',
+          data: {
+            pageNum: this.cur_page,
+            ...this.productSearch
+          }
         }).then(res => {
-          // console.log(res)
-          // this.tableData = res.rows;
-          // this.tableData.forEach((item, index) => {
-          //   item.num = index + 1;
-          // })
+          this.count = res.count;
+          let dict = {};
+          this.getDict.forEach(item => {
+            if(!dict[item.type]) {
+              dict[item.type] = {};
+            }
+            dict[item.type][item.code] = item.name;
+          })
+          res.rows.forEach((item, index) => {
+            item.type = dict.package[item.type];
+            item.publishStateName = dict.pro_status[item.publishStatus];
+            item.stage = dict.stage[item.stage];
+            item.area = dict.area[item.area];
+            item.dept = dict.dept[item.dept];
+            item.num = count++;
+          })
+          this.tableData = res.rows;
         });
+      },
+      getAllProduct() {
+        this.ajax({
+          name: 'getAllProduct'
+        }).then(res => {
+          this.fitPro = res;
+        });
+        this.package = this.getDict.filter(item => item.type === "package");
+        this.stage = this.getDict.filter(item => item.type === "stage");
+        this.area = this.getDict.filter(item => item.type === "area");
+        this.dept = this.getDict.filter(item => item.type === "dept");
+        this.pro_status = this.getDict.filter(item => item.type === 'pro_status');
       },
       //新增设备模态框
       addVisible() {
-        this.newVisible = true;
+        this.addProductModel = true;
       },
-      //新增设备确认
-      saveVisible() {
-        this.newVisible = false;
-        this.ajax({
-          name: 'postProduct',
-          data: this.addVisibles
-        }).then(res => {
-          this.getEquipment();
-          this.$message.success('新增成功');
+      //获取文件
+      getFile(file) {
+        if(file.size > (1024 * 1024 * 3)) {
+          this.$message.warning('文件超出限制');
+        } else {
+          this.file = file;
+        }
+      },
+      //移除文件列表中的文件
+      removeFile() {
+        this.file = null;
+      },
+      //新增产品确认
+      saveAddProduct() {
+        let formData = new FormData();
+        Object.keys(this.addProduct).forEach(item => {
+          formData.append(item, this.addProduct[item]);
         });
+        if(this.file) {
+          formData.append("logo", this.file.raw);
+        }
+        this.axAjax(api.postProduct.url, formData, 'post')
+          .then(res => {
+            if(res.data.errorCode === 1) {
+              this.addProductModel = false;
+              this.$message.success('操作成功');
+              this.file = null;
+              this.addProduct = Object.assign({}, this.cancelvisible);
+              this.$refs['upload'].clearFiles()
+              this.getEquipment();
+            } else {
+              this.$message.error(res.data.errorMsg);
+            }
+          })
+      },
+      //axios
+      axAjax(api, datas, methods) {
+        return axios({
+          method: methods,
+          url: api,
+          data: datas,
+          params: params,
+          headers: { 'token': this.getCommon.token }
+        })
+      },
+      //上传文件超出限制
+      beyondFile() {
+        this.$message.warning('超出上传文件数量限制');
       },
       //删除
       handleDelete(row, index) {
@@ -153,42 +352,143 @@
         })
       },
       //编辑
+      editStage(val) {
+        if(val == 'package_01') {
+          return this.getDict.filter(item => item.type === "stage").filter(item => item.code !== "stage_01" && item.code !== "stage_02" && item.code !== "stage_03");
+        }
+        if(val == 'package_02') {
+          return this.getDict.filter(item => item.type === "stage").filter(item => item.code == "stage_01" || item.code == "stage_02" || item.code == "stage_03");
+        }
+        if(!val) {
+          return this.getDict.filter(item => item.type === "stage")
+        }
+      },
       handleEdit(row, index) {
-        this.visible = {
+        let dict = {};
+        this.getDict.forEach(item => {
+          if(!dict[item.type]) {
+            dict[item.type] = {};
+          }
+          dict[item.type][item.name] = item.code;
+        });
+        this.editProduct = {
+          modelId: row.modelId,
           name: row.name,
-          remark: row.remark
+          model: row.model,
+          type: dict.package[row.type],
+          stage: dict.stage[row.stage],
+          fitPro: row.fitPro,
+          area: dict.area[row.area],
+          dept: dict.dept[row.dept],
+          projectManager: row.projectManager,
+          productDesc: row.productDesc
         };
-        this.editVisible = true;
+        this.editProductModel = true;
         this.idx = row.id;
       },
       //确认编辑
-      saveEdit() {
-        this.editVisible = false;
-
-        this.ajax({
-          name: 'editProduct',
-          data: this.visible,
-          id: this.idx
+      saveEditProductModel() {
+        let formData = new FormData();
+        Object.keys(this.editProduct).forEach(item => {
+          formData.append(item, this.editProduct[item]);
+        });
+        if(this.file) {
+          formData.append("logo", this.file.raw);
+        }
+        axios({
+          method: 'put',
+          url: api.editProduct.url + `/${this.idx}`,
+          data: formData,
+          headers: { 'token': this.getCommon.token }
         }).then(res => {
-          this.$message.success('编辑完成');
-          this.getEquipment()
+          if(res.errorCode === 1) {
+            this.$refs['uploadEdit'].clearFiles()
+            this.editProductModel = false;
+            this.getEquipment();
+            this.$message.success('操作成功');
+          } else {
+            this.$message.error(res.data.errorMsg);
+          }
         })
       },
       cancelEdit() {
         this.editVisible = false;
       },
+      //试用
+      handleOnTrial(row, index) {
+        this.ajax({
+          name: 'productTryout',
+          data: { id: row.id }
+        }).then(res => {
+          this.getEquipment();
+          this.$message.success('操作成功');
+        })
+      },
+      //发布
+      handleselectdevice(row, index) {
+        this.ajax({
+          name: 'productPublish',
+          data: { id: row.id }
+        }).then(res => {
+          this.getEquipment();
+          this.$message.success('操作成功');
+        })
+      },
+      //下架
+      handleObtained(row, index) {
+        this.ajax({
+          name: 'productObtained',
+          data: { id: row.id }
+        }).then(res => {
+          this.getEquipment();
+          this.$message.success('操作成功');
+        })
+      },
+      //撤回
+      productWithdraw(row, index) {
+        this.ajax({
+          name: 'productWithdraw',
+          data: { id: row.id }
+        }).then(res => {
+          this.getEquipment();
+          this.$message.success('操作成功');
+        });
+      },
       handleselect(row, index) {
-        console.log(row);
         this.setProductId(row.id);
         setTimeout(() => {
-          this.$router.push({ name: 'Firmware' });
+          this.$router.push({ name: 'productDetails' });
         }, 100)
+      },
+      //分页
+      handleCurrentChange(val) {
+        this.cur_page = val;
+        this.getEquipment();
+      },
+      search() {
+        this.getEquipment();
       },
       cellStyle({ row, column, rowIndex, columnIndex }) {
         if(columnIndex == 1) {
           return '';
         } else {
           return '';
+        }
+      }
+    },
+    watch: {
+      'addProduct.type'(val) {
+        if(this.addProduct.stage) {
+          this.addProduct.stage = "";
+        }
+        if(val == 'package_01') {
+          this.stage = this.getDict.filter(item => item.type === "stage").filter(item => item.code !== "stage_01" && item.code !== "stage_02" && item.code !== "stage_03");
+        }
+        if(val == 'package_02') {
+          this.stage = this.getDict.filter(item => item.type === "stage").filter(item => item.code == "stage_01" || item.code == "stage_02" || item.code == "stage_03");
+        }
+        if(val == "") {
+          this.stage = this.getDict.filter(item => item.type === "stage")
         }
       }
     }
@@ -210,8 +510,15 @@
   }
   .del-dialog-cnt {
     font-size: 16px;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .btn {
     display: flex;
     justify-content: center;
@@ -226,5 +533,23 @@
   }
   .active:hover {
     cursor: pointer;
+  }
+  .search-box {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .ic {
+    margin-right: 10px;
+    .icon-css {
+      font-size: 30px;
+      color: #f7ba2a;
+    }
+  }
+  .add-product {
+    padding: 0 50px;
+  }
+  .inputs {
+    width: 100%;
   }
 </style>

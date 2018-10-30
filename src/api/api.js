@@ -1,4 +1,7 @@
 let api = {
+    //字典接口
+    dict: { url: 'dict', method: 'get' },
+    //登陆
     postLogin: { url: 'login', method: 'post' },
     getUserAclCodes: { url: 'getUserAclCodes', method: 'get' },
     // 用户
@@ -14,6 +17,7 @@ let api = {
     setRoleStatus: { url: 'setRoleStatus', method: 'post' },
     acls: { url: 'acls', method: 'get' },
     setAuthorize: { url: 'setAuthorize', method: 'post' },
+    setUserStatus: { url: 'setUserStatus', method: 'post' },
     //权限
     getRoleAcls: { url: 'getRoleAcls', method: 'get' },
     getAcls: { url: 'acls', method: 'get' },
@@ -21,11 +25,17 @@ let api = {
     postAclsParent: { url: 'acls', method: 'post' },
     setAclStatus: { url: 'setAclStatus', method: 'post' },
     delectAcls: { url: 'acls/:id', method: 'delete' },
+    getUserAclTree: { url: 'getUserAclTree', method: 'get' },
     //产品
     getProduct: { url: 'products' },
     postProduct: { url: 'products', method: 'post' },
     deleteProduct: { url: 'products/:id', method: 'delete' },
-    editProduct: { url: 'products/:id', method: 'put' }
+    editProduct: { url: 'products', method: 'put' },
+    getAllProduct: { url: 'product/all', method: 'get' },
+    productTryout: { url: 'product/tryout', method: 'post' }, //试用
+    productPublish: { url: 'product/publish', method: 'post' }, //发布
+    productObtained: { url: 'product/obtained', method: 'post' }, //下架
+    productWithdraw: { url: 'product/withdraw', method: 'post' }
 };
 
 for (var k in api) {

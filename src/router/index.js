@@ -11,12 +11,12 @@ const router = new Router({
 });
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
-    const userName = store.getters.getUsername;
     const token = store.getters.getCommon.token;
-    if (!userName && to.path !== '/login' && !token) {
+    if (to.path !== '/login' && !token) {
         next('/login');
     } else {
         next();
     }
+    // next();
 });
 export default router;

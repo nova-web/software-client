@@ -1,19 +1,33 @@
 <template>
   <div class="login-wrap">
-    <div class="ms-title">后台管理系统</div>
+
     <div class="ms-login">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
-        <el-form-item prop="username">
-          <el-input v-model="ruleForm.username" placeholder="username"></el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
-        </el-form-item>
-        <div class="login-btn">
-          <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+      <div class="login-left"></div>
+      <div class="login-right">
+        <div class="login-right-children">
+          <div class="title">
+            <div class="title-logo">
+              <img class="login-img" src="../../assets/login/icon_logo_blue.png" alt="">
+            </div>
+            <div class="title-message">
+              后台管理系统
+            </div>
+          </div>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
+            <el-form-item prop="username">
+              <el-input v-model="ruleForm.username" placeholder="username"></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+            </el-form-item>
+            <div class="login-btn">
+              <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+            </div>
+          </el-form>
         </div>
-        <!-- <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名和密码随便填。</p> -->
-      </el-form>
+
+      </div>
+
     </div>
   </div>
 </template>
@@ -39,25 +53,35 @@
     },
     methods: {
       ...mapActions(['ajax']),
-      ...mapMutations(['setCommon', 'setUserName', 'setAlcs']),
+      ...mapMutations(['setCommon', 'setUserName', 'setAlcs', 'setDict']),
       postLogin() {
         this.ajax({
           name: 'postLogin',
           data: this.ruleForm
         }).then(res => {
           this.setUserName(res.username);
-          this.setCommon({ token: res.token })
-          // window.location.href = 'http://localhost:8080/#/  '
-          this.$router.push({ path: "/" });
-          this.getUserAclCodes();
+          this.setCommon({ token: res.token });
+          setTimeout(() => {
+            this.getUserAclCodes();
+          }, 300)
         });
+
       },
-      getUserAclCodes() {
-        this.ajax({
+      async getUserAclCodes() {
+        await this.ajax({
           name: 'getUserAclCodes'
         }).then(res => {
           this.setAlcs(res);
+          // window.location.href = 'http://172.16.6.247:8080/'
+
         })
+        await this.ajax({
+          name: 'dict'
+        }).then(res => {
+          this.setDict(res);
+        })
+        window.location.reload();
+        this.$router.push({ name: 'index' });
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -73,11 +97,15 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
   .login-wrap {
     position: relative;
     width: 100%;
     height: 100%;
+    background-image: url('../../assets/login/img_bg.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
   }
   .ms-title {
     position: absolute;
@@ -92,12 +120,56 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 300px;
-    height: 160px;
-    margin: -150px 0 0 -190px;
-    padding: 40px;
-    border-radius: 5px;
+    transform: translate(-50%, -50%);
+    width: 65%;
+    height: 82.5%;
     background: #fff;
+    display: flex;
+    justify-content: space-between;
+    .login-left {
+      width: 61%;
+      height: 100%;
+      background-image: url('../../assets/login/img_front.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      background-size: cover;
+    }
+    .login-right {
+      width: 49%;
+      height: 100%;
+      .login-right-children {
+        width: 67%;
+        height: 56%;
+        padding-top: 10%;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .title {
+          margin: auto;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          .title-logo {
+            width: 100%;
+            height: 100%;
+            .login-img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          .title-message {
+            margin-top: -6%;
+            font-size: 23px;
+            color: #3b93ff;
+            font-weight: 550;
+          }
+        }
+      }
+    }
   }
   .login-btn {
     text-align: center;

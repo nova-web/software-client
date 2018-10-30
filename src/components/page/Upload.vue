@@ -13,12 +13,12 @@
         Element UI自带上传组件。 访问地址：
         <a href="http://element.eleme.io/#/zh-CN/component/upload" target="_blank">Element UI Upload</a>
       </div> -->
-      <el-upload class="upload-demo" drag action="api/upload" multiple :show-file-list="true" :on-progress='uploadIng'>
+      <el-upload class="upload-demo" :headers="header" :data="{'aaa': 'aaaaa'}" drag action="proxy/upload" :show-file-list="true" :on-progress='uploadIng'>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或
           <em>点击上传</em>
         </div>
-        <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
+        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
       </el-upload>
       <!-- <div class="content-title">支持裁剪</div> -->
       <!-- <div class="plugins-tips">
@@ -30,9 +30,9 @@
         <div class="crop-demo-btn">选择图片
           <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
         </div>
-      </div> -->
+      </div>
 
-      <!-- <el-dialog title="裁剪图片" :visible.sync="dialogVisible" width="30%">
+      <el-dialog title="裁剪图片" :visible.sync="dialogVisible" width="30%">
         <vue-cropper ref='cropper' :src="imgSrc" :ready="cropImage" :zoom="cropImage" :cropmove="cropImage" style="width:100%;height:300px;"></vue-cropper>
         <span slot="footer" class="dialog-footer">
                     <el-button @click="cancelCrop">取 消</el-button>
@@ -46,8 +46,12 @@
 <script>
   import VueCropper from 'vue-cropperjs';
   import bus from '../common/bus';
+  import { mapActions, mapMutations, mapGetters } from 'vuex';
   export default {
     name: 'upload',
+    components: {
+      VueCropper
+    },
     data: function() {
       return {
         defaultSrc: './static/img/img.jpg',
@@ -55,25 +59,26 @@
         imgSrc: '',
         cropImg: '',
         dialogVisible: false,
+        header: {}
       }
     },
-    components: {
-      VueCropper
+    created() {
+      this.cropImg = this.defaultSrc;
+      this.header = {
+        token: this.getCommon.token
+      }
+      console.log(this.header);
     },
+    computed: {
+      ...mapGetters(['getCommon'])
+    },
+
     methods: {
       uploadIng(event, file, filelists) {
         console.log(event);
-        // console.log(event);
-        // console.log(file);
-        // console.log(filelists);
-        // this.$axios.get('/api/user').then(res => {
-        //   console.log(res.data);
-        // })
-        // setTimeout(() => {
-        //   this.$axios.post('/api/api/v2/topics').then(res => {
-        //     console.log(res.data);
-        //   });
-        // }, 1000)
+        console.log(file);
+        console.log(filelists);
+
       },
       setImage(e) {
         const file = e.target.files[0];
@@ -108,9 +113,6 @@
           message: '图片上传接口上传失败，可更改为自己的服务器接口'
         });
       }
-    },
-    created() {
-      this.cropImg = this.defaultSrc;
     }
   }
 </script>

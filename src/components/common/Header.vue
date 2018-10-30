@@ -1,8 +1,11 @@
 <template>
   <div class="header">
     <!-- 折叠按钮 -->
-    <div class="collapse-btn" @click="collapseChage">
-      <i class="el-icon-menu"></i>
+    <div class="collapse" @click="collapseChage">
+      <img src="../../assets/header/shousuo.png" alt="">
+    </div>
+    <div class="collapse-b">
+      <img src="../../assets/header/icon_logo.png" alt="">
     </div>
     <div class="logo">后台管理系统</div>
     <div class="header-right">
@@ -23,7 +26,7 @@
           <span class="btn-bell-badge" v-if="message"></span>
         </div> -->
         <!-- 用户头像 -->
-        <!-- <div class="user-avator"><img src="static/img/img.jpg"></div> -->
+        <div class="user-avator"><img src="../../assets/header/icon_user.png"></div>
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
@@ -50,7 +53,7 @@
     },
     computed: {
       username() {
-        let username = localStorage.getItem('ms_username');
+        let username = localStorage.getItem('userName');
         return username ? username : this.name;
       }
     },
@@ -58,7 +61,11 @@
       // 用户名下拉菜单选择事件
       handleCommand(command) {
         if(command == 'loginout') {
-          localStorage.removeItem('ms_username')
+          localStorage.removeItem('userName');
+          sessionStorage.removeItem('Alcs');
+          sessionStorage.removeItem('common');
+          sessionStorage.removeItem('cacheData');
+
           this.$router.push('/login');
         }
       },
@@ -102,7 +109,7 @@
     }
   }
 </script>
-<style scoped>
+<style scoped lang="less">
   .header {
     position: relative;
     box-sizing: border-box;
@@ -111,11 +118,15 @@
     font-size: 22px;
     color: #fff;
   }
-  .collapse-btn {
+  .collapse {
     float: left;
-    padding: 0 21px;
     cursor: pointer;
     line-height: 70px;
+  }
+  .collapse-b {
+    float: left;
+    padding-right: 21px;
+    padding-top: 2px;
   }
   .header .logo {
     float: left;
@@ -166,9 +177,6 @@
   }
   .user-avator img {
     display: block;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
   }
   .el-dropdown-link {
     color: #fff;

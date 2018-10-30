@@ -10,8 +10,7 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
-        <!-- <el-button type="primary" icon="search" @click="deleteRole" :disabled="disabled">删除角色</el-button> -->
+        <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
       </div>
       <div class="search-box">
         <el-form ref="search" :model="roleSearch" class="demo-form-inline" :inline="true">
@@ -43,13 +42,13 @@
 
         <el-table-column prop="updatedAt" label="更新时间">
         </el-table-column>
-        <el-table-column label="操作" width="310">
+        <el-table-column label="操作" width="210">
           <template slot-scope="scope">
-            <el-button size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
-            <el-button size="small" @click="handleSetAuthorize(scope.row, scope.$index)">授权</el-button>
-            <el-button v-show="scope.row.isButtonShow" size="small" type="danger" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
-            <el-button v-show="!scope.row.isButtonShow" size="small" @click="handleEffective(scope.row, scope.$index)">置为有效</el-button>
-            <el-button v-show="!scope.row.isButtonShow" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
+            <el-button v-if="getAlcsObj.JSXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
+            <el-button v-if="getAlcsObj.JSSQ" type="text" size="small" @click="handleSetAuthorize(scope.row, scope.$index)">授权</el-button>
+            <el-button v-if="scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
+            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="handleEffective(scope.row, scope.$index)">置为有效</el-button>
+            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSXG" type="text" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -60,7 +59,7 @@
     </div>
     <!-- 授权对话框 -->
     <el-dialog title="授权" :visible.sync="showAcls" center width="30%">
-      <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="true" :expand-on-click-node="true">
+      <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true">
       </el-tree>
       <div class="buttons">
         <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
@@ -79,8 +78,8 @@
           </el-form-item>
         </div>
         <el-form-item class="btn">
-          <el-button type="primary" @click="addVisible=false">取消</el-button>
-          <el-button @click="saveAdd">确定</el-button>
+          <el-button @click="addVisible=false">取消</el-button>
+          <el-button type="primary" @click="saveAdd">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -96,8 +95,8 @@
           </el-form-item>
         </div>
         <el-form-item class="btn">
-          <el-button type="primary" @click="editVisible=false;">取消</el-button>
-          <el-button @click="saveEdit">确定</el-button>
+          <el-button @click="editVisible=false;">取消</el-button>
+          <el-button type="primary" @click="saveEdit">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -112,12 +111,13 @@
   </div>
 </template>
 <script>
-  import { mapActions } from 'vuex';
+  import { mapActions, mapGetters, mapMutations } from 'vuex';
   import { serialize } from '../../utils';
 
   export default {
     data() {
       return {
+        defaultArr: [2, 3], //默认选中的数组
         cur_page: 1,
         count: 0,
         roleName: String,
@@ -159,6 +159,9 @@
       this.getRoles(); //获取权限表
       this.getAcls();  //获取功能
     },
+    computed: {
+      ...mapGetters(['getAlcs', 'getAlcsObj'])
+    },
     methods: {
       ...mapActions(['ajax']),
       //获取角色列表
@@ -170,7 +173,6 @@
           name: 'getRoles',
           data: { pageNum: this.cur_page, ...this.roleSearch }
         }).then(res => {
-          console.log(res);
           res.rows.forEach((item, index) => {
             switch(item.status) {
               case 0:
@@ -200,7 +202,7 @@
       //获取权限数
       getAcls() {
         this.ajax({
-          name: 'acls'
+          name: 'getUserAclTree'
         }).then(res => {
           this.aclsTree = this.pageAclsTree(res);
         })
@@ -236,19 +238,20 @@
           name: 'getRoleAcls',
           data: { id: this.idx }
         }).then(res => {
+          console.log(res);
           this.$refs.tree.setCheckedKeys(res);
         });
 
       },
       // 新增
       saveAdd() {
-        this.addVisible = false;
         this.ajax({
           name: 'addRole',
           data: this.addRole
         }).then(res => {
           this.$message.success('操作成功');
           this.getRoles();
+          this.addVisible = false;
         });
       },
       handleEdit(row, index) {

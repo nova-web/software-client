@@ -9,7 +9,7 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" icon="search" @click="addUsers">新增用户</el-button>
+        <el-button v-if="getAlcsObj.YHXZ" type="primary" icon="search" @click="addUsers">新增用户</el-button>
       </div>
       <div class="search-box">
         <el-form ref="search" :model="userSearch" class="demo-form-inline" :inline="true">
@@ -42,7 +42,7 @@
       <el-table :data="UserList" border style="width: 100%;" ref="multipleTable" height="542">
         <el-table-column prop="index" label="序号" sortable width="80">
         </el-table-column>
-        <el-table-column prop="username" label="用户名称" width="120">
+        <el-table-column prop="name" label="真实姓名" width="120">
         </el-table-column>
         <el-table-column prop="Status" label="状态" width="80">
         </el-table-column>
@@ -58,10 +58,10 @@
         </el-table-column>
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
-            <el-button size="small" @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
-            <el-button v-show="scope.row.isButtonShow" size="small" type="danger" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
-            <el-button v-show="scope.row.isButtonShow" @click="handleEffective(scope.row, scope.$index)" size="small">置为有效</el-button>
-            <el-button v-show="!scope.row.isButtonShow" @click="handleInvalid(scope.row, scope.$index)" size="small">置为无效</el-button>
+            <el-button v-if="getAlcsObj.YHXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
+            <el-button v-if="scope.row.isButtonShow && getAlcsObj.YHSC" size="small" type="text" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
+            <el-button v-if="scope.row.isButtonShow && getAlcsObj.YHSZZT" type="text" @click="handleEffective(scope.row, scope.$index)" size="small">置为有效</el-button>
+            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.YHSZZT" type="text" @click="handleInvalid(scope.row, scope.$index)" size="small">置为无效</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -75,7 +75,7 @@
       <el-form ref="editUser" :model="editUser" label-width="80px" :rules="UserRule">
 
         <el-form-item label="用户名称">
-          <el-input v-model="editUser.username"></el-input>
+          <el-input v-model="editUser.name"></el-input>
         </el-form-item>
         <el-form-item label="密码">
           <el-input v-model="editUser.password"></el-input>
@@ -124,7 +124,7 @@
   </div>
 </template>
 <script>
-  import { mapActions } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
   import { getNowFormatDate } from '../../utils';
   import { checkPhone, checkUsername } from '../../utils/rules';
   export default {
@@ -205,6 +205,9 @@
       this.getUsers();
       this.getrole();
     },
+    computed: {
+      ...mapGetters(['getAlcs', 'getAlcsObj'])
+    },
     methods: {
       ...mapActions(['ajax']),
       // 分页导航
@@ -223,6 +226,7 @@
             ...this.userSearch
           }
         }).then(res => {
+
           res.rows.forEach((item, index) => {
             switch(item.status) {
               case 0:
@@ -290,7 +294,7 @@
         });
         this.editVisible = true;
         this.editUser = {
-          username: row.username,
+          name: row.name,
           password: null,
           remark: row.remark,
           phone: row.phone,
@@ -308,8 +312,8 @@
           data: this.editUser,
           id: this.idx
         }).then(res => {
-          this.$message.success('修改成功');
           this.getUsers();
+          this.$message.success('修改成功');
         });
       },
       getRoleName(roldId) {
@@ -349,11 +353,23 @@
       },
       //置为有效
       handleEffective(row, index) {
-        console.log(row.status);
+        this.ajax({
+          name: 'setUserStatus',
+          data: { id: row.id, status: 1 }
+        }).then(res => {
+          this.$message.success('操作成功');
+          this.getUsers();
+        });
       },
       //置为无效
       handleInvalid(row, index) {
-        console.log(row.status);
+        this.ajax({
+          name: 'setUserStatus',
+          data: { id: row.id, status: 0 }
+        }).then(res => {
+          this.$message.success('操作成功');
+          this.getUsers();
+        });
       }
       // delAll() {
       //   const length = this.multipleSelection.length;

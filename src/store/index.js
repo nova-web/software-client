@@ -15,7 +15,9 @@ export default new Vuex.Store({
         lang: getLoc('lang') || 'zh',
         productId: getSen('productId') || null,
         userName: getLoc('userName') || null,
-        Alcs: getSen('Alcs') || {}
+        Alcs: getSen('Alcs') || {},
+        AlcsObj: getSen('AlcsObj') || {},
+        dict: getSen('dict') || []
     },
     getters: {
         getCommon: state => state.common,
@@ -23,7 +25,9 @@ export default new Vuex.Store({
         getLang: state => state.lang,
         getproductId: state => state.productId,
         getUsername: state => state.userName,
-        getAlcs: state => state.Alcs
+        getAlcs: state => state.Alcs,
+        getAlcsObj: state => state.AlcsObj,
+        getDict: state => state.dict
     },
     mutations: {
         setCommon(state, data) {
@@ -47,8 +51,18 @@ export default new Vuex.Store({
             setLoc('userName', data);
         },
         setAlcs(state, data) {
+            let obj = {};
+            data.forEach(item => {
+                obj[item.code] = true;
+            });
             state.Alcs = data;
             setSen('Alcs', data);
+            state.AlcsObj = obj;
+            setSen('AlcsObj', obj);
+        },
+        setDict(state, data) {
+            state.dict = data;
+            setSen('dict', data);
         }
     },
     actions: {

@@ -35,7 +35,10 @@ let api = {
     productTryout: { url: 'product/tryout', method: 'post' }, //试用
     productPublish: { url: 'product/publish', method: 'post' }, //发布
     productObtained: { url: 'product/obtained', method: 'post' }, //下架
-    productWithdraw: { url: 'product/withdraw', method: 'post' }
+    productWithdraw: { url: 'product/withdraw', method: 'post' },
+    ProductMessage: { url: 'products/:id', method: 'get' }, //详细信息
+    //版本
+    getPackages: { url: 'packages', method: 'get' }
 };
 
 for (var k in api) {

@@ -15,10 +15,61 @@
       <div class="left">
         <div class="title">基本信息</div>
         <div class="content">
-          <div class="list" v-for="item in items">
-            <div>{{item.title}}</div>
-            <div v-if="item.title !== '示意图'">{{item.message}}</div>
-            <img v-else :src="item.message" alt="">
+
+          <div class="list">
+            <div>产品名称:</div>
+            <div>
+              {{result.name}}
+            </div>
+          </div>
+
+          <div class="list">
+            <div>产品类型:</div>
+            <div>
+              {{result.type}}
+            </div>
+          </div>
+
+          <div class="list">
+            <div>最新版本:</div>
+            <div>
+              {{result.version}}
+            </div>
+          </div>
+
+          <div class="list">
+            <div>状态:</div>
+            <div>
+              {{result.publishStatus}}
+            </div>
+          </div>
+
+          <div class="list">
+            <div>所属产品线:</div>
+            <div>
+              {{result.dept}}
+            </div>
+          </div>
+
+          <div class="list">
+            <div>项目经理:</div>
+            <div>
+              {{result.projectManager}}
+            </div>
+          </div>
+
+          <div class="list">
+            <div>产品阶段:</div>
+            <div>
+              {{result.stage}}
+            </div>
+          </div>
+
+          <div class="list">
+            <div>示意图:</div>
+            <div>
+              <img class="img" :src="result.logo" alt="">
+            </div>
           </div>
         </div>
       </div>
@@ -26,7 +77,7 @@
       <div class="right">
         <div class="title">产品介绍</div>
         <div class="content">
-          {{introduce}}
+          {{result.productDesc}}
         </div>
       </div>
 
@@ -41,27 +92,51 @@
   export default {
     data() {
       return {
-        items: [
-          {
-            title: '产品名称',
-            message: 'V-Can',
-
-          },
-          {
-            title: '产品名称',
-            message: 'V-Can'
-          },
-          {
-            title: '示意图',
-            message: "../../../static/img/img.jpg"
-          }
-        ],
-        introduce: '121'
+        result: {
+          name: null,
+          productDesc: null,
+          projectManager: null,
+          publishStatus: null,
+          stage: null,
+          type: null,
+          version: null,
+          area: null,
+          dept: null
+        }
       };
     },
-    created() { },
-    computed: {},
-    methods: {}
+    created() {
+      this.getProductMessage();
+    },
+    computed: {
+      ...mapGetters(['getproductId', 'getDict'])
+    },
+    methods: {
+      ...mapActions(['ajax']),
+      getProductMessage() {
+        let dict = {};
+        this.getDict.forEach(item => {
+          if(!dict[item.type]) {
+            dict[item.type] = {};
+          }
+          dict[item.type][item.code] = item.name;
+        });
+
+        this.ajax({
+          name: 'ProductMessage',
+          id: this.getproductId
+        }).then(res => {
+          [res.result].forEach(item => {
+            item.type = dict.package[item.type];
+            item.publishStatus = dict.pro_status[item.publishStatus];
+            item.stage = dict.stage[item.stage];
+            item.area = dict.area[item.area];
+            item.dept = dict.dept[item.dept];
+          })
+          this.result = res.result;
+        })
+      }
+    }
   }
 </script>
 <style scoped lang="less">
@@ -109,7 +184,10 @@
   }
   .left {
     width: 30%;
-    // margin-right: 30px;
+  }
+  .img {
+    width: 200px;
+    height: auto;
   }
 </style>
 

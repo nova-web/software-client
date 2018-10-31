@@ -7,7 +7,6 @@
         <el-breadcrumb-item>
           产品列表
         </el-breadcrumb-item>
-
       </el-breadcrumb>
     </div>
     <div class="container">

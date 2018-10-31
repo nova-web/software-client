@@ -17,7 +17,8 @@ export default new Vuex.Store({
         userName: getLoc('userName') || null,
         Alcs: getSen('Alcs') || {},
         AlcsObj: getSen('AlcsObj') || {},
-        dict: getSen('dict') || []
+        dict: getSen('dict') || [],
+        formatDict: getSen('formatDict') || []
     },
     getters: {
         getCommon: state => state.common,
@@ -27,7 +28,8 @@ export default new Vuex.Store({
         getUsername: state => state.userName,
         getAlcs: state => state.Alcs,
         getAlcsObj: state => state.AlcsObj,
-        getDict: state => state.dict
+        getDict: state => state.dict,
+        getFormatDict: state => state.formatDict
     },
     mutations: {
         setCommon(state, data) {
@@ -63,6 +65,15 @@ export default new Vuex.Store({
         setDict(state, data) {
             state.dict = data;
             setSen('dict', data);
+            let dict = {};
+            data.forEach(item => {
+                if (!dict[item.type]) {
+                    dict[item.type] = {};
+                }
+                dict[item.type][item.code] = item.name;
+            });
+            state.formatDict = dict;
+            setSen('formatDict', dict);
         }
     },
     actions: {

@@ -48,8 +48,12 @@
         <el-table-column label="发布时间" prop="createdAt"></el-table-column>
         <el-table-column label="操作" width="240px">
           <template slot-scope="scope">
-            <el-button size="small" type="text">下载</el-button>
-            <el-button size="small" type="text">修改</el-button>
+            <el-button size="small" type="text" @click="download(scope.row)">
+              <a class="downloadText" :href="scope.row.url">
+                下载
+              </a>
+            </el-button>
+            <el-button size="small" type="text" @click="modify(scope.row, scope.$index)">修改</el-button>
             <el-button size="small" type="text">删除</el-button>
             <el-button size="small" type="text">试用</el-button>
             <el-button size="small" type="text">发布</el-button>
@@ -63,11 +67,67 @@
     </div>
     <el-dialog title="新增版本" :visible.sync="addEditionModele" width="30%">
       <div class="add-edition">
-        <el-form label-width="90px" :model="addEdition">
-          <el-from-item label="版本名称">
-            <el-input placeholder="输入适配产品名称"></el-input>
-          </el-from-item>
+        <el-form ref="addEdition" label-width="90px" :model="addEdition" class="demo-ruleForm">
+          <el-form-item label="版本名称:">
+            <el-input class="inputs" v-model="addEdition.version" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="版本类型:">
+            <el-select class="inputs" clearable v-model="addEdition.stage" placeholder="">
+              <el-option v-for="item in stage" :key="item.id" :value="item.code" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="版本描述:">
+            <el-input type="textarea" class="inputs" v-model="addEdition.versionLog" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="产品ID:">
+            <el-select class="inputs" v-model="addEdition.productId">
+              <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="版本上传:">
+            <el-upload class="upload-demo" ref="upload" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            </el-upload>
+            <!-- <img class="addImg" :src="file?file.url:''" alt=""> -->
+            <div class="tips" v-show="fileTip">请上传版本包</div>
+          </el-form-item>
         </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addCancel">取消</el-button>
+        <el-button type="primary" @click="saveAddEdition">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="修改版本" :visible.sync="modifyModel" width="30%">
+      <div class="add-edition">
+        <el-form ref="addEdition" label-width="90px" :model="modifyEdition" class="demo-ruleForm">
+          <el-form-item label="版本名称:">
+            <el-input class="inputs" v-model="modifyEdition.version" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="版本类型:">
+            <el-select class="inputs" clearable v-model="modifyEdition.stage" placeholder="">
+              <el-option v-for="item in stage" :key="item.id" :value="item.code" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="版本描述:">
+            <el-input type="textarea" class="inputs" v-model="modifyEdition.versionLog" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="产品ID:">
+            <el-select class="inputs" v-model="modifyEdition.productId">
+              <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="版本上传:">
+            <el-upload class="upload-demo" ref="upload" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelModifyEdition">取消</el-button>
+        <el-button type="primary" @click="saveModifyEdition">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -80,12 +140,21 @@
   export default {
     data() {
       return {
+        modifyModel: false, //修改版本
+        addEditionModele: false, //新增版本
         tableData: [],
+        modifyEdition: {}, //修改版本
         editionSearch: {},
         addEdition: {}, //新增版本
         pro_status: [], // 版本状态
         cur_page: 1,
-        count: 0
+        count: 0,
+        package: [], //产品类型
+        stage: [], //产品阶段
+        fitPro: [], //适配产品
+        href: '',
+        fileTip: false,
+        file: null //文件
       };
     },
     computed: {
@@ -121,23 +190,98 @@
       },
       //下拉框
       getAllProduct() {
-        // this.ajax({
-        //   name: 'getAllProduct'
-        // }).then(res => {
-        //   this.fitPro = res;
-        // });
+        this.ajax({
+          name: 'getAllProduct'
+        }).then(res => {
+          this.fitPro = res;
+        });
         this.pro_status = this.getDict.filter(item => item.type === 'pro_status');
+        this.stage = this.getDict.filter(item => item.type === "stage");
       },
       //新增
-      addVisible() { },
+      addVisible() {
+        this.addEditionModele = true;
+      },
+      //新增确认
+      saveAddEdition() {
+        let formData = new FormData();
+        Object.keys(this.addEdition).forEach(item => {
+          formData.append(item, this.addEdition[item]);
+        })
+        if(this.file) {
+          formData.append("package", this.file.raw);
+          axios({
+            method: 'post',
+            url: api.addPackages.url,
+            data: formData,
+            headers: { 'token': this.getCommon.token }
+          }).then(res => {
+            if(res.data.errorCode === 1) {
+              this.addEditionModele = false;
+              this.$message.success('操作成功');
+              this.file = null;
+              this.$refs['upload'].clearFiles();
+              this.getEdition();
+            } else {
+              this.$message.error(res.data.errorMsg);
+            }
+          })
+        } else {
+          this.fileTip = true;
+        }
+      },
+      //取消新增
+      addCancel() {
+        this.addEditionModele = false;
+        this.fileTip = false; //文件提示
+        this.$refs['addEdition'].clearValidate();
+      },
+      //修改版本
+      modify(row) {
+        console.log(row);
+        this.modifyEdition = {
+          version: row.version,
+          stage: row.stage,
+          versionLog: row.versionLog,
+          productId: row.productId
+        }
+        this.modifyModel = true;
+      },
+      //确认修改
+      saveModifyEdition() { },
+      // 取消修改
+      cancelModifyEdition() {
+        this.modifyModel = false;
+      },
+      //下载
+      download(row) {
+        console.log(row);
+        this.href = row.url;
+      },
+
+
       //搜索
       search() {
-
-
         this.getEdition();
       },
+      //获取文件
+      getFile(file) {
+        this.file = file;
+        if(this.file) {
+          this.fileTip = false;
+        }
+      },
+      //上传文件超出限制
+      beyondFile() { },
+      //移除文件列表中得文件
+      removeFile() {
+        this.file = null;
+      },
       //分页
-      handleCurrentChange() { }
+      handleCurrentChange(val) {
+        this.cur_page = val;
+        this.getEdition();
+      }
     }
   }
 </script>
@@ -149,6 +293,19 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
+  }
+  .inputs {
+    width: 100%;
+  }
+  .downloadText {
+    color: #409eff;
+  }
+  .addImg {
+    width: 200px;
+    height: auto;
+  }
+  .tips {
+    color: #dd5145;
   }
 </style>
 

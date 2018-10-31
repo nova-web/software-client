@@ -138,7 +138,7 @@
       bus.$on('collapse', msg => {
         this.collapse = msg;
       })
-
+      //重新渲染侧边栏
       this.items.forEach((items, i, Arr) => {
         this.getAlcs.forEach(alcs => {
           if(items.code == alcs.code) {

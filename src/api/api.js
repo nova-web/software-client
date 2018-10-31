@@ -38,7 +38,8 @@ let api = {
     productWithdraw: { url: 'product/withdraw', method: 'post' },
     ProductMessage: { url: 'products/:id', method: 'get' }, //详细信息
     //版本
-    getPackages: { url: 'packages', method: 'get' }
+    getPackages: { url: 'packages', method: 'get' },
+    addPackages: { url: 'packages', method: 'post' }
 };
 
 for (var k in api) {

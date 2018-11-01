@@ -47,7 +47,10 @@ let api = {
     packageWithdraw: { url: 'package/withdraw', method: 'post' }, //撤回
     packageObtained: { url: 'package/obtained', method: 'post' }, //下架
     //操作审计
-    getLogs: { url: 'logs', method: 'get' } //操作审计列表
+    getLogs: { url: 'logs', method: 'get' }, //操作审计列表
+    // 系统控制
+    getSyscontrol: { url: 'syscontrol', method: 'get' },
+    setSyscontrolSwitch: { url: 'syscontrol', method: 'put' } // 系统控制开关
 };
 
 for (var k in api) {

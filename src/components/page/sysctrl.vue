@@ -9,20 +9,20 @@
 
     </div>
     <div class="container">
-      <div class="handle-box">
+      <!-- <div class="handle-box">
         <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
-      </div>
+      </div> -->
       <div class="search-box">
-        <el-form ref="search" :model="roleSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="状态">
-            <el-select v-model="roleSearch.status" @change="search">
-              <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
+        <el-form ref="search" :model="sysctrlSearch" class="demo-form-inline" :inline="true">
+          <el-form-item label="服务状态">
+            <el-select v-model="sysctrlSearch.service" @change="search">
+              <el-option v-for="item in service" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="角色名称">
-            <el-input v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索"></el-input>
+          <el-form-item label="产品名称">
+            <el-input v-model="sysctrlSearch.username" @change="search" placeholder="按产品名称搜索"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -30,25 +30,20 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="RoleList" stripe style="width: 100%" ref="multipleTable" height="550" fit :row-class-name="tableRowStatusName">
+      <el-table :data="SysList" stripe style="width: 100%" ref="multipleTable" height="550" fit :row-class-name="tableRowStatusName">
         <el-table-column prop="num" label="序号" width="60">
         </el-table-column>
-        <el-table-column prop="name" label="角色名称">
+        <el-table-column prop="name" label="产品名称">
         </el-table-column>
-        <el-table-column prop="remark" label="备注">
-        </el-table-column>
-        <el-table-column prop="Status" label="状态">
+        <el-table-column prop="service" label="服务状态">
         </el-table-column>
 
-        <el-table-column prop="updatedAt" label="更新时间">
+        <el-table-column prop="serviceTime" label="更新时间">
         </el-table-column>
         <el-table-column label="操作" width="210">
           <template slot-scope="scope">
-            <el-button v-if="getAlcsObj.JSXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
-            <el-button v-if="getAlcsObj.JSSQ" type="text" size="small" @click="handleSetAuthorize(scope.row, scope.$index)">授权</el-button>
-            <el-button v-if="scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
-            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="handleEffective(scope.row, scope.$index)">置为有效</el-button>
-            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSXG" type="text" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
+            <el-button v-if="scope.row.isButtonShow" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">暂停服务</el-button>
+            <el-button v-if="!scope.row.isButtonShow" type="text" size="small" @click="handleEffective(scope.row, scope.$index)">开通服务</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -125,7 +120,7 @@
         count: 0,
         roleName: String,
         disabled: false,
-        RoleList: [],
+        SysList: [],
         editRoleRow: {
           name: '',
           remark: '',
@@ -138,18 +133,18 @@
         delVisible: false,
         delIndex: Number,
         //角色搜索
-        roleSearch: {
-          status: 1
+        sysctrlSearch: {
+          service: 1
         },
         //状态
-        status: [
+        service: [
           {
             value: 0,
-            label: '无效'
+            label: '已关闭'
           },
           {
             value: 1,
-            label: '有效'
+            label: '已开通'
           }
         ],
         showAcls: false, //权限树对话框
@@ -159,8 +154,7 @@
       };
     },
     created() {
-      this.getRoles(); //获取权限表
-      this.getAcls();  //获取功能
+      this.getSyscontrol(); //获取权限表
     },
     computed: {
       ...mapGetters(['getAlcs', 'getAlcsObj'])
@@ -168,39 +162,36 @@
     methods: {
       ...mapActions(['ajax']),
       //获取角色列表
-      getRoles() {
+      getSyscontrol() {
         let d = this.cur_page; //当前页
         let m = 10; //每页显示条数
         let count = (parseInt(d) - 1) * m + 1 === 0 ? 1 : (parseInt(d) - 1) * m + 1;
         this.ajax({
-          name: 'getRoles',
-          data: { pageNum: this.cur_page, ...this.roleSearch }
+          name: 'getSyscontrol',
+          data: { pageNum: this.cur_page, ...this.sysctrlSearch }
         }).then(res => {
           res.rows.forEach((item, index) => {
-            switch(item.status) {
+            switch(item.service) {
               case 0:
-                item.Status = '无效';
+                item.service = '已关闭';
                 item.isButtonShow = false;
                 break;
               case 1:
-                item.Status = '有效';
+                item.service = '已开通';
                 item.isButtonShow = true;
-                break;
-              case 2:
-                item.Status = '删除'
                 break;
               default:
                 break;
             }
             item.num = count++;
           });
-          this.RoleList = res.rows;
+          this.SysList = res.rows;
           this.count = res.count;
         });
       },
       // tableRowStatusName 根据有效无效修改 row 样式
       tableRowStatusName({ row, rowIndex }) {
-        if(row.status == 0) {
+        if(row.service == 0) {
           return 'invalid-row'
         } else {
           return ''
@@ -235,7 +226,7 @@
           name: 'setAuthorize',
           data: { id: this.idx, acls: aclsArr }
         }).then(res => {
-          if(res.status === 1) {
+          if(res.service === 1) {
             this.showAcls = false;
             this.$message.success('操作成功');
           }
@@ -289,7 +280,7 @@
       deleteRole(row, index) {
         this.ajax({
           name: 'setRoleStatus',
-          data: { id: row.id, status: 0 }
+          data: { id: row.id, service: 0 }
         }).then(res => {
           this.$message.success('操作成功');
           this.getRoles();
@@ -299,7 +290,7 @@
       handleEffective(row, index) {
         this.ajax({
           name: 'setRoleStatus',
-          data: { id: row.id, status: 1 }
+          data: { id: row.id, service: 1 }
         }).then(res => {
           this.$message.success('操作成功');
           this.getRoles();

@@ -151,7 +151,6 @@
       })
       //重新渲染侧边栏
       this.items.forEach((items, i, Arr) => {
-        console.log(items);
         this.getAlcs.forEach(alcs => {
           if(items.code == alcs.code) {
             this.index = i;
@@ -175,7 +174,6 @@
     },
     methods: {
       select(index) {
-        console.log(index);
         this.path = index;
       },
       open(index) {

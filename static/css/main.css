@@ -183,3 +183,20 @@ a {
     font-size: 16px;
     font-weight: 800;
 }
+.del-dialog-cnt {
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+.ic {
+    margin-right: 10px;
+}
+.icon-css {
+    font-size: 30px;
+    color: #f7ba2a;
+}

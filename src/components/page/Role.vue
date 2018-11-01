@@ -58,10 +58,10 @@
       </div>
     </div>
     <!-- 授权对话框 -->
-    <el-dialog title="授权" :visible.sync="showAcls" center width="30%">
+    <el-dialog title="授权" :visible.sync="showAcls" width="30%">
       <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true">
       </el-tree>
-      <div class="buttons">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
         <el-button type="primary" @click="getCheckedKeys">确定</el-button>
       </div>
@@ -74,13 +74,9 @@
             <el-input v-model="addRole.name" placeholder="请输入角色名"></el-input>
           </el-form-item>
           <el-form-item label="备注">
-            <el-input v-model="addRole.remark" placeholder="请输入备注"></el-input>
+            <el-input type="textarea" class="inputs" v-model="addRole.remark" placeholder="请输入备注"></el-input>
           </el-form-item>
         </div>
-        <!-- <el-form-item class="btn">
-          <el-button @click="addVisible=false">取消</el-button>
-          <el-button type="primary" @click="saveAdd">确定</el-button>
-        </el-form-item> -->
       </el-form>
       <div slot="footer">
         <el-button type="primary" @click="saveAdd">确定</el-button>
@@ -88,32 +84,31 @@
       </div>
     </el-dialog>
     <!-- 编辑对话框 -->
-    <el-dialog title="修改角色" :visible.sync="editVisible" center width="30%">
-      <el-form :model="editRole" label-width="80px" :label-position="'left'">
-        <div>
-          <el-form-item label="角色名称">
-            <el-input v-model="editRole.name" placeholder="请输入角色名"></el-input>
-          </el-form-item>
-          <el-form-item label="描述">
-            <el-input type="textarea" :rows="4" v-model="editRole.remark" placeholder="请输入备注"></el-input>
-          </el-form-item>
-        </div>
-        <!-- <el-form-item class="btn">
-          <el-button @click="editVisible=false;">取消</el-button>
-          <el-button type="primary" @click="saveEdit">确定</el-button>
-        </el-form-item> -->
+    <el-dialog title="修改角色" :visible.sync="editVisible" width="30%">
+      <el-form :model="editRole" label-width="80px" label-position="left">
+        <el-form-item label="角色名称">
+          <el-input v-model="editRole.name" placeholder="请输入角色名"></el-input>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input type="textarea" :rows="4" v-model="editRole.remark" placeholder="请输入备注"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button @click="editVisible=false;">取消</el-button>
         <el-button type="primary" @click="saveEdit">确定</el-button>
+        <el-button @click="editVisible=false;">取消</el-button>
       </div>
     </el-dialog>
     <!-- 删除对话框 -->
-    <el-dialog title="提示" :visible.sync="deleteRoleVisible" width="300px" center>
-      <div class="del-dialog-cnt">删除角色：{{roleName}}，是否确定？</div>
-      <div slot="footer">
-        <el-button @click="deleteRoleVisible=false">取 消</el-button>
+    <el-dialog title="提示" :visible.sync="deleteRoleVisible" width="600px">
+      <div class="del-dialog-cnt">
+        <div class="ic">
+          <i class="el-icon-info icon-css"></i>
+        </div>
+        <div>删除角色：{{roleName}}，是否确定？</div>
+      </div>
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleDeleteRoles">确 定</el-button>
+        <el-button @click="deleteRoleVisible=false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -205,7 +200,6 @@
       },
       // tableRowStatusName 根据有效无效修改 row 样式
       tableRowStatusName({ row, rowIndex }) {
-        console.log(11111, row, rowIndex);
         if(row.status == 0) {
           return 'invalid-row'
         } else {

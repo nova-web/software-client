@@ -30,7 +30,7 @@
         </el-form>
       </div>
       <div class="search-table">
-        <el-table ref="table" @current-change="handleCurrentChange" highlight-current-row :data="formatData" :row-style="showRow" v-bind="$attrs" stripe style="width: 100%" max-height="550">
+        <el-table ref="table" @current-change="handleCurrentChange" highlight-current-row :data="formatData" :row-style="showRow" v-bind="$attrs" stripe style="width: 100%" max-height="600" fit :row-class-name="tableRowStatusName">
 
           <el-table-column type="index" width="50" label="序号">
           </el-table-column>
@@ -303,6 +303,14 @@
       //置为有效
       setUpToBeValid(row) {
         this.setAclStatus(row, 1);
+      },
+      // tableRowStatusName 根据有效无效修改 row 样式
+      tableRowStatusName({ row, rowIndex }) {
+        if(row.status == 0) {
+          return 'invalid-row'
+        } else {
+          return ''
+        }
       },
       setAclStatus(row, num) {
         this.ajax({

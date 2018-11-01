@@ -34,7 +34,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="tableData" border height="531" style="width: 100%" :cell-style="cellStyle">
+      <el-table :data="tableData" stripe height="531" style="width: 100%" :cell-style="cellStyle">
         <el-table-column width="60px" fixed="left" prop="num" label="序号"></el-table-column>
         <el-table-column label="产品名称">
           <template slot-scope="scope">

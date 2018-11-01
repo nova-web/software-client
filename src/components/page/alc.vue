@@ -30,7 +30,7 @@
         </el-form>
       </div>
       <div class="search-table">
-        <el-table ref="table" @current-change="handleCurrentChange" highlight-current-row :data="formatData" :row-style="showRow" v-bind="$attrs" border style="width: 100%" max-height="550">
+        <el-table ref="table" @current-change="handleCurrentChange" highlight-current-row :data="formatData" :row-style="showRow" v-bind="$attrs" stripe style="width: 100%" max-height="550">
 
           <el-table-column type="index" width="50" label="序号">
           </el-table-column>

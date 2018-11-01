@@ -1,0 +1,25 @@
+// 覆盖element-ui全局样式
+
+// 有问题，下面的th也会被修改颜色
+.el-table th {
+    background-color: #f4f7fc !important;
+}
+
+.el-table thead {
+    color: #464c5b;
+}
+
+.el-table__header-wrapper {
+    border-top: 1px solid #dce3f3;
+}
+
+.el-table th > .cell {
+    border-left: 1px solid #dde6f5;
+}
+.el-table th:nth-child(1) .cell {
+    border: none;
+}
+// 无效样式
+.el-table .invalid-row {
+    color: #c9cace;
+}

@@ -39,7 +39,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="UserList" border style="width: 100%;" ref="multipleTable" height="542">
+      <el-table :data="UserList" stripe style="width: 100%;" ref="multipleTable" height="542">
         <el-table-column prop="index" label="序号" sortable width="80">
         </el-table-column>
         <el-table-column prop="name" label="真实姓名" width="120">

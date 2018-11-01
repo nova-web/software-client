@@ -30,7 +30,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="RoleList" border style="width: 100%" ref="multipleTable" height="550" fit>
+      <el-table :data="RoleList" stripe style="width: 100%" ref="multipleTable" height="550" fit :row-class-name="tableRowStatusName">
         <el-table-column prop="num" label="序号" width="60">
         </el-table-column>
         <el-table-column prop="name" label="角色名称">
@@ -67,7 +67,7 @@
       </div>
     </el-dialog>
     <!-- 新增对话框 -->
-    <el-dialog title="新增角色" :visible.sync="addVisible" center width="30%">
+    <el-dialog title="新增角色" :visible.sync="addVisible" width="30%">
       <el-form :model="addRole" label-width="80px">
         <div>
           <el-form-item label="角色名称">
@@ -77,21 +77,25 @@
             <el-input v-model="addRole.remark" placeholder="请输入备注"></el-input>
           </el-form-item>
         </div>
-        <el-form-item class="btn">
+        <!-- <el-form-item class="btn">
           <el-button @click="addVisible=false">取消</el-button>
           <el-button type="primary" @click="saveAdd">确定</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
+      <div slot="footer">
+        <el-button type="primary" @click="saveAdd">确定</el-button>
+        <el-button @click="addVisible=false">取消</el-button>
+      </div>
     </el-dialog>
     <!-- 编辑对话框 -->
     <el-dialog title="修改角色" :visible.sync="editVisible" center width="30%">
-      <el-form :model="editRole" label-width="80px">
+      <el-form :model="editRole" label-width="80px" :label-position="'left'">
         <div>
           <el-form-item label="角色名称">
             <el-input v-model="editRole.name" placeholder="请输入角色名"></el-input>
           </el-form-item>
-          <el-form-item label="备注">
-            <el-input v-model="editRole.remark" placeholder="请输入备注"></el-input>
+          <el-form-item label="描述">
+            <el-input type="textarea" :rows="4" v-model="editRole.remark" placeholder="请输入备注"></el-input>
           </el-form-item>
         </div>
         <el-form-item class="btn">
@@ -194,6 +198,15 @@
           this.RoleList = res.rows;
           this.count = res.count;
         });
+      },
+      // tableRowStatusName 根据有效无效修改 row 样式
+      tableRowStatusName({ row, rowIndex }) {
+        console.log(11111, row, rowIndex);
+        if(row.status == 0) {
+          return 'invalid-row'
+        } else {
+          return ''
+        }
       },
       handleCurrentChange(val) {
         this.cur_page = val;

@@ -34,7 +34,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="tableData" stripe height="531" style="width: 100%" :cell-style="cellStyle">
+      <el-table :data="tableData" stripe height="531" style="width: 100%">
         <el-table-column width="60px" prop="num" label="序号"></el-table-column>
         <el-table-column label="产品名称">
           <template slot-scope="scope">
@@ -139,7 +139,7 @@
     <!-- 新增产品对话框 -->
     <el-dialog title="新增产品" :visible.sync="addProductModel" width="30%">
       <div class="add-product">
-        <el-form label-width="90px" :model="addProduct" label-position="left">
+        <el-form label-width="90px" :model="addProduct">
           <el-form-item label="产品ID:">
             <el-input v-model="addProduct.modelId"></el-input>
           </el-form-item>
@@ -466,13 +466,6 @@
       },
       search() {
         this.getEquipment();
-      },
-      cellStyle({ row, column, rowIndex, columnIndex }) {
-        if(columnIndex == 1) {
-          return '';
-        } else {
-          return '';
-        }
       }
     },
     watch: {

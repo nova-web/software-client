@@ -76,8 +76,8 @@
         <div>删除不可恢复，是否确定删除？</div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="delVisible = false">取 消</el-button>
         <el-button type="primary" @click="deleteRow">确 定</el-button>
+        <el-button @click="delVisible = false">取 消</el-button>
       </div>
     </el-dialog>
     <!-- 发布对话框 -->
@@ -190,8 +190,8 @@
       </div>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addProductModel=false">取消</el-button>
         <el-button type="primary" @click="saveAddProduct">确定</el-button>
+        <el-button @click="addProductModel=false">取消</el-button>
       </div>
     </el-dialog>
 
@@ -507,16 +507,6 @@
     width: 300px;
     display: inline-block;
   }
-  .del-dialog-cnt {
-    font-size: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .dialog-footer {
-    display: flex;
-    justify-content: flex-end;
-  }
 
   .btn {
     display: flex;
@@ -538,15 +528,9 @@
     display: flex;
     justify-content: flex-end;
   }
-  .ic {
-    margin-right: 10px;
-    .icon-css {
-      font-size: 30px;
-      color: #f7ba2a;
-    }
-  }
+
   .add-product {
-    padding: 0 50px;
+    // padding: 0 50px;
   }
   .inputs {
     width: 100%;

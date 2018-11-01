@@ -151,7 +151,6 @@
       })
       //重新渲染侧边栏
       this.items.forEach((items, i, Arr) => {
-        console.log(items);
         this.getAlcs.forEach(alcs => {
           if(items.code == alcs.code) {
             this.index = i;
@@ -175,11 +174,9 @@
     },
     methods: {
       select(index) {
-        console.log(index);
         this.path = index;
       },
       open(index) {
-
         this.items.forEach(item => {
           if(item.index == index) {
             item.isClose = true;
@@ -196,7 +193,6 @@
       getFathenIndex(childIndex) {
         let index;
         this.items.forEach((i, ifi) => {
-
           if(i.subs) {
             i.subs.forEach((item, ins) => {
               if(item.index == childIndex) {
@@ -206,7 +202,6 @@
           }
         });
         if(index || index === 0) {
-
           this.open(this.items[index].index);
         }
       }

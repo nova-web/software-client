@@ -45,7 +45,9 @@ let api = {
     packageTryout: { url: 'package/tryout', method: 'post' }, //试用
     packagePublish: { url: 'package/publish', method: 'post' }, //发布
     packageWithdraw: { url: 'package/withdraw', method: 'post' }, //撤回
-    packageObtained: { url: 'package/obtained', method: 'post' } //下架
+    packageObtained: { url: 'package/obtained', method: 'post' }, //下架
+    //操作审计
+    getLogs: { url: 'logs', method: 'get' } //操作审计列表
 };
 
 for (var k in api) {

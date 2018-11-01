@@ -94,7 +94,7 @@ let routerArr = [
         meta: { title: '统计分析', keepAlive: false, code: 'TJFX' }
     }
 ];
-console.log(store.getters.getAlcs);
+// console.log(store.getters.getAlcs);
 if (store.getters.getAlcs.length) {
     routerArr = routerArr.filter(item => {
         return store.getters.getAlcs.findIndex(alcs => alcs.code === item.meta.code) > -1;

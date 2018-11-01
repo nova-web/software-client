@@ -149,6 +149,7 @@
         pro_status: [], // 版本状态
         cur_page: 1,
         count: 0,
+        idx: null,
         package: [], //产品类型
         stage: [], //产品阶段
         fitPro: [], //适配产品
@@ -238,13 +239,13 @@
       },
       //修改版本
       modify(row) {
-        console.log(row);
         this.modifyEdition = {
           version: row.version,
           stage: row.stage,
           versionLog: row.versionLog,
           productId: row.productId
         }
+        this.idx = row.id;
         this.modifyModel = true;
       },
       //确认修改

@@ -72,7 +72,7 @@
     </div>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="editUser" :model="editUser" label-width="80px" :rules="UserRule">
+      <el-form ref="editUser" :model="editUser" label-width="80px" :rules="UserRule" label-position="left">
 
         <el-form-item label="用户名称">
           <el-input v-model="editUser.name"></el-input>

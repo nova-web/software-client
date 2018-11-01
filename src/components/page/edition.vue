@@ -38,7 +38,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="tableData" stripe height="531" style="width: 100%">
+      <el-table :data="tableData" stripe height="531" style="width: 100%" :cell-style="cellStyle">
         <el-table-column label="序号" prop="num" width="50px"></el-table-column>
         <el-table-column label="所属产品" prop="productName"></el-table-column>
         <el-table-column label="版本" prop="version"></el-table-column>

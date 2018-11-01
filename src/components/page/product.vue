@@ -34,8 +34,8 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="tableData" stripe height="531" style="width: 100%" :cell-style="cellStyle">
-        <el-table-column width="60px" fixed="left" prop="num" label="序号"></el-table-column>
+      <el-table :data="tableData" stripe height="531" style="width: 100%">
+        <el-table-column width="60px" prop="num" label="序号"></el-table-column>
         <el-table-column label="产品名称">
           <template slot-scope="scope">
             <div class="active" @click="handleselect(scope.row, scope.$index)">
@@ -51,7 +51,7 @@
         <el-table-column prop="area" label="所属业务区域"></el-table-column>
         <el-table-column prop="dept" label="所属产品线"></el-table-column>
         <el-table-column width="160" prop="updatedAt" label="更新时间"></el-table-column>
-        <el-table-column width="300px" fixed="right" label="操作">
+        <el-table-column width="300px" label="操作">
           <template slot-scope="scope">
             <el-button size="small" type="text" @click="handleEdit(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">修改</el-button>
             <el-button size="small" type="text" @click="handleOnTrial(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">试用</el-button>
@@ -466,13 +466,6 @@
       },
       search() {
         this.getEquipment();
-      },
-      cellStyle({ row, column, rowIndex, columnIndex }) {
-        if(columnIndex == 1) {
-          return '';
-        } else {
-          return '';
-        }
       }
     },
     watch: {

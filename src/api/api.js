@@ -39,7 +39,13 @@ let api = {
     ProductMessage: { url: 'products/:id', method: 'get' }, //详细信息
     //版本
     getPackages: { url: 'packages', method: 'get' },
-    addPackages: { url: 'packages', method: 'post' }
+    addPackages: { url: 'packages', method: 'post' },
+    putPackages: { url: 'packages', method: 'put' }, //修改
+    deletePackage: { url: 'packages/:id', method: 'delete' }, //删除
+    packageTryout: { url: 'package/tryout', method: 'post' }, //试用
+    packagePublish: { url: 'package/publish', method: 'post' }, //发布
+    packageWithdraw: { url: 'package/withdraw', method: 'post' }, //撤回
+    packageObtained: { url: 'package/obtained', method: 'post' } //下架
 };
 
 for (var k in api) {

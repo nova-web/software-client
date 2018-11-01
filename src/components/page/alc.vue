@@ -1,15 +1,15 @@
 <template>
 
   <div class="alc">
-    <div class="container">
-      <div class="crumbs">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item>
-            <i class="el-icon-tickets"></i>权限管理</el-breadcrumb-item>
-          <el-breadcrumb-item>功能管理</el-breadcrumb-item>
-        </el-breadcrumb>
+    <div class="crumbs">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item>
+          <i class="el-icon-tickets"></i>权限管理</el-breadcrumb-item>
+        <el-breadcrumb-item>功能管理</el-breadcrumb-item>
+      </el-breadcrumb>
 
-      </div>
+    </div>
+    <div class="container">
       <div class="search-box">
 
         <el-form highlight-current-row @current-change="handleCurrentChange" :model="alcSearch" ref="search" class="demo-form-inline" :inline="true">

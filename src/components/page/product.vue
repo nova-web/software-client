@@ -68,7 +68,7 @@
       </div>
     </div>
     <!-- 删除对话框 -->
-    <el-dialog title="提示" :visible.sync="delVisible" width="600px">
+    <el-dialog title="删除产品" :visible.sync="delVisible" width="600px">
       <div class="del-dialog-cnt">
         <div class="ic">
           <i class="el-icon-info icon-css"></i>

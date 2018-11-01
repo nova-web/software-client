@@ -42,7 +42,7 @@
         <el-table-column label="序号" prop="num" width="50px"></el-table-column>
         <el-table-column label="所属产品" prop="productName"></el-table-column>
         <el-table-column label="版本" prop="version"></el-table-column>
-        <el-table-column label="版本类型" prop="stage"></el-table-column>
+        <el-table-column label="版本类型" prop="stageName"></el-table-column>
         <el-table-column label="状态" prop="publishStatusName"></el-table-column>
         <el-table-column label="版本描述" prop="versionLog"></el-table-column>
         <el-table-column label="发布时间" prop="createdAt"></el-table-column>
@@ -53,10 +53,12 @@
                 下载
               </a>
             </el-button>
-            <el-button size="small" type="text" @click="modify(scope.row, scope.$index)">修改</el-button>
-            <el-button size="small" type="text">删除</el-button>
-            <el-button size="small" type="text">试用</el-button>
-            <el-button size="small" type="text">发布</el-button>
+            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'" @click="modify(scope.row, scope.$index)">修改</el-button>
+            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'" @click="deleteEdition(scope.row, scope.$index)">删除</el-button>
+            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'" @click="packageTryout(scope.row, scope.$index)">试用</el-button>
+            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_02' || scope.row.publishStatus === 'pro_status_04'" @click="packagePublish(scope.row, scope.$index)">发布</el-button>
+            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_02'" @click="withdrawPublish(scope.row, scope.$index)">撤回</el-button>
+            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_03'" @click="packageObtained(scope.row, scope.$index)">下架</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -119,7 +121,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="版本上传:">
-            <el-upload class="upload-demo" ref="upload" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+            <el-upload class="upload-demo" ref="uploadEdition" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
           </el-form-item>
@@ -128,6 +130,19 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelModifyEdition">取消</el-button>
         <el-button type="primary" @click="saveModifyEdition">确定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 删除 -->
+    <el-dialog title="删除版本" :visible.sync="delVisible" width="600px">
+      <div class="del-dialog-cnt">
+        <div class="ic">
+          <i class="el-icon-info icon-css"></i>
+        </div>
+        <div>删除不可恢复，是否确定删除？</div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="delVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveDeleteEdition">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -140,6 +155,7 @@
   export default {
     data() {
       return {
+        delVisible: false,
         modifyModel: false, //修改版本
         addEditionModele: false, //新增版本
         tableData: [],
@@ -182,8 +198,9 @@
         }).then(res => {
           this.count = res.count;
           res.rows.forEach(item => {
+            console.log(item);
             item.publishStatusName = this.getFormatDict.pro_status[item.publishStatus];
-            item.stage = this.getFormatDict.stage[item.stage];
+            item.stageName = this.getFormatDict.stage[item.stage];
             item.num = count++;
           });
           this.tableData = res.rows;
@@ -249,18 +266,93 @@
         this.modifyModel = true;
       },
       //确认修改
-      saveModifyEdition() { },
+      saveModifyEdition() {
+        let formData = new FormData();
+        Object.keys(this.modifyEdition).forEach(item => {
+          formData.append(item, this.modifyEdition[item]);
+        });
+        if(this.file) {
+          formData.append('package', this.file.raw);
+        }
+        axios({
+          method: 'put',
+          url: api.putPackages.url + `/${this.idx}`,
+          data: formData,
+          headers: { 'token': this.getCommon.token }
+        }).then(res => {
+          if(res.data.errorCode === 1) {
+            this.$message.success('操作成功');
+            this.modifyModel = false;
+            this.$refs.uploadEdition.clearFiles()
+          } else {
+            this.$message.error(res.data.errorMsg);
+          }
+        });
+      },
       // 取消修改
       cancelModifyEdition() {
         this.modifyModel = false;
       },
+
+      //删除
+      deleteEdition(row) {
+        this.delVisible = true;
+        this.idx = row.id;
+      },
+      //确认删除
+      saveDeleteEdition() {
+        this.ajax({
+          name: 'deletePackage',
+          id: this.idx
+        }).then(res => {
+          this.delVisible = false;
+          this.getEdition();
+          this.$message.success('删除成功');
+        })
+      },
+      //试用
+      packageTryout(row) {
+        this.ajax({
+          name: 'packageTryout',
+          data: { id: row.id }
+        }).then(res => {
+          this.$message.success('操作成功');
+          this.getEdition();
+        })
+      },
+      //发布
+      packagePublish(row) {
+        this.ajax({
+          name: 'packagePublish',
+          data: { id: row.id }
+        }).then(res => {
+          this.$message.success('操作成功');
+          this.getEdition();
+        })
+      },
+      //撤回
+      withdrawPublish(row) {
+        this.ajax({
+          name: 'packageWithdraw',
+          data: { id: row.id }
+        }).then(res => {
+          this.$message.success('操作成功');
+          this.getEdition();
+        })
+      },
+      packageObtained(row) {
+        this.ajax({
+          name: 'packageObtained',
+          data: { id: row.id }
+        }).then(res => {
+          this.$message.success('操作成功');
+          this.getEdition();
+        })
+      },
       //下载
       download(row) {
-        console.log(row);
         this.href = row.url;
       },
-
-
       //搜索
       search() {
         this.getEdition();
@@ -307,6 +399,19 @@
   }
   .tips {
     color: #dd5145;
+  }
+  .del-dialog-cnt {
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .ic {
+    margin-right: 10px;
+    .icon-css {
+      font-size: 30px;
+      color: #f7ba2a;
+    }
   }
 </style>
 

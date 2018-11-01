@@ -95,10 +95,10 @@
           <el-input v-model="editFunction.remark"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible=false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisible=false">取 消</el-button>
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+      </div>
     </el-dialog>
 
     <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%">
@@ -116,10 +116,10 @@
           <el-input v-model="addParentObj.remark"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="addParentModel=false">取 消</el-button>
-                <el-button type="primary" @click="saveAddParent">确 定</el-button>
-            </span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addParentModel=false">取 消</el-button>
+        <el-button type="primary" @click="saveAddParent">确 定</el-button>
+      </div>
     </el-dialog>
 
     <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%">
@@ -137,18 +137,18 @@
           <el-input v-model="addLeaverObj.remark"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="addLeaverModel=false">取 消</el-button>
-                <el-button type="primary" @click="saveAddLeaver">确 定</el-button>
-            </span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addLeaverModel=false">取 消</el-button>
+        <el-button type="primary" @click="saveAddLeaver">确 定</el-button>
+      </div>
     </el-dialog>
 
     <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
       <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="delVisible = false">取 消</el-button>
-                <el-button type="primary" @click="deleteAcls">确 定</el-button>
-            </span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="delVisible = false">取 消</el-button>
+        <el-button type="primary" @click="deleteAcls">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>

@@ -98,19 +98,23 @@
             <el-input type="textarea" :rows="4" v-model="editRole.remark" placeholder="请输入备注"></el-input>
           </el-form-item>
         </div>
-        <el-form-item class="btn">
+        <!-- <el-form-item class="btn">
           <el-button @click="editVisible=false;">取消</el-button>
           <el-button type="primary" @click="saveEdit">确定</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
+      <div slot="footer">
+        <el-button @click="editVisible=false;">取消</el-button>
+        <el-button type="primary" @click="saveEdit">确定</el-button>
+      </div>
     </el-dialog>
     <!-- 删除对话框 -->
     <el-dialog title="提示" :visible.sync="deleteRoleVisible" width="300px" center>
-      <div class="del-dialog-cnt">删除角色{{roleName}}，是否确定？</div>
-      <span slot="footer" class="dialog-footer">
+      <div class="del-dialog-cnt">删除角色：{{roleName}}，是否确定？</div>
+      <div slot="footer">
         <el-button @click="deleteRoleVisible=false">取 消</el-button>
         <el-button type="primary" @click="handleDeleteRoles">确 定</el-button>
-      </span>
+      </div>
     </el-dialog>
   </div>
 </template>

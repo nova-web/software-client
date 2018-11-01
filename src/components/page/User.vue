@@ -102,19 +102,19 @@
           <el-input v-model="editUser.email"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible=false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisible=false">取 消</el-button>
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+      </div>
     </el-dialog>
 
     <!-- 删除提示框 -->
     <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
       <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="delVisible = false">取 消</el-button>
-                <el-button type="primary" @click="deleteUser">确 定</el-button>
-            </span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="delVisible = false">取 消</el-button>
+        <el-button type="primary" @click="deleteUser">确 定</el-button>
+      </div>
     </el-dialog>
 
     <!-- 新增用户 -->

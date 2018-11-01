@@ -75,7 +75,7 @@
 
     <!-- 新增用户 -->
     <el-dialog title="新增用户" :visible.sync="addVisible" width="30%">
-      <el-form :model="addUser" label-width="80px">
+      <el-form :model="addUser" label-width="80px" label-position="left">
         <el-form-item label="角色">
           <el-select v-model="addUser.operator" placeholder="请选择角色">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label">

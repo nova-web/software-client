@@ -3,8 +3,8 @@
     <div class="crumbs">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i>权限管理</el-breadcrumb-item>
-        <el-breadcrumb-item>角色管理</el-breadcrumb-item>
+          <i class="el-icon-tickets"></i>系统管理</el-breadcrumb-item>
+        <el-breadcrumb-item>系统控制</el-breadcrumb-item>
       </el-breadcrumb>
 
     </div>

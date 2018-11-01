@@ -16,12 +16,14 @@
               <span slot="title">{{ item.title }}</span>
             </template>
             <el-menu-item class="rel" v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index" v-show="subItem.isShow">
-              <img class="imgs" src="../../assets/sidebar/icon_pressed.png" alt="" v-show="subItem.index == path"> {{ subItem.title }}
+              <img class="imgs" src="../../assets/sidebar/icon_pressed.png" alt="" v-show="subItem.index === path"> {{ subItem.title }}
             </el-menu-item>
           </el-submenu>
         </template>
         <template v-else>
           <el-menu-item :index="item.index" :key="item.index" v-show="item.isShow">
+            <img class="checkImg" :src="item.preicon" alt="" v-if="item.index === path">
+            <img class="checkImg" :src="item.noicon" alt="" v-else>
             <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </template>
@@ -98,6 +100,7 @@
             ]
           },
           {
+            isClose: false,
             noicon: require('../../assets/sidebar/icon_admin_normal.png'),
             preicon: require('../../assets/sidebar/icon_admin_pressed.png'),
             index: '3',
@@ -106,16 +109,24 @@
             isShow: false,
             subs: [
               {
-                index: '',
+                index: 'syslog',    // 路由
                 title: '操作审计',
                 isShow: false,
                 code: 'CZSJ'
+              },
+              {
+                index: 'sysctrl',
+                title: '系统控制',
+                isShow: false,
+                code: 'XTKZ'
               }
             ]
           },
           {
-            icon: 'el-icon-tickets',
-            index: 'Statistics',
+            isClose: false,
+            noicon: require('../../assets/sidebar/icon_admin_normal.png'),
+            preicon: require('../../assets/sidebar/icon_admin_pressed.png'),
+            index: 'statistics',
             title: '统计分析',
             code: 'TJFX',
             isShow: false
@@ -140,6 +151,7 @@
       })
       //重新渲染侧边栏
       this.items.forEach((items, i, Arr) => {
+        console.log(items);
         this.getAlcs.forEach(alcs => {
           if(items.code == alcs.code) {
             this.index = i;
@@ -163,6 +175,7 @@
     },
     methods: {
       select(index) {
+        console.log(index);
         this.path = index;
       },
       open(index) {

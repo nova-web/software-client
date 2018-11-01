@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <el-form :model="data" label-width="80px" ref="adduser" :rules="UserRule" class="demo-ruleForm">
+      <el-form :model="data" label-width="80px" ref="adduser" :rules="UserRule" class="demo-ruleForm" label-position="left">
         <el-form-item label="用户名称" prop="username">
           <el-input v-model.trim="data.username" maxlength="30" clearable></el-input>
         </el-form-item>

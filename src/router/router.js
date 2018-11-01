@@ -73,9 +73,28 @@ let routerArr = [
         path: '/edition',
         component: resolve => require(['../components/page/edition.vue'], resolve),
         meta: { title: '版本管理', keepAlive: false, code: 'BBLB' }
+    },
+    // nie
+    {
+        name: 'syslog',
+        path: '/syslog',
+        component: resolve => require(['../components/page/syslog.vue'], resolve),
+        meta: { title: '操作审计', keepAlive: false, code: 'CZSJ' }
+    },
+    {
+        name: 'sysctrl',
+        path: '/sysctrl',
+        component: resolve => require(['../components/page/sysctrl.vue'], resolve),
+        meta: { title: '系统控制', keepAlive: false, code: 'XTKZ' }
+    },
+    {
+        name: 'statistics',
+        path: '/statistics',
+        component: resolve => require(['../components/page/statistics.vue'], resolve),
+        meta: { title: '统计分析', keepAlive: false, code: 'TJFX' }
     }
 ];
-// console.log(store.getters.getAlcs);
+console.log(store.getters.getAlcs);
 if (store.getters.getAlcs.length) {
     routerArr = routerArr.filter(item => {
         return store.getters.getAlcs.findIndex(alcs => alcs.code === item.meta.code) > -1;

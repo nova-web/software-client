@@ -101,8 +101,8 @@
           },
           {
             isClose: false,
-            noicon: require('../../assets/sidebar/icon_admin_normal.png'),
-            preicon: require('../../assets/sidebar/icon_admin_pressed.png'),
+            noicon: require('../../assets/sidebar/icon_setting_normal.png'),
+            preicon: require('../../assets/sidebar/icon_setting_pressed.png'),
             index: '3',
             title: '系统管理',
             code: 'XTGL',
@@ -124,8 +124,8 @@
           },
           {
             isClose: false,
-            noicon: require('../../assets/sidebar/icon_admin_normal.png'),
-            preicon: require('../../assets/sidebar/icon_admin_pressed.png'),
+            noicon: require('../../assets/sidebar/icon_analysis_normal.png'),
+            preicon: require('../../assets/sidebar/icon_analysis_pressed.png'),
             index: 'statistics',
             title: '统计分析',
             code: 'TJFX',

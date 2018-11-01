@@ -84,7 +84,7 @@
     <!-- 编辑对话框 -->
     <el-dialog title="编辑" :visible.sync="editProductModel" width="30%">
 
-      <el-form ref="editFrom" :model="editProduct" label-width="90px">
+      <el-form ref="editFrom" :model="editProduct" label-width="90px" label-position="left">
         <el-form-item label="产品ID:">
           <el-input v-model="editProduct.modelId"></el-input>
         </el-form-item>

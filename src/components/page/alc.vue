@@ -81,7 +81,7 @@
     </div>
 
     <el-dialog title="修改功能" :visible.sync="editVisible" width="30%">
-      <el-form ref="editUser" :rules="AlcRule" :model="editFunction" label-width="80px">
+      <el-form ref="editacl" :rules="AlcRule" :model="editFunction" label-width="80px">
         <el-form-item label="功能名称" prop="name">
           <el-input v-model.trim="editFunction.name" maxlength="30"></el-input>
         </el-form-item>
@@ -96,13 +96,13 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisible=false">取 消</el-button>
         <el-button type="primary" @click="saveEdit">确 定</el-button>
+        <el-button @click="editVisible=false;$refs['editacl'].resetFields();">取 消</el-button>
       </div>
     </el-dialog>
 
     <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%">
-      <el-form ref="editUser" :model="addParentObj" :rules="AlcRule" label-width="80px">
+      <el-form ref="addpeer" :model="addParentObj" :rules="AlcRule" label-width="80px">
         <el-form-item label="功能名称" prop="name">
           <el-input v-model.trim="addParentObj.name"></el-input>
         </el-form-item>
@@ -117,13 +117,13 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addParentModel=false">取 消</el-button>
         <el-button type="primary" @click="saveAddParent">确 定</el-button>
+        <el-button @click="addParentModel=false;$refs['addpeer'].resetFields();">取 消</el-button>
       </div>
     </el-dialog>
 
     <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%">
-      <el-form ref="editUser" :model="addLeaverObj" :rules="AlcRule" label-width="80px">
+      <el-form ref="addleaver" :model="addLeaverObj" :rules="AlcRule" label-width="80px">
         <el-form-item label="功能名称" prop="name">
           <el-input v-model.trim="addLeaverObj.name"></el-input>
         </el-form-item>
@@ -138,8 +138,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addLeaverModel=false">取 消</el-button>
         <el-button type="primary" @click="saveAddLeaver">确 定</el-button>
+        <el-button @click="addLeaverModel=false;$refs['addleaver'].resetFields();">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -178,11 +178,11 @@
         },
         AlcRule: {  // 弹出框内容的验证规则 name url code remark
           name: [
-            { required: true, validator: checkUsername, trigger: 'change' },
+            { required: true, validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '功能名称不能为空' }],
-          url: [{ required: true, message: 'URL不能为空', trigger: 'change' }],
-          code: [{ required: true, message: 'Code不能为空', trigger: 'change' }],
-          remark: [{ required: true, message: '描述不能为空', trigger: 'change' }],
+          url: [{ required: true, message: 'URL不能为空', trigger: 'blur' }],
+          code: [{ required: true, message: 'Code不能为空', trigger: 'blur' }],
+          remark: [{ required: true, message: '描述不能为空', trigger: 'blur' }],
         },
         editVisible: false,
         editFunction: {},
@@ -236,16 +236,21 @@
       },
       //确认修改
       saveEdit() {
-        console.log(this.editFunction);
-        this.ajax({
-          name: 'putAcls',
-          id: this.idx,
-          data: this.editFunction
-        }).then(res => {
-          this.initData();
-          this.editVisible = false;
-          this.$message.success('操作成功');
-        })
+        this.$refs.editacl.validate((valid) => {
+          if(valid) {
+            this.ajax({
+              name: 'putAcls',
+              id: this.idx,
+              data: this.editFunction
+            }).then(res => {
+              this.initData();
+              this.editVisible = false;
+              this.$message.success('操作成功');
+            })
+          } else {
+            return;
+          }
+        });
       },
       //删除
       handleDelete(row) {
@@ -276,21 +281,24 @@
       },
       //确认新增
       saveAddParent() {
-        if(!this.addParentObj.parentId) {
-          delete this.addParentObj.parentId
-        }
-        this.ajax({
-          name: 'postAclsParent',
-          data: this.addParentObj
-        }).then(res => {
-          this.initData();
-          this.addParentModel = false;
-          this.$message.success('操作成功');
-        })
+        this.$refs.addpeer.validate((valid) => {
+          if(valid) {
+            if(!this.addParentObj.parentId) {
+              delete this.addParentObj.parentId
+            }
+            this.ajax({
+              name: 'postAclsParent',
+              data: this.addParentObj
+            }).then(res => {
+              this.initData();
+              this.addParentModel = false;
+              this.$message.success('操作成功');
+            })
+          }
+        });
       },
       //新增下级菜单
       handleLowerLevelMenu(row) {
-
         this.addLeaverModel = true;
         this.addLeaverObj = {
           name: null,
@@ -301,14 +309,18 @@
         }
       },
       saveAddLeaver() {
-        this.ajax({
-          name: 'postAclsParent',
-          data: this.addLeaverObj
-        }).then(res => {
-          this.initData();
-          this.addLeaverModel = false;
-          this.$message.success('操作成功');
-        })
+        this.$refs.addleaver.validate((valid) => {
+          if(valid) {
+            this.ajax({
+              name: 'postAclsParent',
+              data: this.addLeaverObj
+            }).then(res => {
+              this.initData();
+              this.addLeaverModel = false;
+              this.$message.success('操作成功');
+            })
+          }
+        });
       },
       //置为无效
       nullAndVoid(row) {

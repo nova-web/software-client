@@ -160,8 +160,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addVisible = false;$refs['adduser'].clearValidate();">取 消</el-button>
         <el-button type="primary" @click="saveAdd('addUser')">确 定</el-button>
+        <el-button @click="addVisible = false;$refs['adduser'].resetFields();">取 消</el-button>
       </div>
     </el-dialog>
   </div>

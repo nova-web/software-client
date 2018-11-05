@@ -15,18 +15,18 @@
       </div>
       <div class="search-box">
         <el-form ref="search" :rules="searchRules" :model="editionSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="状态">
+          <el-form-item label="状态：">
             <el-select class="select-input" clearable v-model="editionSearch.publishStatus" @change="search">
               <el-option v-for=" item in pro_status" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="产品名称" prop="name">
+          <el-form-item label="产品名称：" prop="name">
             <el-input class="ent-input" maxlength="30" clearable v-model.trim="editionSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="版本名称" prop="version">
+          <el-form-item label="版本名称：" prop="version">
             <el-input class="ent-inputs" maxlength="30" clearable v-model.trim="editionSearch.version" placeholder="按版本名称搜索" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="更新时间">
+          <el-form-item label="更新时间：">
             <el-date-picker class="ent-inputs" v-model="editionSearch.updatedStart" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
             </el-date-picker>
             &nbsp; 至 &nbsp;

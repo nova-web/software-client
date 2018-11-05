@@ -13,25 +13,25 @@
       </div>
       <div class="search-box">
         <el-form ref="search" :model="userSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="状态">
+          <el-form-item label="状态：">
             <el-select v-model="userSearch.status" @change="search">
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="角色">
+          <el-form-item label="角色：">
             <el-select v-model="userSearch.roleId" clearable @change="search">
               <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="用户名称">
+          <el-form-item label="用户名称：">
             <el-input v-model="userSearch.username" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="工号">
+          <el-form-item label="工号：">
             <el-input v-model="userSearch.code" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="真实姓名">
+          <el-form-item label="真实姓名：">
             <el-input v-model="userSearch.name" @change="search"></el-input>
           </el-form-item>
           <el-form-item>

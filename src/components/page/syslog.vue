@@ -13,21 +13,21 @@
       </div>
       <div class="search-box">
         <el-form ref="search" :model="syslogSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
-          <el-form-item label="操作对象:" prop="target">
+          <el-form-item label="操作对象：" prop="target">
             <el-input class="inputs" v-model="syslogSearch.target" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="操作员:" prop="operator">
+          <el-form-item label="操作员：" prop="operator">
             <el-input v-model="syslogSearch.operator" class="inputs" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="操作类型:">
+          <el-form-item label="操作类型：">
             <el-select class="inputs" clearable v-model="syslogSearch.operateType" @change="search">
               <el-option v-for="(item, index) in selectOperateType" :value="item.value" :label="item.label" :key="index"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="操作描述:" prop="operateContent">
+          <el-form-item label="操作描述：" prop="operateContent">
             <el-input v-model="syslogSearch.operateContent" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="时间:">
+          <el-form-item label="时间：">
             <el-date-picker v-model="syslogSearch.startTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
             </el-date-picker>
             &nbsp; 至 &nbsp;

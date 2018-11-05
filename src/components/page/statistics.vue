@@ -13,10 +13,10 @@
       </div>
       <div class="search-box">
         <el-form ref="search" :rules="searchRules" :model="scarchStatistics" class="demo-form-inline" :inline="true">
-          <el-form-item label="设备S/N号:" prop="deviceId">
+          <el-form-item label="设备S/N号：" prop="deviceId">
             <el-input v-model="scarchStatistics.deviceId"></el-input>
           </el-form-item>
-          <el-form-item label="设备名称或IP:" prop="softwareIp">
+          <el-form-item label="设备名称或IP：" prop="softwareIp">
             <el-input v-model="scarchStatistics.softwareIp"></el-input>
           </el-form-item>
           <el-form-item>

@@ -14,14 +14,14 @@
       </div>
       <div class="search-box">
         <el-form ref="search" :rules="searchRules" :model="roleSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="状态">
+          <el-form-item label="状态：">
             <el-select v-model="roleSearch.status" @change="search">
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="角色名称" prop="username">
+          <el-form-item label="角色名称：" prop="username">
             <el-input v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索" clearable></el-input>
           </el-form-item>
 

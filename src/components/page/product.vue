@@ -16,17 +16,17 @@
 
       <div class="search-box">
         <el-form ref="search" :rules="searchRules" :model="productSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="状态">
+          <el-form-item label="状态：">
             <el-select clearable v-model="productSearch.publishStatus" @change="search">
               <el-option v-for=" item in pro_status" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="产品类型">
+          <el-form-item label="产品类型：">
             <el-select clearable v-model="productSearch.type" @change="search">
               <el-option v-for=" item in package" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="产品名称" prop="name">
+          <el-form-item label="产品名称：" prop="name">
             <el-input clearable v-model="productSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
           </el-form-item>
           <el-form-item>

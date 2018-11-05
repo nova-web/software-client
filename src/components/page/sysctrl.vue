@@ -14,14 +14,14 @@
       </div> -->
       <div class="search-box">
         <el-form ref="search" :model="sysctrlSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
-          <el-form-item label="服务状态">
+          <el-form-item label="服务状态：">
             <el-select v-model="sysctrlSearch.service" @change="search">
               <el-option v-for="item in service" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="产品名称" prop="username">
+          <el-form-item label="产品名称：" prop="username">
             <el-input v-model="sysctrlSearch.username" @change="search" placeholder="按产品名称搜索"></el-input>
           </el-form-item>
 

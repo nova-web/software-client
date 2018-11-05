@@ -84,48 +84,48 @@
     <!-- 编辑对话框 -->
     <el-dialog title="编辑" :visible.sync="editProductModel" width="30%">
 
-      <el-form ref="editFrom" :model="editProduct" label-width="90px" label-position="left">
-        <el-form-item label="产品ID:">
+      <el-form ref="editFrom" :rules="ProRule" :model="editProduct" label-width="90px" label-position="left">
+        <el-form-item label="产品ID:" prop="modelId">
           <el-input v-model="editProduct.modelId"></el-input>
         </el-form-item>
-        <el-form-item label="产品名称:">
+        <el-form-item label="产品名称:" prop="name">
           <el-input v-model="editProduct.name"></el-input>
         </el-form-item>
-        <el-form-item label="产品型号:">
+        <el-form-item label="产品型号:" prop="model">
           <el-input v-model="editProduct.model"></el-input>
         </el-form-item>
-        <el-form-item label="产品类型:">
+        <el-form-item label="产品类型:" prop="type">
           <el-select class="inputs" clearable v-model="editProduct.type">
             <el-option v-for=" item in package" :key="item.id" :value="item.code" :label="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="产品阶段:">
+        <el-form-item label="产品阶段:" prop="stage">
           <el-select class="inputs" clearable v-model="editProduct.stage">
             <el-option v-for="item in editStage(editProduct.type)" :key="item.id" :value="item.code" :label="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="适配产品:">
+        <el-form-item label="适配产品:" prop="fitPro">
           <el-select class="inputs" filterable multiple clearable collapse-tags v-model="editProduct.fitPro">
             <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="业务区域:">
+        <el-form-item label="业务区域:" prop="area">
           <el-select class="inputs" clearable v-model="editProduct.area">
             <el-option v-for="item in area" :key="item.id" :value="item.code" :label="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属产品线:">
+        <el-form-item label="所属产品线:" prop="dept">
           <el-select class="inputs" clearable v-model="editProduct.dept">
             <el-option v-for="item in dept" :key="item.id" :value="item.code" :label="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="项目经理:">
+        <el-form-item label="项目经理:" prop="projectManager">
           <el-input v-model="editProduct.projectManager"></el-input>
         </el-form-item>
-        <el-form-item label="产品介绍:">
+        <el-form-item label="产品介绍:" prop="productDesc">
           <el-input v-model="editProduct.productDesc" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="示意图:">
+        <el-form-item label="示意图:" prop="upload">
           <el-upload class="upload-demo" ref="uploadEdit" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
           </el-upload>
@@ -139,48 +139,48 @@
     <!-- 新增产品对话框 -->
     <el-dialog title="新增产品" :visible.sync="addProductModel" width="30%">
       <div class="add-product">
-        <el-form label-width="90px" :model="addProduct">
-          <el-form-item label="产品ID:">
-            <el-input v-model="addProduct.modelId"></el-input>
+        <el-form label-width="90px" :model="addProduct" ref="addpro" :rules="ProRule" class="demo-ruleForm">
+          <el-form-item label="产品ID:" prop="modelId">
+            <el-input v-model.trim="addProduct.modelId" placeholder="输入产品ID"></el-input>
           </el-form-item>
-          <el-form-item label="产品名称:">
-            <el-input v-model="addProduct.name"></el-input>
+          <el-form-item label="产品名称:" prop="name">
+            <el-input v-model.trim="addProduct.name" placeholder="输入产品名称"></el-input>
           </el-form-item>
-          <el-form-item label="产品型号:">
-            <el-input v-model="addProduct.model"></el-input>
+          <el-form-item label="产品型号:" prop="model">
+            <el-input v-model.trim="addProduct.model" placeholder="输入产品型号"></el-input>
           </el-form-item>
-          <el-form-item label="产品类型:">
-            <el-select class="inputs" clearable v-model="addProduct.type">
+          <el-form-item label="产品类型:" prop="type">
+            <el-select class="inputs" clearable v-model="addProduct.type" placeholder="请选择产品类型">
               <el-option v-for=" item in package" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="产品阶段:">
-            <el-select class="inputs" clearable v-model="addProduct.stage">
+          <el-form-item label="产品阶段:" prop="stage">
+            <el-select class="inputs" clearable v-model="addProduct.stage" placeholder="请选择产品类型">
               <el-option v-for="item in stage" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="适配产品:">
-            <el-select class="inputs" filterable multiple clearable collapse-tags v-model="addProduct.fitPro">
+          <el-form-item label="适配产品:" prop="fitPro">
+            <el-select class="inputs" filterable multiple clearable collapse-tags v-model="addProduct.fitPro" placeholder="请选择适配产品, 可多选">
               <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="业务区域:">
-            <el-select class="inputs" clearable v-model="addProduct.area">
+          <el-form-item label="业务区域:" prop="area">
+            <el-select class="inputs" clearable v-model="addProduct.area" placeholder="请选择业务区域">
               <el-option v-for="item in area" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属产品线:">
-            <el-select class="inputs" clearable v-model="addProduct.dept">
+          <el-form-item label="所属产品线:" prop="dept">
+            <el-select class="inputs" clearable v-model="addProduct.dept" placeholder="请选择所属产品线">
               <el-option v-for="item in dept" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="项目经理:">
-            <el-input v-model="addProduct.projectManager"></el-input>
+          <el-form-item label="项目经理:" prop="projectManager">
+            <el-input v-model="addProduct.projectManager" placeholder="输入产品项目经理"></el-input>
           </el-form-item>
-          <el-form-item label="产品介绍:">
-            <el-input v-model="addProduct.productDesc" type="textarea" :rows="2"></el-input>
+          <el-form-item label="产品介绍:" prop="productDesc">
+            <el-input v-model="addProduct.productDesc" type="textarea" :rows="2" placeholder="输入产品介绍说明"></el-input>
           </el-form-item>
-          <el-form-item label="示意图:">
+          <el-form-item label="示意图:" prop="upload">
             <el-upload class="upload-demo" ref="upload" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
@@ -190,8 +190,8 @@
       </div>
 
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveAddProduct">确定</el-button>
-        <el-button @click="addProductModel=false">取消</el-button>
+        <el-button type="primary" @click="saveAddProduct('addProduct')">确定</el-button>
+        <el-button @click="addProductModel=false;$refs['addpro'].resetFields();">取消</el-button>
       </div>
     </el-dialog>
 
@@ -202,6 +202,7 @@
   import { serialize } from '../../utils';
   import axios from 'axios';
   import { api } from '../../api';
+  import { checkLength, checkUsername } from '../../utils/rules';
   export default {
     data() {
       return {
@@ -213,6 +214,23 @@
         editProduct: {}, //修改产品
         addProductModel: false,
         addProduct: {},
+        ProRule: {
+          modelId: [{ required: true, message: '产品ID不能为空', trigger: 'blur' }],
+          name: [
+            { required: true, validator: checkLength, trigger: 'blur' },
+            { required: true, trigger: 'blur', message: '产品名称不能为空' }],
+          model: [
+            { required: true, validator: checkLength, trigger: 'blur' },
+            { required: true, trigger: 'blur', message: '产品型号不能为空' }],
+          type: [{ required: true, message: '请选择产品类型', trigger: 'change' }],
+          stage: [{ required: true, message: '请选择产品阶段', trigger: 'change' }],
+          fitPro: [{ required: true, message: '请选择适配产品', trigger: 'change' }],
+          area: [{ required: true, message: '请选择业务区域', trigger: 'change' }],
+          dept: [{ required: true, message: '请选择所属产品线', trigger: 'change' }],
+          projectManager: [
+            { required: true, validator: checkLength, trigger: 'blur' },
+            { required: true, trigger: 'blur', message: '请输入产品项目经理' }]
+        },
         cancelvisible: {
           fitPro: []
         },
@@ -298,30 +316,37 @@
         this.file = null;
       },
       //新增产品确认
-      saveAddProduct() {
-        let formData = new FormData();
-        Object.keys(this.addProduct).forEach(item => {
-          formData.append(item, this.addProduct[item]);
-        });
-        if(this.file) {
-          formData.append("logo", this.file.raw);
-        }
-        this.axAjax(api.postProduct.url, formData, 'post')
-          .then(res => {
-            if(res.data.errorCode === 1) {
-              this.addProductModel = false;
-              this.$message.success('操作成功');
-              this.file = null;
-              this.addProduct = Object.assign({}, this.cancelvisible);
-              this.$refs['upload'].clearFiles()
-              this.getEquipment();
-            } else {
-              this.$message.error(res.data.errorMsg);
+      saveAddProduct(formName) {
+        // console.log(this.$refs.addpro);
+        this.$refs.addpro.validate((valid) => {
+          if(valid) {
+            let formData = new FormData();
+            Object.keys(this.addProduct).forEach(item => {
+              formData.append(item, this.addProduct[item]);
+            });
+            if(this.file) {
+              formData.append("logo", this.file.raw);
             }
-          })
+            this.axAjax('post', api.postProduct.url, formData, null)
+              .then(res => {
+                if(res.data.errorCode === 1) {
+                  this.addProductModel = false;
+                  this.$message.success('操作成功');
+                  this.file = null;
+                  this.addProduct = Object.assign({}, this.cancelvisible);
+                  this.$refs['upload'].clearFiles()
+                  this.getEquipment();
+                } else {
+                  this.$message.error(res.data.errorMsg);
+                }
+              })
+          } else {
+            return;
+          }
+        });
       },
       //axios
-      axAjax(api, datas, methods) {
+      axAjax(methods, api, datas, params) {
         return axios({
           method: methods,
           url: api,
@@ -415,42 +440,89 @@
       },
       //试用
       handleOnTrial(row, index) {
-        this.ajax({
-          name: 'productTryout',
-          data: { id: row.id }
-        }).then(res => {
-          this.getEquipment();
-          this.$message.success('操作成功');
-        })
+        this.$confirm('确定试用该产品？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'productTryout',
+            data: { id: row.id }
+          }).then(res => {
+            this.getEquipment();
+            this.$message({
+              type: 'success',
+              message: '试用成功!'
+            });
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消试用'
+          });
+        });
       },
       //发布
       handleselectdevice(row, index) {
-        this.ajax({
-          name: 'productPublish',
-          data: { id: row.id }
-        }).then(res => {
-          this.getEquipment();
-          this.$message.success('操作成功');
-        })
+        this.$confirm('确定发布该产品？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'productPublish',
+            data: { id: row.id }
+          }).then(res => {
+            this.getEquipment();
+            this.$message.success('发布成功');
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布'
+          });
+        });
       },
       //下架
       handleObtained(row, index) {
-        this.ajax({
-          name: 'productObtained',
-          data: { id: row.id }
-        }).then(res => {
-          this.getEquipment();
-          this.$message.success('操作成功');
-        })
+        this.$confirm('确定下架该产品？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'productObtained',
+            data: { id: row.id }
+          }).then(res => {
+            this.getEquipment();
+            this.$message.success('下架成功');
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消下架'
+          });
+        });
       },
       //撤回
       productWithdraw(row, index) {
-        this.ajax({
-          name: 'productWithdraw',
-          data: { id: row.id }
-        }).then(res => {
-          this.getEquipment();
-          this.$message.success('操作成功');
+        this.$confirm('确定撤回该产品？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'productWithdraw',
+            data: { id: row.id }
+          }).then(res => {
+            this.getEquipment();
+            this.$message.success('撤回成功');
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消撤回'
+          });
         });
       },
       handleselect(row, index) {

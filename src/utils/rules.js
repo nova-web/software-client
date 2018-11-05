@@ -18,7 +18,7 @@ export function checkPhone(rule, value, callback) {
 }
 
 export function checkUsername(rule, value, callback) {
-    let reg = /^[a-zA-Z0-9_\u4e00-\u9fa5\s]{0,30}$/; //匹配所有非特殊字符，且长度在0和30之间;
+    let reg = /^[a-zA-Z0-9_\u4e00-\u9fa5\s]{1,30}$/; //匹配所有非特殊字符，且长度在0和30之间;
     if (!value) {
         callback();
     }
@@ -38,6 +38,20 @@ export function checkWorkNumber(rule, value, callback) {
             callback();
         } else {
             callback(new Error('工号格式不正确'));
+        }
+    }, 100);
+}
+
+export function checkLength(rule, value, callback) {
+    let reg = /^.{1,30}$/; //匹配任意字符，且长度在1和30之间;
+    if (!value) {
+        callback();
+    }
+    setTimeout(() => {
+        if (reg.test(value)) {
+            callback();
+        } else {
+            callback(new Error('请输入1~30长度字符'));
         }
     }, 100);
 }

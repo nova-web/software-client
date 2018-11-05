@@ -14,13 +14,15 @@
       <div class="search-box">
         <el-form ref="search" :model="syslogSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="操作对象:">
-            <el-input class="inputs" @change="search"></el-input>
+            <el-input class="inputs" v-model="syslogSearch.target" @change="search"></el-input>
           </el-form-item>
           <el-form-item label="操作员:">
             <el-input v-model="syslogSearch.operator" class="inputs" @change="search"></el-input>
           </el-form-item>
           <el-form-item label="操作类型:">
-            <el-input class="inputs" @change="search"></el-input>
+            <el-select class="inputs" clearable v-model="syslogSearch.operateType" @change="search">
+              <el-option v-for="(item, index) in selectOperateType" :value="item.value" :label="item.label" :key="index"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="操作描述:">
             <el-input v-model="syslogSearch.operateContent" @change="search"></el-input>
@@ -54,7 +56,7 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination background @current-change="handleCurrentChange" :page-size="9" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
+        <el-pagination background @current-change="handleCurrentChange" :page-size="10" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
         </el-pagination>
       </div>
     </div>
@@ -70,7 +72,41 @@
         sylogData: [],
         cur_page: 1,
         count: 0,
-        syslogSearch: {}
+        syslogSearch: {},
+        selectOperateType: [
+          {
+            value: 0,
+            label: '新增'
+          },
+          {
+            value: 1,
+            label: '修改'
+          },
+          {
+            value: 2,
+            label: '删除'
+          },
+          {
+            value: 3,
+            label: '授权'
+          },
+          {
+            value: 4,
+            label: '试用'
+          },
+          {
+            value: 5,
+            label: '撤回'
+          },
+          {
+            value: 6,
+            label: '发布'
+          },
+          {
+            value: 7,
+            label: '下架'
+          }
+        ]
       };
     },
     computed: {
@@ -109,7 +145,7 @@
       },
       //搜索
       search() {
-        this.getRoles();
+        this.getLog();
       }
     }
   }

@@ -7,7 +7,7 @@
           <span slot="title">首页</span>
         </el-menu-item>
       </template>
-      <template v-for="item in items">
+      <template v-for="(item, i) in items">
         <template v-if="item.subs">
           <el-submenu :index="item.index" :key="item.index" v-show="item.isShow">
             <template slot="title">
@@ -29,11 +29,8 @@
         </template>
       </template>
     </el-menu>
-
   </div>
-
 </template>
-
 <script>
   import bus from './bus';
   import { getSen, setSen } from '../../utils';
@@ -148,6 +145,15 @@
       // 通过 Event Bus 进行组件间通信，来折叠侧边栏
       bus.$on('collapse', msg => {
         this.collapse = msg;
+        //折叠后需重新渲染侧边栏
+        this.items.forEach(item => {
+          item.isClose = false;
+        })
+        this.getFathenIndex(this.onRoutes);
+      })
+      bus.$on('tags', msg => {
+        // 监听点击标签
+        this.getFathenIndex(this.onRoutes);
       })
       //重新渲染侧边栏
       this.items.forEach((items, i, Arr) => {
@@ -168,7 +174,6 @@
             })
           })
         }
-
       })
 
     },

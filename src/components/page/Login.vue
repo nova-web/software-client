@@ -65,7 +65,6 @@
             this.getUserAclCodes();
           }, 300)
         });
-
       },
       async getUserAclCodes() {
         await this.ajax({

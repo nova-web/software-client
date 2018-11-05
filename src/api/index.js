@@ -4,7 +4,7 @@ import { Loading, Message } from 'element-ui';
 import store from '../store';
 import qs from 'qs';
 import routes from '../router';
-import { isArray } from 'util';
+import { isArray, getCookie } from '../utils';
 
 let loading = false;
 let timer = null;
@@ -141,6 +141,7 @@ let xhr = config => {
             }
         }
         let headers = {
+            'x-csrf-token': getCookie('csrfToken'),
             token: store.getters.getCommon.token,
             'Content-Type': isForm ? 'application/x-www-form-urlencoded; charset=UTF-8' : 'application/json; charset=UTF-8'
         };

@@ -4,67 +4,58 @@
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
           <i class="el-icon-tickets"></i> 产品管理</el-breadcrumb-item>
-        <el-breadcrumb-item>
-          首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{path: '/product'}">
+          产品列表</el-breadcrumb-item>
         <el-breadcrumb-item>
           产品详情</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
-
       <div class="left">
         <div class="title">基本信息</div>
         <div class="content">
-
           <div class="list">
             <div>产品名称:</div>
             <div>
               {{result.name}}
             </div>
           </div>
-
           <div class="list">
             <div>产品类型:</div>
             <div>
               {{result.type}}
             </div>
           </div>
-
           <div class="list">
             <div>最新版本:</div>
             <div>
               {{result.version}}
             </div>
           </div>
-
           <div class="list">
             <div>状态:</div>
             <div>
               {{result.publishStatus}}
             </div>
           </div>
-
           <div class="list">
             <div>所属产品线:</div>
             <div>
               {{result.dept}}
             </div>
           </div>
-
           <div class="list">
             <div>项目经理:</div>
             <div>
               {{result.projectManager}}
             </div>
           </div>
-
           <div class="list">
             <div>产品阶段:</div>
             <div>
               {{result.stage}}
             </div>
           </div>
-
           <div class="list">
             <div>示意图:</div>
             <div>
@@ -73,7 +64,6 @@
           </div>
         </div>
       </div>
-
       <div class="right">
         <div class="title">产品介绍</div>
         <div class="content">

@@ -200,3 +200,7 @@ a {
     font-size: 30px;
     color: #f7ba2a;
 }
+/* 移入框样式 */
+.el-popper {
+    max-width: 400px !important;
+}

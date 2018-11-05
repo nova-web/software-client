@@ -14,23 +14,23 @@
         <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增产品</el-button>
       </div>
       <div class="search-box">
-        <el-form ref="search" :model="editionSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="产品名称">
-            <el-input clearable v-model="editionSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
-          </el-form-item>
+        <el-form ref="search" :rules="searchRules" :model="editionSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态">
-            <el-select clearable v-model="editionSearch.publishStatus" @change="search">
+            <el-select class="select-input" clearable v-model="editionSearch.publishStatus" @change="search">
               <el-option v-for=" item in pro_status" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="版本名称">
-            <el-input clearable v-model="editionSearch.version" placeholder="按版本名称搜索" @change="search"></el-input>
+          <el-form-item label="产品名称" prop="name">
+            <el-input class="ent-input" maxlength="30" clearable v-model.trim="editionSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
+          </el-form-item>
+          <el-form-item label="版本名称" prop="version">
+            <el-input class="ent-inputs" maxlength="30" clearable v-model.trim="editionSearch.version" placeholder="按版本名称搜索" @change="search"></el-input>
           </el-form-item>
           <el-form-item label="更新时间">
-            <el-date-picker v-model="editionSearch.updatedStart" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
+            <el-date-picker class="ent-inputs" v-model="editionSearch.updatedStart" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
             </el-date-picker>
-            至
-            <el-date-picker v-model="editionSearch.updatedEnd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search">
+            &nbsp; 至 &nbsp;
+            <el-date-picker class="ent-inputs" v-model="editionSearch.updatedEnd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search">
             </el-date-picker>
           </el-form-item>
           <el-form-item>
@@ -38,13 +38,22 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="tableData" stripe height="531" style="width: 100%" :cell-style="cellStyle">
+      <el-table :data="tableData" stripe height="531" style="width: 100%">
         <el-table-column label="序号" prop="num" width="50px"></el-table-column>
         <el-table-column label="所属产品" prop="productName"></el-table-column>
         <el-table-column label="版本" prop="version"></el-table-column>
         <el-table-column label="版本类型" prop="stageName"></el-table-column>
         <el-table-column label="状态" prop="publishStatusName"></el-table-column>
-        <el-table-column label="版本描述" prop="versionLog"></el-table-column>
+        <el-table-column label="版本描述">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top" popper-class="poper-css">
+              {{scope.row.versionLog}}
+              <div slot="reference" class="name-wrapper">
+                {{scope.row.versionLog}}
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column label="发布时间" prop="createdAt"></el-table-column>
         <el-table-column label="操作" width="240px">
           <template slot-scope="scope">
@@ -63,40 +72,42 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination background @current-change="handleCurrentChange" :page-size="9" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
+        <el-pagination background @current-change="handleCurrentChange" :page-size="10" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
         </el-pagination>
       </div>
     </div>
     <el-dialog title="新增版本" :visible.sync="addEditionModele" width="30%">
       <div class="add-edition">
-        <el-form ref="addEdition" label-width="90px" :model="addEdition" class="demo-ruleForm">
-          <el-form-item label="版本名称:">
-            <el-input class="inputs" v-model="addEdition.version" placeholder=""></el-input>
+        <el-form ref="addEdition" :rules="editionRules" label-width="90px" :model="addEdition" class="demo-ruleForm">
+          <el-form-item label="版本名称:" prop="version">
+            <el-input class="inputs" v-model.trim="addEdition.version" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="版本类型:">
+          <el-form-item label="版本类型:" prop="stage">
             <el-select class="inputs" clearable v-model="addEdition.stage" placeholder="">
               <el-option v-for="item in stage" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="版本描述:">
+          <el-form-item label="版本描述:" prop="versionLog">
             <el-input type="textarea" class="inputs" v-model="addEdition.versionLog" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="产品ID:">
+          <el-form-item label="产品ID:" prop="productId">
             <el-select class="inputs" v-model="addEdition.productId">
               <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="版本上传:">
+          <el-form-item label="版本上传:" prop="package">
             <el-upload class="upload-demo" ref="upload" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
             <!-- <img class="addImg" :src="file?file.url:''" alt=""> -->
-            <div class="tips" v-show="fileTip">请上传版本包</div>
+            <transition name="fade">
+              <div class="tips" v-show="fileTip">请上传版本包</div>
+            </transition>
           </el-form-item>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addCancel">取消</el-button>
+        <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
         <el-button type="primary" @click="saveAddEdition">确定</el-button>
       </div>
     </el-dialog>
@@ -121,7 +132,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="版本上传:">
-            <el-upload class="upload-demo" ref="uploadEdition" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+            <el-upload class="upload-demo" ref="uploadEdition" action="" :file-list="fileList" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeEditFile" :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
           </el-form-item>
@@ -152,6 +163,7 @@
   import { serialize } from '../../utils';
   import axios from 'axios';
   import { api } from '../../api';
+  import { checkUsername } from '../../utils/rules';
   export default {
     data() {
       return {
@@ -160,8 +172,13 @@
         addEditionModele: false, //新增版本
         tableData: [],
         modifyEdition: {}, //修改版本
-        editionSearch: {},
-        addEdition: {}, //新增版本
+        fileList: [{ name: '', url: '' }],
+        editionSearch: {
+          name: ''
+        },
+        addEdition: {
+          package: 1
+        }, //新增版本
         pro_status: [], // 版本状态
         cur_page: 1,
         count: 0,
@@ -171,7 +188,29 @@
         fitPro: [], //适配产品
         href: '',
         fileTip: false,
-        file: null //文件
+        file: null, //文件
+        searchRules: {
+          name: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
+        editionRules: {
+          version: [
+            { required: true, message: '版本名称不可为空' }
+          ],
+          stage: [
+            { required: true, message: '版本类型不可为空' }
+          ],
+          versionLog: [
+            {}
+          ],
+          productId: [
+            { required: true, message: '产品ID不可为空' }
+          ],
+          package: [
+            { required: true },
+          ]
+        }
       };
     },
     computed: {
@@ -188,7 +227,6 @@
         let d = this.cur_page; //当前页
         let m = 10; //每页显示条数
         let count = (parseInt(d) - 1) * m + 1 === 0 ? 1 : (parseInt(d) - 1) * m + 1;
-
         this.ajax({
           name: 'getPackages',
           data: {
@@ -198,7 +236,6 @@
         }).then(res => {
           this.count = res.count;
           res.rows.forEach(item => {
-            console.log(item);
             item.publishStatusName = this.getFormatDict.pro_status[item.publishStatus];
             item.stageName = this.getFormatDict.stage[item.stage];
             item.num = count++;
@@ -223,30 +260,39 @@
       //新增确认
       saveAddEdition() {
         let formData = new FormData();
-        Object.keys(this.addEdition).forEach(item => {
-          formData.append(item, this.addEdition[item]);
-        })
-        if(this.file) {
-          formData.append("package", this.file.raw);
-          axios({
-            method: 'post',
-            url: api.addPackages.url,
-            data: formData,
-            headers: { 'token': this.getCommon.token }
-          }).then(res => {
-            if(res.data.errorCode === 1) {
-              this.addEditionModele = false;
-              this.$message.success('操作成功');
-              this.file = null;
-              this.$refs['upload'].clearFiles();
-              this.getEdition();
+        this.$refs.addEdition.validate(valid => {
+          if(valid) {
+            delete this.addEdition.package;
+            if(this.file) {
+              Object.keys(this.addEdition).forEach(item => {
+                formData.append(item, this.addEdition[item]);
+              })
+              formData.append("package", this.file.raw);
+              axios({
+                method: 'post',
+                url: api.addPackages.url,
+                data: formData,
+                headers: { 'token': this.getCommon.token }
+              }).then(res => {
+                if(res.data.errorCode === 1) {
+                  this.addEditionModele = false;
+                  this.$message.success('操作成功');
+                  this.file = null;
+                  this.$refs['upload'].clearFiles();
+                  this.getEdition();
+                } else {
+                  this.$message.error(res.data.errorMsg);
+                }
+              })
             } else {
-              this.$message.error(res.data.errorMsg);
+              this.fileTip = true;
             }
-          })
-        } else {
-          this.fileTip = true;
-        }
+          } else {
+            this.fileTip = true;
+            return false;
+          }
+        })
+
       },
       //取消新增
       addCancel() {
@@ -256,12 +302,17 @@
       },
       //修改版本
       modify(row) {
+        console.log(row);
         this.modifyEdition = {
           version: row.version,
           stage: row.stage,
           versionLog: row.versionLog,
           productId: row.productId
         }
+        this.fileList.forEach(item => {
+          item.name = row.version;
+          item.url = row.url;
+        });
         this.idx = row.id;
         this.modifyModel = true;
       },
@@ -284,6 +335,7 @@
             this.$message.success('操作成功');
             this.modifyModel = false;
             this.$refs.uploadEdition.clearFiles()
+            this.getEdition();
           } else {
             this.$message.error(res.data.errorMsg);
           }
@@ -355,7 +407,14 @@
       },
       //搜索
       search() {
-        this.getEdition();
+        this.$refs.search.validate(valid => {
+          if(valid) {
+            this.getEdition();
+          } else {
+            return
+          }
+        })
+
       },
       //获取文件
       getFile(file) {
@@ -370,6 +429,7 @@
       removeFile() {
         this.file = null;
       },
+      removeEditFile() { },
       //分页
       handleCurrentChange(val) {
         this.cur_page = val;
@@ -387,6 +447,9 @@
     display: flex;
     justify-content: flex-end;
   }
+  .ent-inputs {
+    width: 200px;
+  }
   .inputs {
     width: 100%;
   }
@@ -398,7 +461,10 @@
     height: auto;
   }
   .tips {
-    color: #dd5145;
+    color: #f56c6c;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
   }
   .del-dialog-cnt {
     font-size: 16px;
@@ -406,12 +472,28 @@
     justify-content: center;
     align-items: center;
   }
+  .select-input {
+    width: 122px;
+  }
   .ic {
     margin-right: 10px;
     .icon-css {
       font-size: 30px;
       color: #f7ba2a;
     }
+  }
+
+  .name-wrapper {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 </style>
 

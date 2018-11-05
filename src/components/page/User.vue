@@ -110,7 +110,6 @@
 
     <!-- 删除提示框 -->
     <el-dialog title="提示" :visible.sync="delVisible" width="600px">
-
       <div class="del-dialog-cnt">
         <div class="ic">
           <i class="el-icon-info icon-css"></i>
@@ -118,14 +117,9 @@
         <div>删除不可恢复，是否确定删除？</div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="deleteUser">确 定</el-button>
         <el-button @click="delVisible = false">取 消</el-button>
+        <el-button type="primary" @click="deleteUser">确 定</el-button>
       </div>
-      <!-- <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="delVisible = false">取 消</el-button>
-        <el-button type="primary" @click="deleteUser">确 定</el-button>
-      </div> -->
     </el-dialog>
 
     <!-- 新增用户 -->
@@ -160,7 +154,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addVisible = false;$refs['adduser'].clearValidate();">取 消</el-button>
+        <el-button @click="addVisible = false;$refs['adduser'].resetFields();">取 消</el-button>
         <el-button type="primary" @click="saveAdd('addUser')">确 定</el-button>
       </div>
     </el-dialog>

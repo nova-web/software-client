@@ -13,7 +13,7 @@
         <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
       </div> -->
       <div class="search-box">
-        <el-form ref="search" :model="sysctrlSearch" class="demo-form-inline" :inline="true">
+        <el-form ref="search" :model="sysctrlSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
           <el-form-item label="服务状态">
             <el-select v-model="sysctrlSearch.service" @change="search">
               <el-option v-for="item in service" :key="item.num" :value="item.value" :label="item.label">
@@ -21,7 +21,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="产品名称">
+          <el-form-item label="产品名称" prop="username">
             <el-input v-model="sysctrlSearch.username" @change="search" placeholder="按产品名称搜索"></el-input>
           </el-form-item>
 
@@ -111,6 +111,7 @@
 <script>
   import { mapActions, mapGetters, mapMutations } from 'vuex';
   import { serialize } from '../../utils';
+  import { checkUsername } from '../../utils/rules';
 
   export default {
     data() {
@@ -150,7 +151,12 @@
         showAcls: false, //权限树对话框
         aclsTree: [], //权限树
         effectiveVisible: false, //置为无效对话框
-        deleteRoleVisible: false //删除对话框
+        deleteRoleVisible: false, //删除对话框
+        searchRules: {  // 搜索框规则
+          username: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
       };
     },
     created() {

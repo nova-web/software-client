@@ -13,7 +13,7 @@
         <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
       </div>
       <div class="search-box">
-        <el-form ref="search" :model="roleSearch" class="demo-form-inline" :inline="true">
+        <el-form ref="search" :rules="searchRules" :model="roleSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态">
             <el-select v-model="roleSearch.status" @change="search">
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
@@ -21,8 +21,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="角色名称">
-            <el-input v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索"></el-input>
+          <el-form-item label="角色名称" prop="username">
+            <el-input v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索" clearable></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -116,6 +116,7 @@
 <script>
   import { mapActions, mapGetters, mapMutations } from 'vuex';
   import { serialize } from '../../utils';
+  import { checkUsername } from '../../utils/rules';
 
   export default {
     data() {
@@ -137,6 +138,11 @@
         idx: -1,
         delVisible: false,
         delIndex: Number,
+        searchRules: {  // 搜索框规则
+          username: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
         //角色搜索
         roleSearch: {
           status: 1

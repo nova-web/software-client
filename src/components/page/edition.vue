@@ -364,33 +364,66 @@
       },
       //试用
       packageTryout(row) {
-        this.ajax({
-          name: 'packageTryout',
-          data: { id: row.id }
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getEdition();
-        })
+        this.$confirm('确定试用该版本？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'packageTryout',
+            data: { id: row.id }
+          }).then(res => {
+            this.$message.success('试用成功');
+            this.getEdition();
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消试用'
+          });
+        });
       },
       //发布
       packagePublish(row) {
-        this.ajax({
-          name: 'packagePublish',
-          data: { id: row.id }
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getEdition();
-        })
+        this.$confirm('确定发布该版本？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'packagePublish',
+            data: { id: row.id }
+          }).then(res => {
+            this.$message.success('发布成功');
+            this.getEdition();
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布'
+          });
+        });
       },
       //撤回
       withdrawPublish(row) {
-        this.ajax({
-          name: 'packageWithdraw',
-          data: { id: row.id }
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getEdition();
-        })
+        this.$confirm('确定撤回该产品？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'packageWithdraw',
+            data: { id: row.id }
+          }).then(res => {
+            this.$message.success('撤回成功');
+            this.getEdition();
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消撤回'
+          });
+        });
       },
       packageObtained(row) {
         this.ajax({

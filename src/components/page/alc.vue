@@ -12,7 +12,7 @@
     <div class="container">
       <div class="search-box">
 
-        <el-form highlight-current-row @current-change="handleCurrentChange" :model="alcSearch" ref="search" class="demo-form-inline" :inline="true">
+        <el-form highlight-current-row @current-change="handleCurrentChange" :rules="searchRules" :model="alcSearch" ref="search" class="demo-form-inline" :inline="true">
           <el-form-item label="状态">
             <el-select v-model="alcSearch.status" @change="search" clearable>
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
@@ -20,7 +20,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="功能名称">
+          <el-form-item label="功能名称" prop="name">
             <el-input v-model="alcSearch.name" placeholder="按功能名称搜索" @input="search"></el-input>
           </el-form-item>
 
@@ -81,18 +81,18 @@
     </div>
 
     <el-dialog title="修改功能" :visible.sync="editVisible" width="30%">
-      <el-form ref="editUser" :model="editFunction" label-width="80px">
-        <el-form-item label="功能名称">
-          <el-input v-model="editFunction.name"></el-input>
+      <el-form ref="editUser" :rules="AlcRule" :model="editFunction" label-width="80px">
+        <el-form-item label="功能名称" prop="name">
+          <el-input v-model.trim="editFunction.name" maxlength="30"></el-input>
         </el-form-item>
-        <el-form-item label="URL">
-          <el-input v-model="editFunction.url"></el-input>
+        <el-form-item label="URL" prop="url">
+          <el-input v-model.trim="editFunction.url"></el-input>
         </el-form-item>
-        <el-form-item label="code">
-          <el-input v-model="editFunction.code"></el-input>
+        <el-form-item label="code" prop="code">
+          <el-input v-model.trim="editFunction.code"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="editFunction.remark"></el-input>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model.trim="editFunction.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -102,18 +102,18 @@
     </el-dialog>
 
     <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%">
-      <el-form ref="editUser" :model="addParentObj" label-width="80px">
-        <el-form-item label="功能名称">
-          <el-input v-model="addParentObj.name"></el-input>
+      <el-form ref="editUser" :model="addParentObj" :rules="AlcRule" label-width="80px">
+        <el-form-item label="功能名称" prop="name">
+          <el-input v-model.trim="addParentObj.name"></el-input>
         </el-form-item>
-        <el-form-item label="URL">
-          <el-input v-model="addParentObj.url"></el-input>
+        <el-form-item label="URL" prop="url">
+          <el-input v-model.trim="addParentObj.url"></el-input>
         </el-form-item>
-        <el-form-item label="code">
-          <el-input v-model="addParentObj.code"></el-input>
+        <el-form-item label="code" prop="url">
+          <el-input v-model.trim="addParentObj.code"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="addParentObj.remark"></el-input>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model.trim="addParentObj.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -123,18 +123,18 @@
     </el-dialog>
 
     <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%">
-      <el-form ref="editUser" :model="addLeaverObj" label-width="80px">
-        <el-form-item label="功能名称">
-          <el-input v-model="addLeaverObj.name"></el-input>
+      <el-form ref="editUser" :model="addLeaverObj" :rules="AlcRule" label-width="80px">
+        <el-form-item label="功能名称" prop="name">
+          <el-input v-model.trim="addLeaverObj.name"></el-input>
         </el-form-item>
-        <el-form-item label="URL">
-          <el-input v-model="addLeaverObj.url"></el-input>
+        <el-form-item label="URL" prop="url">
+          <el-input v-model.trim="addLeaverObj.url"></el-input>
         </el-form-item>
-        <el-form-item label="code">
-          <el-input v-model="addLeaverObj.code"></el-input>
+        <el-form-item label="code" prop="url">
+          <el-input v-model.trim="addLeaverObj.code"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="addLeaverObj.remark"></el-input>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model.trim="addLeaverObj.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -155,6 +155,7 @@
 <script>
   import { treeToArray, serialize } from '../../utils';
   import { mapActions, mapGetters } from 'vuex';
+  import { checkUsername } from '../../utils/rules';
   export default {
     data() {
       return {
@@ -170,6 +171,19 @@
             label: '有效'
           }
         ],
+        searchRules: {  // 搜索框规则
+          name: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
+        AlcRule: {  // 弹出框内容的验证规则 name url code remark
+          name: [
+            { required: true, validator: checkUsername, trigger: 'change' },
+            { required: true, trigger: 'blur', message: '功能名称不能为空' }],
+          url: [{ required: true, message: 'URL不能为空', trigger: 'change' }],
+          code: [{ required: true, message: 'Code不能为空', trigger: 'change' }],
+          remark: [{ required: true, message: '描述不能为空', trigger: 'change' }],
+        },
         editVisible: false,
         editFunction: {},
         alcSearch: {},

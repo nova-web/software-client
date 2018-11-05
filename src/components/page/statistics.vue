@@ -12,11 +12,11 @@
 
       </div>
       <div class="search-box">
-        <el-form ref="search" :model="scarchStatistics" class="demo-form-inline" :inline="true">
-          <el-form-item label="设备S/N号:">
+        <el-form ref="search" :rules="searchRules" :model="scarchStatistics" class="demo-form-inline" :inline="true">
+          <el-form-item label="设备S/N号:" prop="deviceId">
             <el-input v-model="scarchStatistics.deviceId"></el-input>
           </el-form-item>
-          <el-form-item label="设备名称或IP:">
+          <el-form-item label="设备名称或IP:" prop="softwareIp">
             <el-input v-model="scarchStatistics.softwareIp"></el-input>
           </el-form-item>
           <el-form-item>
@@ -52,6 +52,7 @@
 <script>
   import { mapActions, mapGetters, mapMutations } from 'vuex';
   import { serialize } from '../../utils';
+  import { checkLength, checkUsername } from '../../utils/rules';
 
   export default {
     data() {
@@ -59,7 +60,15 @@
         statistics: [],
         count: 0,
         cur_page: 1,
-        scarchStatistics: {}
+        scarchStatistics: {},
+        searchRules: {  // 搜索框规则
+          deviceId: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ],
+          softwareIp: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
       };
     },
     created() {

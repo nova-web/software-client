@@ -15,7 +15,7 @@
       </div>
 
       <div class="search-box">
-        <el-form ref="search" :model="productSearch" class="demo-form-inline" :inline="true">
+        <el-form ref="search" :rules="searchRules" :model="productSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态">
             <el-select clearable v-model="productSearch.publishStatus" @change="search">
               <el-option v-for=" item in pro_status" :key="item.id" :value="item.code" :label="item.name"></el-option>
@@ -26,7 +26,7 @@
               <el-option v-for=" item in package" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="产品名称">
+          <el-form-item label="产品名称" prop="name">
             <el-input clearable v-model="productSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
           </el-form-item>
           <el-form-item>
@@ -214,13 +214,18 @@
         editProduct: {}, //修改产品
         addProductModel: false,
         addProduct: {},
+        searchRules: {  // 搜索框规则
+          name: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
         ProRule: {
           modelId: [{ required: true, message: '产品ID不能为空', trigger: 'blur' }],
           name: [
-            { required: true, validator: checkLength, trigger: 'blur' },
+            { required: true, validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '产品名称不能为空' }],
           model: [
-            { required: true, validator: checkLength, trigger: 'blur' },
+            { required: true, validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '产品型号不能为空' }],
           type: [{ required: true, message: '请选择产品类型', trigger: 'change' }],
           stage: [{ required: true, message: '请选择产品阶段', trigger: 'change' }],
@@ -228,7 +233,7 @@
           area: [{ required: true, message: '请选择业务区域', trigger: 'change' }],
           dept: [{ required: true, message: '请选择所属产品线', trigger: 'change' }],
           projectManager: [
-            { required: true, validator: checkLength, trigger: 'blur' },
+            { required: true, validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '请输入产品项目经理' }]
         },
         cancelvisible: {

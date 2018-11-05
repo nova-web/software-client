@@ -12,11 +12,11 @@
       <div class="handle-box">
       </div>
       <div class="search-box">
-        <el-form ref="search" :model="syslogSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="操作对象:">
+        <el-form ref="search" :model="syslogSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
+          <el-form-item label="操作对象:" prop="target">
             <el-input class="inputs" v-model="syslogSearch.target" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="操作员:">
+          <el-form-item label="操作员:" prop="operator">
             <el-input v-model="syslogSearch.operator" class="inputs" @change="search"></el-input>
           </el-form-item>
           <el-form-item label="操作类型:">
@@ -24,7 +24,7 @@
               <el-option v-for="(item, index) in selectOperateType" :value="item.value" :label="item.label" :key="index"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="操作描述:">
+          <el-form-item label="操作描述:" prop="operateContent">
             <el-input v-model="syslogSearch.operateContent" @change="search"></el-input>
           </el-form-item>
           <el-form-item label="时间:">
@@ -65,6 +65,7 @@
 <script>
   import { mapActions, mapGetters, mapMutations } from 'vuex';
   import { serialize } from '../../utils';
+  import { checkUsername } from '../../utils/rules';
 
   export default {
     data() {
@@ -106,7 +107,18 @@
             value: 7,
             label: '下架'
           }
-        ]
+        ],
+        searchRules: {  // 搜索框规则
+          target: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ],
+          operator: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ],
+          operateContent: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
       };
     },
     computed: {

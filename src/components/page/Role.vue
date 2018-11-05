@@ -62,8 +62,8 @@
       <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true">
       </el-tree>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
         <el-button type="primary" @click="getCheckedKeys">确定</el-button>
+        <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
       </div>
     </el-dialog>
     <!-- 新增对话框 -->

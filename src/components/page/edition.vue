@@ -107,8 +107,8 @@
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
         <el-button type="primary" @click="saveAddEdition">确定</el-button>
+        <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
       </div>
     </el-dialog>
 
@@ -139,8 +139,8 @@
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelModifyEdition">取消</el-button>
         <el-button type="primary" @click="saveModifyEdition">确定</el-button>
+        <el-button @click="cancelModifyEdition">取消</el-button>
       </div>
     </el-dialog>
     <!-- 删除 -->
@@ -152,8 +152,8 @@
         <div>删除不可恢复，是否确定删除？</div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="delVisible = false">取 消</el-button>
         <el-button type="primary" @click="saveDeleteEdition">确 定</el-button>
+        <el-button @click="delVisible = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>

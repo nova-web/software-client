@@ -1,5 +1,18 @@
 // 覆盖element-ui全局样式
 
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    .pagination-right {
+        display: flex;
+    }
+    .pagination-left {
+        font-size: 13px;
+        font-weight: 400;
+        color: #606266;
+    }
+}
+
 // 有问题，下面的th也会被修改颜色
 .el-table th {
     background-color: #f4f7fc !important;

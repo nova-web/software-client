@@ -65,8 +65,17 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination background @current-change="handleCurrentChange" :page-size="10" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
-        </el-pagination>
+        <div class="pagination-left">
+          {{(cur_page - 1) * pageSize + 1 === 0 ? 1 : (cur_page - 1) * pageSize + 1}}-{{cur_page * pageSize}} 共 {{count}}
+        </div>
+        <div class="pagination-right">
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
+            <el-button icon="el-icon-d-arrow-left" size="small" @click="gofist"></el-button>
+          </el-pagination>
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
+            <el-button icon="el-icon-d-arrow-right" size="small" @click="goLast"></el-button>
+          </el-pagination>
+        </div>
       </div>
     </div>
     <!-- 编辑弹出框 -->
@@ -217,6 +226,7 @@
         delVisible: false,
         RoleID: Number,
         cur_page: 1,
+        pageSize: 10,
         multipleSelection: [],
         userSearch: {
           status: 1
@@ -237,14 +247,27 @@
         this.cur_page = val;
         this.getUsers();
       },
+      handleSizeChange(val) {
+        this.pageSize = val;
+        this.getUsers();
+      },
+      gofist() {
+        this.cur_page = 1;
+        this.getUsers();
+      },
+      goLast() {
+        this.cur_page = Math.ceil(this.count / this.pageSize);
+        this.getUsers();
+      },
       getUsers() {
         let d = this.cur_page; //当前页
-        let m = 10; //每页显示条数
+        let m = this.pageSize; //每页显示条数
         let count = (d - 1) * m + 1 === 0 ? 1 : (d - 1) * m + 1;
         this.ajax({
           name: 'getUsers',
           data: {
             pageNum: this.cur_page,
+            pageSize: this.pageSize,
             ...this.userSearch
           }
         }).then(res => {

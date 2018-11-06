@@ -66,20 +66,6 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 删除对话框 -->
-    <el-dialog title="删除产品" :visible.sync="delVisible" width="600px">
-      <div class="del-dialog-cnt">
-        <div class="ic">
-          <i class="el-icon-info icon-css"></i>
-        </div>
-        <div>删除不可恢复，是否确定删除？</div>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="deleteRow">确 定</el-button>
-        <el-button @click="delVisible = false">取 消</el-button>
-      </div>
-    </el-dialog>
-    <!-- 发布对话框 -->
     <!-- 编辑对话框 -->
     <el-dialog title="编辑" :visible.sync="editProductModel" width="30%">
 
@@ -207,7 +193,6 @@
       return {
         num: Number,
         tableData: [],
-        delVisible: false,
         index: Number,
         editProductModel: false,
         editProduct: {}, //修改产品
@@ -365,20 +350,19 @@
       },
       //删除
       handleDelete(row, index) {
-        this.delVisible = true;
-        this.idx = row.id;
-      },
-      //确认删除
-      deleteRow() {
-        this.delVisible = false;
-        this.ajax({
-          name: 'deleteProduct',
-          id: this.idx
-        }).then(res => {
-          this.getEquipment()
-          this.$message.success('删除成功');
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'deleteProduct',
+            id: row.id
+          }).then(res => {
+            this.getEquipment()
+            this.$message.success('删除成功');
+          })
         })
       },
+
       //编辑
       editStage(val) {
         if(val == 'package_01') {

@@ -41,7 +41,20 @@ export function checkWorkNumber(rule, value, callback) {
         }
     }, 100);
 }
-
+// 匹配所有特殊字符
+export function checkSpecialStr(rule, value, callback) {
+    let reg = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/im;
+    if (!value) {
+        callback();
+    }
+    setTimeout(() => {
+        if (!reg.test(value)) {
+            callback();
+        } else {
+            callback(new Error('不可输入非法字符'));
+        }
+    }, 100);
+}
 export function checkLength(rule, value, callback) {
     let reg = /^.{1,30}$/; //匹配任意字符，且长度在1和30之间;
     if (!value) {

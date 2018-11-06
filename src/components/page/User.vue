@@ -107,23 +107,9 @@
       </div>
     </el-dialog>
 
-    <!-- 删除提示框 -->
-    <el-dialog title="提示" :visible.sync="delVisible" width="600px">
-      <div class="del-dialog-cnt">
-        <div class="ic">
-          <i class="el-icon-info icon-css"></i>
-        </div>
-        <div>删除不可恢复，是否确定删除？</div>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="deleteUser">确 定</el-button>
-        <el-button @click="delVisible = false">取 消</el-button>
-      </div>
-    </el-dialog>
-
     <!-- 新增用户 -->
     <el-dialog title="新增用户" :visible.sync="addVisible" width="30%">
-      <el-form :model="addUser" label-width="80px" ref="adduser" :rules="UserRule" class="demo-ruleForm">
+      <el-form ref="addusers" :model="addUser" label-width="80px" :rules="UserRule" class="demo-ruleForm">
         <el-form-item label="用户名称" prop="username">
           <el-input v-model.trim="addUser.username" maxlength="30" clearable></el-input>
         </el-form-item>
@@ -133,8 +119,8 @@
         <el-form-item label="工号" prop="code">
           <el-input v-model.trim="addUser.code" maxlength="30" clearable></el-input>
         </el-form-item>
-        <el-form-item label="角色">
-          <el-select v-model="addUser.roles" placeholder="请选择角色" multiple collapse-tags>
+        <el-form-item label="角色" prop="roles">
+          <el-select class="inputs" v-model="addUser.roles" placeholder="请选择角色" multiple collapse-tags>
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -148,13 +134,13 @@
         <el-form-item label="电子邮箱" prop="email">
           <el-input v-model="addUser.email" :clearable="true"></el-input>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item label="备注" prop="remark">
           <el-input v-model="addUser.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveAdd('addUser')">确 定</el-button>
-        <el-button @click="addVisible = false;$refs['adduser'].resetFields();">取 消</el-button>
+        <el-button @click="cancelAddUser">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -308,15 +294,15 @@
         this.addVisible = true;
       },
       saveAdd(ruleName) {
-        this.$refs.adduser.validate((valid) => {
+        this.$refs.addusers.validate((valid) => {
           if(valid) {
-            this.addVisible = false;
             this.ajax({
               name: 'addUser',
               data: this.addUser
             }).then(res => {
               this.getUsers();
-              this.addUser = Object.assign({}, this.newAddUser)
+              this.$refs.addusers.resetFields()
+              this.addVisible = false;
             });
           } else {
             return false;
@@ -326,8 +312,8 @@
       },
       //取消 
       cancelAddUser() {
+        this.$refs.addusers.resetFields()
         this.addVisible = false;
-        this.addUser = Object.assign({}, this.newAddUser);
       },
       //编辑
       handleEdit(row, index) {
@@ -375,21 +361,20 @@
       },
       //删除
       handleDelete(row, index) {
-        this.idx = row.id;
-        this.delVisible = true;
         this.delIndex = index;
+        this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'deleteUser',
+            id: row.id
+          }).then(res => {
+            this.$message.success('删除成功');
+            this.getUsers();
+          });
+        })
       },
-      // 确定删除
-      deleteUser() {
-        this.delVisible = false;
-        this.ajax({
-          name: 'deleteUser',
-          id: this.idx
-        }).then(res => {
-          this.$message.success('删除成功');
-          this.getUsers();
-        });
-      },
+
       //搜索
       search() {
         this.getUsers();
@@ -461,5 +446,8 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
+  }
+  .inputs {
+    width: 100%;
   }
 </style>

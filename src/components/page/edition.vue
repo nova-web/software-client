@@ -37,7 +37,7 @@
       </div>
       <el-table :data="tableData" stripe height="531" style="width: 100%">
         <el-table-column label="序号" prop="num" width="50px"></el-table-column>
-        <el-table-column label="所属产品" prop="productName"></el-table-column>
+
         <el-table-column label="版本" prop="version"></el-table-column>
         <el-table-column label="版本类型" prop="stageName"></el-table-column>
         <el-table-column label="状态" prop="publishStatusName"></el-table-column>
@@ -51,6 +51,7 @@
             </el-popover>
           </template>
         </el-table-column>
+        <el-table-column label="适配产品" prop="productName"></el-table-column>
         <el-table-column label="发布时间" prop="createdAt"></el-table-column>
         <el-table-column label="操作" width="240px">
           <template slot-scope="scope">
@@ -92,11 +93,10 @@
               <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="版本上传:" prop="package">
+          <el-form-item label="版本上传:" :rules="[{ required: true} ]">
             <el-upload class="upload-demo" ref="upload" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
-            <!-- <img class="addImg" :src="file?file.url:''" alt=""> -->
             <transition name="fade">
               <div class="tips" v-show="fileTip">请上传版本包</div>
             </transition>
@@ -108,28 +108,28 @@
         <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
       </div>
     </el-dialog>
-
     <el-dialog title="修改版本" :visible.sync="modifyModel" width="30%">
       <div class="add-edition">
-        <el-form ref="addEdition" label-width="90px" :model="modifyEdition" class="demo-ruleForm">
-          <el-form-item label="版本名称:">
+        <el-form ref="changeEdition" :rules="editionRules" label-width="90px" :model="modifyEdition" class="demo-ruleForm">
+          <el-form-item label="版本名称:" prop="version">
             <el-input class="inputs" v-model="modifyEdition.version" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="版本类型:">
+          <el-form-item label="版本类型:" prop="stage">
             <el-select class="inputs" clearable v-model="modifyEdition.stage" placeholder="">
               <el-option v-for="item in stage" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="版本描述:">
+          <el-form-item label="版本描述:" prop="versionLog">
             <el-input type="textarea" class="inputs" v-model="modifyEdition.versionLog" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="产品ID:">
+          <el-form-item label="产品ID:" prop="productId">
             <el-select class="inputs" v-model="modifyEdition.productId">
               <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="版本上传:">
-            <el-upload class="upload-demo" ref="uploadEdition" action="" :file-list="fileList" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeEditFile" :auto-upload="false">
+          <el-form-item label="版本上传:" prop="packages">
+            <el-input v-show="0" class="inputs" v-model="modifyEdition.packages" placeholder=""></el-input>
+            <el-upload class="upload-demo" ref="uploadEdition" action="" :file-list="fileList" :limit="1" :on-change="modifyEditionGetFile" :on-exceed="beyondFile" :on-remove="removeEditFile" :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
           </el-form-item>
@@ -138,19 +138,6 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveModifyEdition">确定</el-button>
         <el-button @click="cancelModifyEdition">取消</el-button>
-      </div>
-    </el-dialog>
-    <!-- 删除 -->
-    <el-dialog title="删除版本" :visible.sync="delVisible" width="600px">
-      <div class="del-dialog-cnt">
-        <div class="ic">
-          <i class="el-icon-info icon-css"></i>
-        </div>
-        <div>删除不可恢复，是否确定删除？</div>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveDeleteEdition">确 定</el-button>
-        <el-button @click="delVisible = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -164,18 +151,16 @@
   export default {
     data() {
       return {
-        delVisible: false,
         modifyModel: false, //修改版本
         addEditionModele: false, //新增版本
         tableData: [],
-        modifyEdition: {}, //修改版本
+        modifyEdition: {
+        }, //修改版本
         fileList: [{ name: '', url: '' }],
         editionSearch: {
           name: ''
         },
-        addEdition: {
-          package: 1
-        }, //新增版本
+        addEdition: {}, //新增版本
         pro_status: [], // 版本状态
         cur_page: 1,
         count: 0,
@@ -185,7 +170,8 @@
         fitPro: [], //适配产品
         href: '',
         fileTip: false,
-        file: null, //文件
+        addfile: null, //文件
+        file: null,
         searchRules: {
           name: [
             { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
@@ -204,8 +190,8 @@
           productId: [
             { required: true, message: '产品ID不可为空' }
           ],
-          package: [
-            { required: true },
+          packages: [
+            { required: true, message: '请选择文件', trigger: 'change' },
           ]
         }
       };
@@ -260,11 +246,11 @@
         this.$refs.addEdition.validate(valid => {
           if(valid) {
             delete this.addEdition.package;
-            if(this.file) {
+            if(this.addfile) {
               Object.keys(this.addEdition).forEach(item => {
                 formData.append(item, this.addEdition[item]);
               })
-              formData.append("package", this.file.raw);
+              formData.append("package", this.addfile.raw);
               axios({
                 method: 'post',
                 url: api.addPackages.url,
@@ -272,10 +258,11 @@
                 headers: { 'token': this.getCommon.token }
               }).then(res => {
                 if(res.data.errorCode === 1) {
-                  this.addEditionModele = false;
                   this.$message.success('操作成功');
-                  this.file = null;
-                  this.$refs['upload'].clearFiles();
+                  this.addfile = null;
+                  this.$refs.addEdition.resetFields()
+                  this.$refs.upload.clearFiles()
+                  this.addEditionModele = false;
                   this.getEdition();
                 } else {
                   this.$message.error(res.data.errorMsg);
@@ -285,58 +272,89 @@
               this.fileTip = true;
             }
           } else {
-            this.fileTip = true;
+            if(!this.addfile) {
+              this.fileTip = true;
+            }
             return false;
           }
         })
 
       },
+      //移除文件列表中得文件
+      removeFile() {
+        this.addfile = null;
+      },
       //取消新增
       addCancel() {
-        this.addEditionModele = false;
+        this.$refs.addEdition.resetFields()
+        this.$refs.upload.clearFiles();
         this.fileTip = false; //文件提示
-        this.$refs['addEdition'].clearValidate();
+        this.addEditionModele = false;
       },
       //修改版本
       modify(row) {
-        console.log(row);
+        let fileArr = [{ name: '', url: '' }];
         this.modifyEdition = {
           version: row.version,
           stage: row.stage,
           versionLog: row.versionLog,
-          productId: row.productId
+          productId: row.productId,
+          packages: 1
         }
-        this.fileList.forEach(item => {
+        fileArr.forEach(item => {
           item.name = row.version;
           item.url = row.url;
         });
+        this.fileList = serialize(fileArr);
+        this.modifyEdition.packages = 1;
         this.idx = row.id;
         this.modifyModel = true;
       },
       //确认修改
       saveModifyEdition() {
         let formData = new FormData();
-        Object.keys(this.modifyEdition).forEach(item => {
-          formData.append(item, this.modifyEdition[item]);
-        });
-        if(this.file) {
-          formData.append('package', this.file.raw);
-        }
-        axios({
-          method: 'put',
-          url: api.putPackages.url + `/${this.idx}`,
-          data: formData,
-          headers: { 'token': this.getCommon.token }
-        }).then(res => {
-          if(res.data.errorCode === 1) {
-            this.$message.success('操作成功');
-            this.modifyModel = false;
-            this.$refs.uploadEdition.clearFiles()
-            this.getEdition();
+
+        this.$refs.changeEdition.validate(valid => {
+          if(valid) {
+            delete this.modifyEdition.packages;
+            Object.keys(this.modifyEdition).forEach(item => {
+              formData.append(item, this.modifyEdition[item]);
+            });
+            if(this.file) {
+              formData.append('package', this.file.raw);
+            }
+            axios({
+              method: 'put',
+              url: api.putPackages.url + `/${this.idx}`,
+              data: formData,
+              headers: { 'token': this.getCommon.token }
+            }).then(res => {
+              if(res.data.errorCode === 1) {
+                this.$message.success('操作成功');
+                this.modifyModel = false;
+                this.$refs.uploadEdition.clearFiles()
+                this.getEdition();
+              } else {
+                this.$message.error(res.data.errorMsg);
+              }
+            });
           } else {
-            this.$message.error(res.data.errorMsg);
+            this.fileTip = true;
+            return false;
           }
-        });
+        })
+
+      },
+      removeEditFile() {
+        this.file = null;
+        this.modifyEdition.packages = '';
+        this.fileList.shift();
+      },
+      //修改时添加文件
+      modifyEditionGetFile(file) {
+        this.addfile = file;
+        this.$set(this.modifyEdition, 'packages', 1);
+
       },
       // 取消修改
       cancelModifyEdition() {
@@ -345,18 +363,17 @@
 
       //删除
       deleteEdition(row) {
-        this.delVisible = true;
-        this.idx = row.id;
-      },
-      //确认删除
-      saveDeleteEdition() {
-        this.ajax({
-          name: 'deletePackage',
-          id: this.idx
-        }).then(res => {
-          this.delVisible = false;
-          this.getEdition();
-          this.$message.success('删除成功');
+        this.$confirm('此操作将永久删除该选项，是否继续', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'deletePackage',
+            id: row.id
+          }).then(res => {
+            this.delVisible = false;
+            this.getEdition();
+            this.$message.success('删除成功');
+          })
         })
       },
       //试用
@@ -448,18 +465,15 @@
       },
       //获取文件
       getFile(file) {
-        this.file = file;
-        if(this.file) {
+        this.addfile = file;
+        if(this.addfile) {
           this.fileTip = false;
         }
       },
       //上传文件超出限制
       beyondFile() { },
-      //移除文件列表中得文件
-      removeFile() {
-        this.file = null;
-      },
-      removeEditFile() { },
+
+
       //分页
       handleCurrentChange(val) {
         this.cur_page = val;

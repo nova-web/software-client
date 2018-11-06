@@ -33,11 +33,10 @@
         </el-table-column>
         <el-table-column prop="name" label="角色名称">
         </el-table-column>
-        <el-table-column prop="remark" label="备注">
-        </el-table-column>
         <el-table-column prop="Status" label="状态">
         </el-table-column>
-
+        <el-table-column prop="remark" label="描述">
+        </el-table-column>
         <el-table-column prop="updatedAt" label="更新时间">
         </el-table-column>
         <el-table-column label="操作" width="210">
@@ -66,12 +65,12 @@
     </el-dialog>
     <!-- 新增对话框 -->
     <el-dialog title="新增角色" :visible.sync="addVisible" width="30%">
-      <el-form :model="addRole" label-width="80px" label-position="left">
+      <el-form :model="addRole" label-width="100px" label-position="right">
         <div>
-          <el-form-item label="角色名称">
+          <el-form-item label="角色名称:">
             <el-input v-model="addRole.name" placeholder="请输入角色名"></el-input>
           </el-form-item>
-          <el-form-item label="备注">
+          <el-form-item label="备注:">
             <el-input type="textarea" class="inputs" v-model="addRole.remark" placeholder="请输入备注"></el-input>
           </el-form-item>
         </div>
@@ -167,6 +166,7 @@
           data: { pageNum: this.cur_page, ...this.roleSearch }
         }).then(res => {
           res.rows.forEach((item, index) => {
+            console.log(item);
             switch(item.status) {
               case 0:
                 item.Status = '无效';

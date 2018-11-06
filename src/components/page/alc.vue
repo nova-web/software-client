@@ -44,7 +44,7 @@
           </el-table-column>
           <el-table-column label="功能名称">
             <template slot-scope="scope">
-              <!-- <span v-for="space in scope.row._level" :key="space" class="ms-tree-space" /> -->
+              <span v-if="scope.row._level > 1" v-for="space in scope.row._level" :key="space" class="ms-tree-space" />
               <span>
               {{scope.row.name}}
             </span>

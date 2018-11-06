@@ -25,13 +25,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="用户名称：">
-            <el-input v-model="userSearch.username" @change="search"></el-input>
-          </el-form-item>
-          <el-form-item label="工号：">
-            <el-input v-model="userSearch.code" @change="search"></el-input>
+            <el-input v-model="userSearch.username" @change="search" placeholder="输入用户名称查询"></el-input>
           </el-form-item>
           <el-form-item label="真实姓名：">
-            <el-input v-model="userSearch.name" @change="search"></el-input>
+            <el-input v-model="userSearch.name" @change="search" placeholder="输入真实姓名查询"></el-input>
+          </el-form-item>
+          <el-form-item label="工号：">
+            <el-input v-model="userSearch.code" @change="search" placeholder="输入工号查询"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -41,13 +41,15 @@
       <el-table :data="UserList" stripe style="width: 100%;" ref="multipleTable" height="550" fit :row-class-name="tableRowStatusName">
         <el-table-column prop="index" label="序号" sortable width="80">
         </el-table-column>
-        <el-table-column prop="name" label="真实姓名" width="120">
+        <el-table-column prop="username" label="用户名称" width="120">
         </el-table-column>
         <el-table-column prop="Status" label="状态" width="80">
         </el-table-column>
         <el-table-column prop="roleName" label="角色">
         </el-table-column>
-        <el-table-column prop="remark" label="备注">
+        <el-table-column prop="name" label="真实姓名">
+        </el-table-column>
+        <el-table-column prop="code" label="工号">
         </el-table-column>
         <el-table-column prop="phone" label="联系电话">
         </el-table-column>
@@ -80,34 +82,30 @@
     </div>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="editUser" :model="editUser" label-width="80px" :rules="UserRule" label-position="left">
-
-        <el-form-item label="用户名称">
-          <el-input v-model="editUser.name"></el-input>
+      <el-form ref="editUser" :model="editUser" label-width="100px" :rules="UserRule" label-position="rigth">
+        <el-form-item label="用户名称:" prop="username">
+          <el-input v-model.trim="editUser.username"></el-input>
         </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="editUser.password"></el-input>
+        <el-form-item label="真实姓名:" prop="name">
+          <el-input v-model.trim="editUser.name"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="editUser.status">
-            <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
-            </el-option>
-          </el-select>
+        <el-form-item label="密码:">
+          <el-input v-model.trim="editUser.password"></el-input>
         </el-form-item>
-        <el-form-item label="角色">
+        <el-form-item label="工号:" prop="code">
+          <el-input v-model.trim="addUser.code" maxlength="30" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="用户角色:" prop="roles">
           <el-select v-model="editUser.roles" multiple collapse-tags>
             <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="editUser.remark"></el-input>
+        <el-form-item label="电话:" prop="phone">
+          <el-input v-model.trim="editUser.phone"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="editUser.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="editUser.email"></el-input>
+        <el-form-item label="邮箱:" prop="email">
+          <el-input v-model.trim="editUser.email"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -118,33 +116,30 @@
 
     <!-- 新增用户 -->
     <el-dialog title="新增用户" :visible.sync="addVisible" width="30%">
-      <el-form ref="addusers" :model="addUser" label-width="80px" :rules="UserRule" class="demo-ruleForm">
-        <el-form-item label="用户名称" prop="username">
+      <el-form ref="addusers" :model="addUser" label-width="100px" :rules="UserRule" label-position="rigth" class="demo-ruleForm">
+        <el-form-item label="用户名称:" prop="username">
           <el-input v-model.trim="addUser.username" maxlength="30" clearable></el-input>
         </el-form-item>
-        <el-form-item label="真实姓名" prop="name">
+        <el-form-item label="真实姓名:" prop="name">
           <el-input v-model.trim="addUser.name" maxlength="30" clearable></el-input>
         </el-form-item>
-        <el-form-item label="工号" prop="code">
+        <el-form-item label="工号:" prop="code">
           <el-input v-model.trim="addUser.code" maxlength="30" clearable></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="roles">
+        <el-form-item label="用户角色:" prop="roles">
           <el-select class="inputs" v-model="addUser.roles" placeholder="请选择角色" multiple collapse-tags>
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item label="密码:" prop="password">
           <el-input v-model="addUser.password"></el-input>
         </el-form-item>
-        <el-form-item label="联系方式" prop="phone">
+        <el-form-item label="电话:" prop="phone">
           <el-input v-model.number="addUser.phone" maxlength="11" clearable></el-input>
         </el-form-item>
-        <el-form-item label="电子邮箱" prop="email">
+        <el-form-item label="邮箱:" prop="email">
           <el-input v-model="addUser.email" :clearable="true"></el-input>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="addUser.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

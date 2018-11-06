@@ -57,6 +57,12 @@
             </div>
           </div>
           <div class="list">
+            <div>适配产品:</div>
+            <div>
+              {{result.fitPro.map(item => item.name).join(",")}}
+            </div>
+          </div>
+          <div class="list">
             <div>示意图:</div>
             <div>
               <img class="img" :src="result.logo" alt="">
@@ -142,6 +148,7 @@
     width: 67%;
     height: 100%;
     border: 1px solid #dce3f3;
+
     .title {
       width: 100%;
       padding: 13px 20px;
@@ -165,9 +172,15 @@
         align-items: center;
         > div:nth-child(1) {
           align-self: flex-start;
-          width: 85px;
+          width: 100px;
           text-align: right;
           margin-right: 30px;
+          flex-shrink: 0;
+        }
+        > div:nth-child(2) {
+          padding-right: 8px;
+          box-sizing: border-box;
+          width: 300px;
         }
       }
     }

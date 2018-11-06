@@ -1,3 +1,31 @@
+// 需求  常规匹配
+export function checkUsername(rule, value, callback) {
+    let reg = /^[a-zA-Z0-9-\.&#_\u4e00-\u9fa5\s]{1,30}$/; //匹配所有非特殊字符，且长度在0和30之间;
+    if (!value) {
+        callback();
+    }
+    setTimeout(() => {
+        if (reg.test(value)) {
+            callback();
+        } else {
+            callback(new Error('不可输入非法字符'));
+        }
+    }, 100);
+}
+// 文件夹匹配
+export function checkFolder(rule, value, callback) {
+    let reg = /^[^\^/:*?"<>|]+$/;
+    if (!value) {
+        callback();
+    }
+    setTimeout(() => {
+        if (reg.test(value)) {
+            callback();
+        } else {
+            callback(new Error('不可输入 /:*?"<>|'));
+        }
+    }, 100);
+}
 export function checkPhone(rule, value, callback) {
     const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/;
     if (!value) {
@@ -17,20 +45,6 @@ export function checkPhone(rule, value, callback) {
     }, 100);
 }
 
-export function checkNormal(rule, value, callback) {
-    let reg = /^[a-zA-Z0-9_\u4e00-\u9fa5\s]{1,30}$/; //匹配所有非特殊字符，且长度在0和30之间;
-    if (!value) {
-        callback();
-    }
-    setTimeout(() => {
-        if (reg.test(value)) {
-            callback();
-        } else {
-            callback(new Error('不可输入非法字符'));
-        }
-    }, 100);
-}
-
 export function checkWorkNumber(rule, value, callback) {
     let reg = /^[A-Za-z0-9]+$/;
     setTimeout(() => {
@@ -42,7 +56,7 @@ export function checkWorkNumber(rule, value, callback) {
     }, 100);
 }
 // 匹配所有特殊字符
-export function checkUsername(rule, value, callback) {
+export function checkSpecial(rule, value, callback) {
     let reg = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/im;
     if (!value) {
         callback();
@@ -51,20 +65,7 @@ export function checkUsername(rule, value, callback) {
         if (!reg.test(value)) {
             callback();
         } else {
-            callback(new Error('不可输入非法字符'));
-        }
-    }, 100);
-}
-export function checkLength(rule, value, callback) {
-    let reg = /^.{1,30}$/; //匹配任意字符，且长度在1和30之间;
-    if (!value) {
-        callback();
-    }
-    setTimeout(() => {
-        if (reg.test(value)) {
-            callback();
-        } else {
-            callback(new Error('请输入1~30长度字符'));
+            callback(new Error('请输入特殊字符'));
         }
     }, 100);
 }

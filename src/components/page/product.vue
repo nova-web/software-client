@@ -83,7 +83,7 @@
     <el-dialog title="编辑" :visible.sync="editProductModel" width="30%">
 
       <el-form :rules="ProRule" ref="editpro" :model="editProduct" label-width="90px" label-position="left">
-        <el-form-item label="产品ID:" prop="modelId">
+        <el-form-item label="Model ID:" prop="modelId">
           <el-input v-model="editProduct.modelId"></el-input>
         </el-form-item>
         <el-form-item label="产品名称:" prop="name">
@@ -138,7 +138,7 @@
     <el-dialog title="新增产品" :visible.sync="addProductModel" width="30%">
       <div class="add-product">
         <el-form label-width="90px" :model="addProduct" ref="addpro" :rules="ProRule" class="demo-ruleForm">
-          <el-form-item label="产品ID:" prop="modelId">
+          <el-form-item label="Model ID:" prop="modelId">
             <el-input v-model.trim="addProduct.modelId" placeholder="输入产品ID"></el-input>
           </el-form-item>
           <el-form-item label="产品名称:" prop="name">
@@ -200,7 +200,7 @@
   import { serialize } from '../../utils';
   import axios from 'axios';
   import { api } from '../../api';
-  import { checkLength, checkUsername } from '../../utils/rules';
+  import { checkFolder, checkUsername } from '../../utils/rules';
   export default {
     data() {
       return {
@@ -217,7 +217,10 @@
           ]
         },
         ProRule: {
-          modelId: [{ required: true, message: '产品ID不能为空', trigger: 'blur' }],
+          modelId: [
+            { required: true, validator: checkFolder, trigger: 'blur' },
+            { required: true, message: 'Model ID不能为空', trigger: 'blur' }
+          ],
           name: [
             { required: true, validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '产品名称不能为空' }],
@@ -324,6 +327,7 @@
         this.$refs.addpro.validate((valid) => {
           if(valid) {
             let formData = new FormData();
+            this.addProduct.modelId = this.addProduct.modelId.replace(/\\/g, "");
             Object.keys(this.addProduct).forEach(item => {
               formData.append(item, this.addProduct[item]);
             });
@@ -418,6 +422,7 @@
         this.$refs.editpro.validate((valid) => {
           if(valid) {
             let formData = new FormData();
+            this.editProduct.modelId = this.editProduct.modelId.replace(/\\/g, "");
             Object.keys(this.editProduct).forEach(item => {
               formData.append(item, this.editProduct[item]);
             });

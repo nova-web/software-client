@@ -1,17 +1,14 @@
 <template>
   <div class="edition">
     <div class="crumbs">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i>产品管理</el-breadcrumb-item>
-        <el-breadcrumb-item>
-          版本列表
-        </el-breadcrumb-item>
+      <el-breadcrumb>
+        <el-breadcrumb-item>产品管理</el-breadcrumb-item>
+        <el-breadcrumb-item>版本列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增产品</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增版本</el-button>
       </div>
       <div class="search-box">
         <el-form ref="search" :rules="searchRules" :model="editionSearch" class="demo-form-inline" :inline="true">

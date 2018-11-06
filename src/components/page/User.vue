@@ -1,15 +1,14 @@
 <template>
   <div class="table">
     <div class="crumbs">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i>权限管理</el-breadcrumb-item>
+      <el-breadcrumb>
+        <el-breadcrumb-item>权限管理</el-breadcrumb-item>
         <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button v-if="getAlcsObj.YHXZ" type="primary" icon="search" @click="addUsers">新增用户</el-button>
+        <el-button v-if="getAlcsObj.YHXZ" type="primary" icon="el-icon-plus" @click="addUsers">新增用户</el-button>
       </div>
       <div class="search-box">
         <el-form ref="search" :model="userSearch" class="demo-form-inline" :inline="true">

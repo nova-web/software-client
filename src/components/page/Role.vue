@@ -1,21 +1,20 @@
 <template>
   <div class="table">
     <div class="crumbs">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i>权限管理</el-breadcrumb-item>
+      <el-breadcrumb>
+        <el-breadcrumb-item>权限管理</el-breadcrumb-item>
         <el-breadcrumb-item>角色管理</el-breadcrumb-item>
       </el-breadcrumb>
 
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
+        <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="el-icon-plus" @click="addVisible=true">新增角色</el-button>
       </div>
       <div class="search-box">
         <el-form ref="search" :rules="searchRules" :model="roleSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
-            <el-select v-model="roleSearch.status" @change="search">
+            <el-select v-model="roleSearch.status" @change="search" clearable>
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>

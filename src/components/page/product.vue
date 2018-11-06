@@ -307,7 +307,6 @@
       },
       //新增产品确认
       saveAddProduct(formName) {
-        // console.log(this.$refs.addpro);
         this.$refs.addpro.validate((valid) => {
           if(valid) {
             let formData = new FormData();
@@ -317,9 +316,11 @@
             if(this.file) {
               formData.append("logo", this.file.raw);
             }
+
             this.axAjax('post', api.postProduct.url, formData, null)
               .then(res => {
-                if(res.data.errorCode === 1) {
+
+                if(res.data.status === 1) {
                   this.addProductModel = false;
                   this.$message.success('操作成功');
                   this.file = null;
@@ -331,7 +332,7 @@
                 }
               })
           } else {
-            return;
+            return false;
           }
         });
       },
@@ -414,7 +415,7 @@
           data: formData,
           headers: { 'token': this.getCommon.token }
         }).then(res => {
-          if(res.errorCode === 1) {
+          if(res.data.errorCode === 1) {
             this.$refs['uploadEdit'].clearFiles()
             this.editProductModel = false;
             this.getEquipment();

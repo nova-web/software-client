@@ -217,16 +217,4 @@
       width: 120px;
     }
   }
-  .pagination {
-    display: flex;
-    justify-content: space-between;
-    .pagination-right {
-      display: flex;
-    }
-    .pagination-left {
-      font-size: 13px;
-      font-weight: 400;
-      color: #606266;
-    }
-  }
 </style>

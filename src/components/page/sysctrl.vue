@@ -47,8 +47,17 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination background @current-change="handleCurrentChange" :page-size="10" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
-        </el-pagination>
+        <div class="pagination-left">
+          {{(cur_page - 1) * pageSize + 1 === 0 ? 1 : (cur_page - 1) * pageSize + 1}}-{{cur_page * pageSize}} 共 {{count}}
+        </div>
+        <div class="pagination-right">
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
+            <el-button icon="el-icon-d-arrow-left" size="small" @click="gofist"></el-button>
+          </el-pagination>
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
+            <el-button icon="el-icon-d-arrow-right" size="small" @click="goLast"></el-button>
+          </el-pagination>
+        </div>
       </div>
     </div>
     <!-- 授权对话框 -->
@@ -118,6 +127,7 @@
         defaultArr: [2, 3], //默认选中的数组
         cur_page: 1,
         count: 0,
+        pageSize: 10,
         roleName: String,
         disabled: false,
         SysList: [],
@@ -169,11 +179,11 @@
       //获取角色列表
       getSyscontrol() {
         let d = this.cur_page; //当前页
-        let m = 10; //每页显示条数
+        let m = this.pageSize; //每页显示条数
         let count = (parseInt(d) - 1) * m + 1 === 0 ? 1 : (parseInt(d) - 1) * m + 1;
         this.ajax({
           name: 'getSyscontrol',
-          data: { pageNum: this.cur_page, ...this.sysctrlSearch }
+          data: { pageNum: this.cur_page, pageSize: this.pageSize, ...this.sysctrlSearch }
         }).then(res => {
           res.rows.forEach((item, index) => {
             switch(item.service) {
@@ -205,6 +215,18 @@
       handleCurrentChange(val) {
         this.cur_page = val;
         this.getRoles()
+      },
+      handleSizeChange(val) {
+        this.pageSize = val;
+        this.getLog();
+      },
+      gofist() {
+        this.cur_page = 1;
+        this.getLog();
+      },
+      goLast() {
+        this.cur_page = Math.ceil(this.count / this.pageSize);
+        this.getLog();
       },
       //获取权限数
       getAcls() {

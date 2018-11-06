@@ -333,7 +333,7 @@
 
             this.axAjax('post', api.postProduct.url, formData, null)
               .then(res => {
-                if(res.data.status === 1) {
+                if(res.data.errorCode === 1) {
                   this.addProductModel = false;
                   this.$message.success('操作成功');
                   this.file = null;

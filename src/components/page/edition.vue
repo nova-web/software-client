@@ -1,17 +1,14 @@
 <template>
   <div class="edition">
     <div class="crumbs">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i>产品管理</el-breadcrumb-item>
-        <el-breadcrumb-item>
-          版本列表
-        </el-breadcrumb-item>
+      <el-breadcrumb>
+        <el-breadcrumb-item>产品管理</el-breadcrumb-item>
+        <el-breadcrumb-item>版本列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增产品</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增版本</el-button>
       </div>
       <div class="search-box">
         <el-form ref="search" :rules="searchRules" :model="editionSearch" class="demo-form-inline" :inline="true">
@@ -42,7 +39,7 @@
         <el-table-column label="序号" prop="num" width="50px"></el-table-column>
 
         <el-table-column label="版本" prop="version"></el-table-column>
-        <el-table-column label="版本类型" prop="stageName"></el-table-column>
+        <el-table-column label="版本类型" prop="typeName"></el-table-column>
         <el-table-column label="状态" prop="publishStatusName"></el-table-column>
         <el-table-column label="版本描述">
           <template slot-scope="scope">
@@ -224,6 +221,8 @@
           res.rows.forEach(item => {
             item.publishStatusName = this.getFormatDict.pro_status[item.publishStatus];
             item.stageName = this.getFormatDict.stage[item.stage];
+            item.typeName = this.getFormatDict.version[item.type];
+            console.log(this.getFormatDict);
             item.num = count++;
           });
           this.tableData = res.rows;

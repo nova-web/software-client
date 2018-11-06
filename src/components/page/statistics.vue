@@ -1,9 +1,8 @@
 <template>
   <div class="table">
     <div class="crumbs">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i>统计分析</el-breadcrumb-item>
+      <el-breadcrumb>
+        <el-breadcrumb-item>统计分析</el-breadcrumb-item>
       </el-breadcrumb>
 
     </div>

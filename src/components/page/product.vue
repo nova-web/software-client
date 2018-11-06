@@ -1,17 +1,16 @@
 <template>
   <div class="download">
     <div class="crumbs">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb>
+        <!-- <el-breadcrumb-item :to="{path: '/'}">首页</el-breadcrumb-item> -->
         <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i>产品管理</el-breadcrumb-item>
-        <el-breadcrumb-item>
-          产品列表
-        </el-breadcrumb-item>
+          <!-- <i class="el-icon-tickets"></i> -->产品管理</el-breadcrumb-item>
+        <el-breadcrumb-item>产品列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" icon="search" @click="addVisible">新增产品</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增产品</el-button>
       </div>
 
       <div class="search-box">
@@ -70,7 +69,7 @@
     <!-- 编辑对话框 -->
     <el-dialog title="编辑" :visible.sync="editProductModel" width="30%">
 
-      <el-form ref="editFrom" :rules="ProRule" :model="editProduct" label-width="90px" label-position="left">
+      <el-form :rules="ProRule" ref="editpro" :model="editProduct" label-width="90px" label-position="left">
         <el-form-item label="产品ID:" prop="modelId">
           <el-input v-model="editProduct.modelId"></el-input>
         </el-form-item>
@@ -214,7 +213,7 @@
             { required: true, trigger: 'blur', message: '产品型号不能为空' }],
           type: [{ required: true, message: '请选择产品类型', trigger: 'blur' }],
           stage: [{ required: true, message: '请选择产品阶段', trigger: 'blur' }],
-          fitPro: [{ required: true, message: '请选择适配产品', trigger: 'blur' }],
+          // fitPro: [{ required: true, message: '请选择适配产品', trigger: 'blur' }],
           area: [{ required: true, message: '请选择业务区域', trigger: 'blur' }],
           dept: [{ required: true, message: '请选择所属产品线', trigger: 'blur' }],
           projectManager: [
@@ -319,12 +318,11 @@
 
             this.axAjax('post', api.postProduct.url, formData, null)
               .then(res => {
-
                 if(res.data.status === 1) {
                   this.addProductModel = false;
                   this.$message.success('操作成功');
                   this.file = null;
-                  this.addProduct = Object.assign({}, this.cancelvisible);
+                  this.$refs.addpro.resetFields();
                   this.$refs['upload'].clearFiles()
                   this.getEquipment();
                 } else {
@@ -402,31 +400,37 @@
       },
       //确认编辑
       saveEditProductModel() {
-        let formData = new FormData();
-        Object.keys(this.editProduct).forEach(item => {
-          formData.append(item, this.editProduct[item]);
-        });
-        if(this.file) {
-          formData.append("logo", this.file.raw);
-        }
-        axios({
-          method: 'put',
-          url: api.editProduct.url + `/${this.idx}`,
-          data: formData,
-          headers: { 'token': this.getCommon.token }
-        }).then(res => {
-          if(res.data.errorCode === 1) {
-            this.$refs['uploadEdit'].clearFiles()
-            this.editProductModel = false;
-            this.getEquipment();
-            this.$message.success('操作成功');
-          } else {
-            this.$message.error(res.data.errorMsg);
+        this.$refs.editpro.validate((valid) => {
+          if(valid) {
+            let formData = new FormData();
+            Object.keys(this.editProduct).forEach(item => {
+              formData.append(item, this.editProduct[item]);
+            });
+            if(this.file) {
+              formData.append("logo", this.file.raw);
+            }
+            axios({
+              method: 'put',
+              url: api.editProduct.url + `/${this.idx}`,
+              data: formData,
+              headers: { 'token': this.getCommon.token }
+            }).then(res => {
+              if(res.data.errorCode === 1) {
+                this.$refs['uploadEdit'].clearFiles();
+                this.$refs['editpro'].resetFields();
+                this.editProductModel = false;
+                this.getEquipment();
+                this.$message.success('操作成功');
+              } else {
+                this.$message.error(res.data.errorMsg);
+              }
+            })
           }
-        })
+        });
       },
       cancelEdit() {
         this.editVisible = false;
+        this.$refs['editpro'].resetFields();
       },
       //试用
       handleOnTrial(row, index) {

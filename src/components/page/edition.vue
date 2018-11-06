@@ -332,7 +332,7 @@
               data: formData,
               headers: { 'token': this.getCommon.token }
             }).then(res => {
-              if(res.data.errorCode === 1) {
+              if(res.data.status === 1) {
                 this.$message.success('操作成功');
                 this.modifyModel = false;
                 this.$refs.uploadEdition.clearFiles()

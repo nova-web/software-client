@@ -17,7 +17,7 @@ export function checkPhone(rule, value, callback) {
     }, 100);
 }
 
-export function checkUsername(rule, value, callback) {
+export function checkNormal(rule, value, callback) {
     let reg = /^[a-zA-Z0-9_\u4e00-\u9fa5\s]{1,30}$/; //匹配所有非特殊字符，且长度在0和30之间;
     if (!value) {
         callback();
@@ -42,7 +42,7 @@ export function checkWorkNumber(rule, value, callback) {
     }, 100);
 }
 // 匹配所有特殊字符
-export function checkSpecialStr(rule, value, callback) {
+export function checkUsername(rule, value, callback) {
     let reg = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/im;
     if (!value) {
         callback();

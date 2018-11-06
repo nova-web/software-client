@@ -111,7 +111,6 @@
         <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
       </div>
     </el-dialog>
-
     <el-dialog title="修改版本" :visible.sync="modifyModel" width="30%">
       <div class="add-edition">
         <el-form ref="changeEdition" :rules="editionRules" label-width="90px" :model="modifyEdition" class="demo-ruleForm">
@@ -144,20 +143,6 @@
         <el-button @click="cancelModifyEdition">取消</el-button>
       </div>
     </el-dialog>
-    <<<<<<< HEAD=======< !-- 删除 -->
-      <el-dialog title="删除版本" :visible.sync="delVisible" width="600px">
-        <div class="del-dialog-cnt">
-          <div class="ic">
-            <i class="el-icon-info icon-css"></i>
-          </div>
-          <div>删除不可恢复，是否确定删除？</div>
-        </div>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="saveDeleteEdition">确 定</el-button>
-          <el-button @click="delVisible = false">取 消</el-button>
-        </div>
-      </el-dialog>
-      >>>>>>> 99ecb8501c1605736c3f4df79df6bbc07f809713
   </div>
 </template>
 <script>

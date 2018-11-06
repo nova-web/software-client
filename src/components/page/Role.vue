@@ -20,11 +20,9 @@
               </el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item label="角色名称">
             <el-input v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索"></el-input>
           </el-form-item>
-
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
           </el-form-item>
@@ -98,19 +96,6 @@
         <el-button @click="editVisible=false;">取消</el-button>
       </div>
     </el-dialog>
-    <!-- 删除对话框 -->
-    <el-dialog title="提示" :visible.sync="deleteRoleVisible" width="600px">
-      <div class="del-dialog-cnt">
-        <div class="ic">
-          <i class="el-icon-info icon-css"></i>
-        </div>
-        <div>删除角色：{{roleName}}，是否确定？</div>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleDeleteRoles">确 定</el-button>
-        <el-button @click="deleteRoleVisible=false">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -135,7 +120,6 @@
         editVisible: false,
         editRole: {},
         idx: -1,
-        delVisible: false,
         delIndex: Number,
         //角色搜索
         roleSearch: {
@@ -307,19 +291,17 @@
       },
       //删除
       handledeleteRole(row, index) {
-        this.deleteRoleVisible = true;
-        this.idx = row.id;
-        this.roleName = row.name;
-      },
-      handleDeleteRoles() {
-        this.deleteRoleVisible = false;
-        this.ajax({
-          name: 'deleteRole',
-          id: this.idx
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getRoles();
-        });
+        this.$confirm(`删除角色:${row.name},是否确定？`, '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'deleteRole',
+            id: row.id
+          }).then(res => {
+            this.$message.success('操作成功');
+            this.getRoles();
+          });
+        })
       },
       //搜索
       search() {

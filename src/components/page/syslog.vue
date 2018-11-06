@@ -55,8 +55,17 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination background @current-change="handleCurrentChange" :page-size="10" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
-        </el-pagination>
+        <div class="pagination-left">
+          {{(cur_page - 1) * pageSize + 1 === 0 ? 1 : (cur_page - 1) * pageSize + 1}}-{{cur_page * pageSize}} 共 {{count}}
+        </div>
+        <div class="pagination-right">
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
+            <el-button icon="el-icon-d-arrow-left" size="small" @click="gofist"></el-button>
+          </el-pagination>
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
+            <el-button icon="el-icon-d-arrow-right" size="small" @click="goLast"></el-button>
+          </el-pagination>
+        </div>
       </div>
     </div>
   </div>
@@ -71,6 +80,7 @@
       return {
         sylogData: [],
         cur_page: 1,
+        pageSize: 10,
         count: 0,
         syslogSearch: {},
         selectOperateType: [
@@ -130,12 +140,13 @@
       ...mapActions(['ajax']),
       getLog() {
         let d = this.cur_page; //当前页
-        let m = 10; //每页显示条数
+        let m = this.pageSize; //每页显示条数
         let count = (parseInt(d) - 1) * m + 1 === 0 ? 1 : (parseInt(d) - 1) * m + 1;
         this.ajax({
           name: 'getLogs',
           data: {
             pageNum: this.cur_page,
+            pageSize: this.pageSize,
             ...this.syslogSearch
           }
         }).then(res => {
@@ -150,8 +161,21 @@
       tableRowStatusName({ row, rowIndex }) {
         return 'line-row-padding'
       },
+      //分页
       handleCurrentChange(val) {
         this.cur_page = val;
+        this.getLog();
+      },
+      handleSizeChange(val) {
+        this.pageSize = val;
+        this.getLog();
+      },
+      gofist() {
+        this.cur_page = 1;
+        this.getLog();
+      },
+      goLast() {
+        this.cur_page = Math.ceil(this.count / this.pageSize);
         this.getLog();
       },
       //搜索
@@ -191,6 +215,18 @@
     justify-content: flex-end;
     .inputs {
       width: 120px;
+    }
+  }
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    .pagination-right {
+      display: flex;
+    }
+    .pagination-left {
+      font-size: 13px;
+      font-weight: 400;
+      color: #606266;
     }
   }
 </style>

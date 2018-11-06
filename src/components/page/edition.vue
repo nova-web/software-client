@@ -80,9 +80,9 @@
           <el-form-item label="版本名称:" prop="version">
             <el-input class="inputs" v-model.trim="addEdition.version" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="版本类型:" prop="stage">
-            <el-select class="inputs" clearable v-model="addEdition.stage" placeholder="">
-              <el-option v-for="item in stage" :key="item.id" :value="item.code" :label="item.name"></el-option>
+          <el-form-item label="版本类型:" prop="type">
+            <el-select class="inputs" clearable v-model="addEdition.type" placeholder="">
+              <el-option v-for="item in type" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="版本描述:" prop="versionLog">
@@ -114,9 +114,9 @@
           <el-form-item label="版本名称:" prop="version">
             <el-input class="inputs" v-model="modifyEdition.version" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="版本类型:" prop="stage">
-            <el-select class="inputs" clearable v-model="modifyEdition.stage" placeholder="">
-              <el-option v-for="item in stage" :key="item.id" :value="item.code" :label="item.name"></el-option>
+          <el-form-item label="版本类型:" prop="type">
+            <el-select class="inputs" clearable v-model="modifyEdition.type" placeholder="">
+              <el-option v-for="item in type" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="版本描述:" prop="versionLog">
@@ -192,6 +192,9 @@
           ],
           packages: [
             { required: true, message: '请选择文件', trigger: 'change' },
+          ],
+          type: [
+            { required: true, message: '版本类型不可为空', trigger: 'change' },
           ]
         }
       };
@@ -222,7 +225,6 @@
             item.publishStatusName = this.getFormatDict.pro_status[item.publishStatus];
             item.stageName = this.getFormatDict.stage[item.stage];
             item.typeName = this.getFormatDict.version[item.type];
-            console.log(this.getFormatDict);
             item.num = count++;
           });
           this.tableData = res.rows;
@@ -236,7 +238,8 @@
           this.fitPro = res;
         });
         this.pro_status = this.getDict.filter(item => item.type === 'pro_status');
-        this.stage = this.getDict.filter(item => item.type === "stage");
+        this.stage = this.getDict.filter(item => item.type === 'stage');
+        this.type = this.getDict.filter(item => item.type === 'version');
       },
       //新增
       addVisible() {
@@ -262,8 +265,8 @@
                 if(res.data.errorCode === 1) {
                   this.$message.success('操作成功');
                   this.addfile = null;
-                  this.$refs.addEdition.resetFields()
-                  this.$refs.upload.clearFiles()
+                  this.$refs.addEdition.resetFields();
+                  this.$refs.upload.clearFiles();
                   this.addEditionModele = false;
                   this.getEdition();
                 } else {
@@ -298,9 +301,9 @@
         let fileArr = [{ name: '', url: '' }];
         this.modifyEdition = {
           version: row.version,
-          stage: row.stage,
           versionLog: row.versionLog,
           productId: row.productId,
+          type: row.type,
           packages: 1
         }
         fileArr.forEach(item => {
@@ -315,7 +318,6 @@
       //确认修改
       saveModifyEdition() {
         let formData = new FormData();
-
         this.$refs.changeEdition.validate(valid => {
           if(valid) {
             delete this.modifyEdition.packages;
@@ -331,7 +333,7 @@
               data: formData,
               headers: { 'token': this.getCommon.token }
             }).then(res => {
-              if(res.data.status === 1) {
+              if(res.data.errorCode === 1) {
                 this.$message.success('操作成功');
                 this.modifyModel = false;
                 this.$refs.uploadEdition.clearFiles()
@@ -345,7 +347,6 @@
             return false;
           }
         })
-
       },
       removeEditFile() {
         this.file = null;

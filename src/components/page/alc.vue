@@ -12,15 +12,15 @@
     <div class="container">
       <div class="search-box">
 
-        <el-form highlight-current-row @current-change="handleCurrentChange" :model="alcSearch" ref="search" class="demo-form-inline" :inline="true">
-          <el-form-item label="状态">
+        <el-form highlight-current-row @current-change="handleCurrentChange" :rules="searchRules" :model="alcSearch" ref="search" class="demo-form-inline" :inline="true">
+          <el-form-item label="状态：">
             <el-select v-model="alcSearch.status" @change="search" clearable>
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="功能名称">
+          <el-form-item label="功能名称：" prop="name">
             <el-input v-model="alcSearch.name" placeholder="按功能名称搜索" @input="search"></el-input>
           </el-form-item>
 
@@ -81,73 +81,73 @@
     </div>
 
     <el-dialog title="修改功能" :visible.sync="editVisible" width="30%">
-      <el-form ref="editUser" :model="editFunction" label-width="80px">
-        <el-form-item label="功能名称">
-          <el-input v-model="editFunction.name"></el-input>
+      <el-form ref="editacl" :rules="AlcRule" :model="editFunction" label-width="80px">
+        <el-form-item label="功能名称" prop="name">
+          <el-input v-model.trim="editFunction.name" maxlength="30"></el-input>
         </el-form-item>
-        <el-form-item label="URL">
-          <el-input v-model="editFunction.url"></el-input>
+        <el-form-item label="URL" prop="url">
+          <el-input v-model.trim="editFunction.url"></el-input>
         </el-form-item>
-        <el-form-item label="code">
-          <el-input v-model="editFunction.code"></el-input>
+        <el-form-item label="code" prop="code">
+          <el-input v-model.trim="editFunction.code"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="editFunction.remark"></el-input>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model.trim="editFunction.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisible=false">取 消</el-button>
         <el-button type="primary" @click="saveEdit">确 定</el-button>
+        <el-button @click="editVisible=false;$refs['editacl'].resetFields();">取 消</el-button>
       </div>
     </el-dialog>
 
     <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%">
-      <el-form ref="editUser" :model="addParentObj" label-width="80px">
-        <el-form-item label="功能名称">
-          <el-input v-model="addParentObj.name"></el-input>
+      <el-form ref="addpeer" :model="addParentObj" :rules="AlcRule" label-width="80px">
+        <el-form-item label="功能名称" prop="name">
+          <el-input v-model.trim="addParentObj.name"></el-input>
         </el-form-item>
-        <el-form-item label="URL">
-          <el-input v-model="addParentObj.url"></el-input>
+        <el-form-item label="URL" prop="url">
+          <el-input v-model.trim="addParentObj.url"></el-input>
         </el-form-item>
-        <el-form-item label="code">
-          <el-input v-model="addParentObj.code"></el-input>
+        <el-form-item label="code" prop="url">
+          <el-input v-model.trim="addParentObj.code"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="addParentObj.remark"></el-input>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model.trim="addParentObj.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addParentModel=false">取 消</el-button>
         <el-button type="primary" @click="saveAddParent">确 定</el-button>
+        <el-button @click="addParentModel=false;$refs['addpeer'].resetFields();">取 消</el-button>
       </div>
     </el-dialog>
 
     <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%">
-      <el-form ref="editUser" :model="addLeaverObj" label-width="80px">
-        <el-form-item label="功能名称">
-          <el-input v-model="addLeaverObj.name"></el-input>
+      <el-form ref="addleaver" :model="addLeaverObj" :rules="AlcRule" label-width="80px">
+        <el-form-item label="功能名称" prop="name">
+          <el-input v-model.trim="addLeaverObj.name"></el-input>
         </el-form-item>
-        <el-form-item label="URL">
-          <el-input v-model="addLeaverObj.url"></el-input>
+        <el-form-item label="URL" prop="url">
+          <el-input v-model.trim="addLeaverObj.url"></el-input>
         </el-form-item>
-        <el-form-item label="code">
-          <el-input v-model="addLeaverObj.code"></el-input>
+        <el-form-item label="code" prop="url">
+          <el-input v-model.trim="addLeaverObj.code"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="addLeaverObj.remark"></el-input>
+        <el-form-item label="描述" prop="remark">
+          <el-input v-model.trim="addLeaverObj.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addLeaverModel=false">取 消</el-button>
         <el-button type="primary" @click="saveAddLeaver">确 定</el-button>
+        <el-button @click="addLeaverModel=false;$refs['addleaver'].resetFields();">取 消</el-button>
       </div>
     </el-dialog>
 
     <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
       <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="delVisible = false">取 消</el-button>
         <el-button type="primary" @click="deleteAcls">确 定</el-button>
+        <el-button @click="delVisible = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -155,6 +155,7 @@
 <script>
   import { treeToArray, serialize } from '../../utils';
   import { mapActions, mapGetters } from 'vuex';
+  import { checkUsername } from '../../utils/rules';
   export default {
     data() {
       return {
@@ -170,6 +171,19 @@
             label: '有效'
           }
         ],
+        searchRules: {  // 搜索框规则
+          name: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
+        AlcRule: {  // 弹出框内容的验证规则 name url code remark
+          name: [
+            { required: true, validator: checkUsername, trigger: 'blur' },
+            { required: true, trigger: 'blur', message: '功能名称不能为空' }],
+          url: [{ required: true, message: 'URL不能为空', trigger: 'blur' }],
+          code: [{ required: true, message: 'Code不能为空', trigger: 'blur' }],
+          remark: [{ required: true, message: '描述不能为空', trigger: 'blur' }],
+        },
         editVisible: false,
         editFunction: {},
         alcSearch: {},
@@ -222,16 +236,21 @@
       },
       //确认修改
       saveEdit() {
-        console.log(this.editFunction);
-        this.ajax({
-          name: 'putAcls',
-          id: this.idx,
-          data: this.editFunction
-        }).then(res => {
-          this.initData();
-          this.editVisible = false;
-          this.$message.success('操作成功');
-        })
+        this.$refs.editacl.validate((valid) => {
+          if(valid) {
+            this.ajax({
+              name: 'putAcls',
+              id: this.idx,
+              data: this.editFunction
+            }).then(res => {
+              this.initData();
+              this.editVisible = false;
+              this.$message.success('操作成功');
+            })
+          } else {
+            return;
+          }
+        });
       },
       //删除
       handleDelete(row) {
@@ -262,21 +281,24 @@
       },
       //确认新增
       saveAddParent() {
-        if(!this.addParentObj.parentId) {
-          delete this.addParentObj.parentId
-        }
-        this.ajax({
-          name: 'postAclsParent',
-          data: this.addParentObj
-        }).then(res => {
-          this.initData();
-          this.addParentModel = false;
-          this.$message.success('操作成功');
-        })
+        this.$refs.addpeer.validate((valid) => {
+          if(valid) {
+            if(!this.addParentObj.parentId) {
+              delete this.addParentObj.parentId
+            }
+            this.ajax({
+              name: 'postAclsParent',
+              data: this.addParentObj
+            }).then(res => {
+              this.initData();
+              this.addParentModel = false;
+              this.$message.success('操作成功');
+            })
+          }
+        });
       },
       //新增下级菜单
       handleLowerLevelMenu(row) {
-
         this.addLeaverModel = true;
         this.addLeaverObj = {
           name: null,
@@ -287,14 +309,18 @@
         }
       },
       saveAddLeaver() {
-        this.ajax({
-          name: 'postAclsParent',
-          data: this.addLeaverObj
-        }).then(res => {
-          this.initData();
-          this.addLeaverModel = false;
-          this.$message.success('操作成功');
-        })
+        this.$refs.addleaver.validate((valid) => {
+          if(valid) {
+            this.ajax({
+              name: 'postAclsParent',
+              data: this.addLeaverObj
+            }).then(res => {
+              this.initData();
+              this.addLeaverModel = false;
+              this.$message.success('操作成功');
+            })
+          }
+        });
       },
       //置为无效
       nullAndVoid(row) {

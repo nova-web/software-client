@@ -15,18 +15,18 @@
       </div>
       <div class="search-box">
         <el-form ref="search" :rules="searchRules" :model="editionSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="状态">
+          <el-form-item label="状态：">
             <el-select class="select-input" clearable v-model="editionSearch.publishStatus" @change="search">
               <el-option v-for=" item in pro_status" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="产品名称" prop="name">
+          <el-form-item label="产品名称：" prop="name">
             <el-input class="ent-input" maxlength="30" clearable v-model.trim="editionSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="版本名称" prop="version">
+          <el-form-item label="版本名称：" prop="version">
             <el-input class="ent-inputs" maxlength="30" clearable v-model.trim="editionSearch.version" placeholder="按版本名称搜索" @change="search"></el-input>
           </el-form-item>
-          <el-form-item label="更新时间">
+          <el-form-item label="更新时间：">
             <el-date-picker class="ent-inputs" v-model="editionSearch.updatedStart" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
             </el-date-picker>
             &nbsp; 至 &nbsp;
@@ -107,8 +107,8 @@
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addCancel();">取消</el-button>
         <el-button type="primary" @click="saveAddEdition">确定</el-button>
+        <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
       </div>
     </el-dialog>
 
@@ -140,10 +140,24 @@
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelModifyEdition">取消</el-button>
         <el-button type="primary" @click="saveModifyEdition">确定</el-button>
+        <el-button @click="cancelModifyEdition">取消</el-button>
       </div>
     </el-dialog>
+    <<<<<<< HEAD=======< !-- 删除 -->
+      <el-dialog title="删除版本" :visible.sync="delVisible" width="600px">
+        <div class="del-dialog-cnt">
+          <div class="ic">
+            <i class="el-icon-info icon-css"></i>
+          </div>
+          <div>删除不可恢复，是否确定删除？</div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="saveDeleteEdition">确 定</el-button>
+          <el-button @click="delVisible = false">取 消</el-button>
+        </div>
+      </el-dialog>
+      >>>>>>> 99ecb8501c1605736c3f4df79df6bbc07f809713
   </div>
 </template>
 <script>
@@ -382,33 +396,66 @@
       },
       //试用
       packageTryout(row) {
-        this.ajax({
-          name: 'packageTryout',
-          data: { id: row.id }
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getEdition();
-        })
+        this.$confirm('确定试用该版本？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'packageTryout',
+            data: { id: row.id }
+          }).then(res => {
+            this.$message.success('试用成功');
+            this.getEdition();
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消试用'
+          });
+        });
       },
       //发布
       packagePublish(row) {
-        this.ajax({
-          name: 'packagePublish',
-          data: { id: row.id }
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getEdition();
-        })
+        this.$confirm('确定发布该版本？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'packagePublish',
+            data: { id: row.id }
+          }).then(res => {
+            this.$message.success('发布成功');
+            this.getEdition();
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布'
+          });
+        });
       },
       //撤回
       withdrawPublish(row) {
-        this.ajax({
-          name: 'packageWithdraw',
-          data: { id: row.id }
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getEdition();
-        })
+        this.$confirm('确定撤回该产品？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.ajax({
+            name: 'packageWithdraw',
+            data: { id: row.id }
+          }).then(res => {
+            this.$message.success('撤回成功');
+            this.getEdition();
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消撤回'
+          });
+        });
       },
       packageObtained(row) {
         this.ajax({

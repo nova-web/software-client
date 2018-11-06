@@ -13,15 +13,16 @@
         <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
       </div>
       <div class="search-box">
-        <el-form ref="search" :model="roleSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="状态">
+        <el-form ref="search" :rules="searchRules" :model="roleSearch" class="demo-form-inline" :inline="true">
+          <el-form-item label="状态：">
             <el-select v-model="roleSearch.status" @change="search">
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="角色名称">
-            <el-input v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索"></el-input>
+
+          <el-form-item label="角色名称：" prop="username">
+            <el-input v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -60,8 +61,8 @@
       <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true">
       </el-tree>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
         <el-button type="primary" @click="getCheckedKeys">确定</el-button>
+        <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
       </div>
     </el-dialog>
     <!-- 新增对话框 -->
@@ -101,6 +102,7 @@
 <script>
   import { mapActions, mapGetters, mapMutations } from 'vuex';
   import { serialize } from '../../utils';
+  import { checkUsername } from '../../utils/rules';
 
   export default {
     data() {
@@ -121,6 +123,11 @@
         editRole: {},
         idx: -1,
         delIndex: Number,
+        searchRules: {  // 搜索框规则
+          username: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
         //角色搜索
         roleSearch: {
           status: 1

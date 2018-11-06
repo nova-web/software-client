@@ -13,15 +13,15 @@
         <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
       </div> -->
       <div class="search-box">
-        <el-form ref="search" :model="sysctrlSearch" class="demo-form-inline" :inline="true">
-          <el-form-item label="服务状态">
+        <el-form ref="search" :model="sysctrlSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
+          <el-form-item label="服务状态：">
             <el-select v-model="sysctrlSearch.service" @change="search">
               <el-option v-for="item in service" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="产品名称">
+          <el-form-item label="产品名称：" prop="username">
             <el-input v-model="sysctrlSearch.username" @change="search" placeholder="按产品名称搜索"></el-input>
           </el-form-item>
 
@@ -57,8 +57,8 @@
       <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true">
       </el-tree>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
         <el-button type="primary" @click="getCheckedKeys">确定</el-button>
+        <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
       </div>
     </el-dialog>
     <!-- 新增对话框 -->
@@ -111,6 +111,7 @@
 <script>
   import { mapActions, mapGetters, mapMutations } from 'vuex';
   import { serialize } from '../../utils';
+  import { checkUsername } from '../../utils/rules';
 
   export default {
     data() {
@@ -150,7 +151,12 @@
         showAcls: false, //权限树对话框
         aclsTree: [], //权限树
         effectiveVisible: false, //置为无效对话框
-        deleteRoleVisible: false //删除对话框
+        deleteRoleVisible: false, //删除对话框
+        searchRules: {  // 搜索框规则
+          username: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ]
+        },
       };
     },
     created() {

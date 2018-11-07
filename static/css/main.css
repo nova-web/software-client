@@ -206,3 +206,13 @@ a {
 .el-popper {
     max-width: 400px !important;
 }
+
+/* 确定在前，取消在后样式 */
+.el-message-box__btns {
+    display: flex;
+    justify-content: flex-end;
+}
+.el-message-box__btns > button:nth-child(1) {
+    order: 1;
+    margin-left: 10px;
+}

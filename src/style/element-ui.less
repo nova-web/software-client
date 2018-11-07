@@ -36,6 +36,11 @@
 .el-table .invalid-row {
     color: #c9cace;
 }
-.el-table .line-row-padding {
-    height: 50px;
+
+.el-table__row {
+    > td {
+        padding: 0;
+        height: 40px;
+        min-height: 40px !important;
+    }
 }

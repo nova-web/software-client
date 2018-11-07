@@ -8,10 +8,9 @@
 
     </div>
     <div class="container">
-      <!-- <div class="handle-box">
-        <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="search" @click="addVisible=true">新增角色</el-button>
-      </div> -->
       <div class="search-box">
+        <div class="handle-box">
+        </div>
         <el-form ref="search" :model="sysctrlSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
           <el-form-item label="服务状态：">
             <el-select v-model="sysctrlSearch.service" @change="search">
@@ -369,10 +368,5 @@
   .del-dialog-cnt {
     font-size: 16px;
     text-align: center;
-  }
-  .search-box {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
   }
 </style>

@@ -7,10 +7,10 @@
       </el-breadcrumb>
     </div>
     <div class="container">
-      <div class="handle-box">
-        <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增版本</el-button>
-      </div>
       <div class="search-box">
+        <div class="handle-box">
+          <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增版本</el-button>
+        </div>
         <el-form ref="search" :rules="searchRules" :model="editionSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
             <el-select class="select-input" clearable v-model="editionSearch.publishStatus" @change="search">
@@ -516,11 +516,7 @@
   .handle-box {
     margin-bottom: 20px;
   }
-  .search-box {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-  }
+
   .ent-inputs {
     width: 200px;
   }

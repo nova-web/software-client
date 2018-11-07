@@ -7,10 +7,9 @@
 
     </div>
     <div class="container">
-      <div class="handle-box">
-
-      </div>
       <div class="search-box">
+        <div class="handle-box">
+        </div>
         <el-form ref="search" :rules="searchRules" :model="scarchStatistics" class="demo-form-inline" :inline="true">
           <el-form-item label="设备S/N号：" prop="deviceId">
             <el-input v-model="scarchStatistics.deviceId"></el-input>
@@ -158,10 +157,5 @@
   .del-dialog-cnt {
     font-size: 16px;
     text-align: center;
-  }
-  .search-box {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
   }
 </style>

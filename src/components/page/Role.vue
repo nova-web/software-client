@@ -8,10 +8,10 @@
 
     </div>
     <div class="container">
-      <div class="handle-box">
-        <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="el-icon-plus" @click="addVisible=true">新增角色</el-button>
-      </div>
       <div class="search-box">
+        <div class="handle-box">
+          <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="el-icon-plus" @click="addVisible=true">新增角色</el-button>
+        </div>
         <el-form ref="search" :rules="searchRules" :model="roleSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
             <el-select v-model="roleSearch.status" @change="search" clearable>
@@ -362,10 +362,5 @@
   .del-dialog-cnt {
     font-size: 16px;
     text-align: center;
-  }
-  .search-box {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
   }
 </style>

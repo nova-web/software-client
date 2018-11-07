@@ -7,10 +7,10 @@
       </el-breadcrumb>
     </div>
     <div class="container">
-      <div class="handle-box">
-        <el-button v-if="getAlcsObj.YHXZ" type="primary" icon="el-icon-plus" @click="addUsers">新增用户</el-button>
-      </div>
       <div class="search-box">
+        <div class="handle-box">
+          <el-button v-if="getAlcsObj.YHXZ" type="primary" icon="el-icon-plus" @click="addUsers">新增用户</el-button>
+        </div>
         <el-form ref="search" :model="userSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
             <el-select v-model="userSearch.status" @change="search" clearable>
@@ -19,19 +19,19 @@
             </el-select>
           </el-form-item>
           <el-form-item label="角色：">
-            <el-select v-model="userSearch.roleId" clearable @change="search">
+            <el-select v-model.trim="userSearch.roleId" clearable @change="search">
               <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="用户名称：">
-            <el-input v-model="userSearch.username" @change="search" placeholder="输入用户名称查询" clearable></el-input>
+            <el-input v-model.trim="userSearch.username" @change="search" placeholder="输入用户名称查询" clearable></el-input>
           </el-form-item>
           <el-form-item label="真实姓名：">
-            <el-input v-model="userSearch.name" @change="search" placeholder="输入真实姓名查询" clearable></el-input>
+            <el-input v-model.trim="userSearch.name" @change="search" placeholder="输入真实姓名查询" clearable></el-input>
           </el-form-item>
           <el-form-item label="工号：">
-            <el-input v-model="userSearch.code" @change="search" placeholder="输入工号查询" clearable></el-input>
+            <el-input v-model.trim="userSearch.code" @change="search" placeholder="输入工号查询" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -59,10 +59,10 @@
         </el-table-column>
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
-            <el-button v-if="getAlcsObj.YHXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">编辑</el-button>
-            <el-button v-if="scope.row.isButtonShow && getAlcsObj.YHSC" size="small" type="text" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
+            <el-button v-if="getAlcsObj.YHXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
             <el-button v-if="scope.row.isButtonShow && getAlcsObj.YHSZZT" type="text" @click="handleEffective(scope.row, scope.$index)" size="small">置为有效</el-button>
             <el-button v-if="!scope.row.isButtonShow && getAlcsObj.YHSZZT" type="text" @click="handleInvalid(scope.row, scope.$index)" size="small">置为无效</el-button>
+            <el-button v-if="scope.row.isButtonShow && getAlcsObj.YHSC" size="small" type="text" @click="handleDelete(scope.row, scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -133,13 +133,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="密码:" prop="password">
-          <el-input v-model="addUser.password"></el-input>
+          <el-input v-model.trim="addUser.password"></el-input>
         </el-form-item>
         <el-form-item label="电话:" prop="phone">
           <el-input v-model.number="addUser.phone" maxlength="11" clearable></el-input>
         </el-form-item>
         <el-form-item label="邮箱:" prop="email">
-          <el-input v-model="addUser.email" :clearable="true"></el-input>
+          <el-input v-model.trim="addUser.email" :clearable="true"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -465,11 +465,7 @@
     font-size: 16px;
     text-align: center;
   }
-  .search-box {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-  }
+
   .inputs {
     width: 100%;
   }

@@ -179,7 +179,7 @@
     },
     created() {
       this.getRoles(); //获取权限表
-      this.getAcls();  //获取功能
+      this.getAcls();  //获取权限
     },
     computed: {
       ...mapGetters(['getAlcs', 'getAlcsObj'])

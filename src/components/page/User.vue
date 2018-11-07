@@ -93,7 +93,7 @@
           <el-input v-model.trim="editUser.password"></el-input>
         </el-form-item>
         <el-form-item label="工号:" prop="code">
-          <el-input v-model.trim="addUser.code" maxlength="30" clearable></el-input>
+          <el-input v-model.trim="editUser.code" maxlength="30" clearable></el-input>
         </el-form-item>
         <el-form-item label="用户角色:" prop="roles">
           <el-select v-model="editUser.roles" multiple collapse-tags>
@@ -159,11 +159,6 @@
       return {
         count: 0,
         UserList: [],
-        editUserRow: {
-          username: '',
-          password: '',
-          remark: '',
-        },
         addVisible: false,
         addUser: {
           roles: [],
@@ -356,6 +351,7 @@
             password: null,
             remark: row.remark,
             phone: row.phone,
+            code: row.code,
             status: row.status,
             email: row.email,
             roles: arr

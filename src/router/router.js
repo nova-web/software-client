@@ -60,7 +60,7 @@ let routerArr = [
     {
         path: '/alc',
         component: resolve => require(['../components/page/alc.vue'], resolve),
-        meta: { title: '功能管理', keepAlive: false, code: 'GNGL' }
+        meta: { title: '权限管理', keepAlive: false, code: 'GNGL' }
     },
     {
         name: 'productDetails',

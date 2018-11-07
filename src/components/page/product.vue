@@ -402,6 +402,7 @@
           }
           dict[item.type][item.name] = item.code;
         });
+        console.log(row);
         this.editProduct = {
           modelId: row.modelId,
           name: row.name,
@@ -412,7 +413,7 @@
           area: dict.area[row.area],
           dept: dict.dept[row.dept],
           projectManager: row.projectManager,
-          productDesc: row.productDesc
+          productDesc: row.productDesc || ''
         };
         this.editProductModel = true;
         this.idx = row.id;

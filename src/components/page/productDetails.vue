@@ -97,7 +97,8 @@
           type: null,
           version: null,
           area: null,
-          dept: null
+          dept: null,
+          fitPro: []
         }
       };
     },

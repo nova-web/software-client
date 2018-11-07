@@ -141,7 +141,8 @@
       },
       // tableRowStatusName 根据有效无效修改 row 样式
       tableRowStatusName({ row, rowIndex }) {
-        if(row.service == 0) {
+        console.log(row.service);
+        if(row.service == '已关闭') {
           return 'invalid-row'
         } else {
           return ''
@@ -149,19 +150,19 @@
       },
       handleCurrentChange(val) {
         this.cur_page = val;
-        this.getRoles()
+        this.getSyscontrol()
       },
       handleSizeChange(val) {
         this.pageSize = val;
-        this.getLog();
+        this.getSyscontrol();
       },
       gofist() {
         this.cur_page = 1;
-        this.getLog();
+        this.getSyscontrol();
       },
       goLast() {
         this.cur_page = Math.ceil(this.count / this.pageSize);
-        this.getLog();
+        this.getSyscontrol();
       },
       // 暂停服务
       stopService(row, index) {

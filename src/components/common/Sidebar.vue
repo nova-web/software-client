@@ -90,7 +90,7 @@
               },
               {
                 index: 'alc',
-                title: '功能管理',
+                title: '权限管理',
                 isShow: false,
                 code: 'GNGL'
               }

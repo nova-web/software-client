@@ -50,7 +50,7 @@ let api = {
     getLogs: { url: 'logs', method: 'get' }, //操作审计列表
     // 系统控制
     getSyscontrol: { url: 'syscontrol', method: 'get' },
-    setSyscontrolSwitch: { url: 'syscontrol', method: 'put' }, // 系统控制开关
+    setSyscontrolSwitch: { url: 'syscontrol/:id', method: 'put' }, // 系统控制开关
     //统计分析
     getProductLogs: { url: 'product/logs', method: 'get' }
 };

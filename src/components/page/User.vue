@@ -13,7 +13,7 @@
         </div>
         <el-form ref="search" :model="userSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
-            <el-select class="el-select-width" v-model="userSearch.status" @change="search" clearable>
+            <el-select class="el-select-width" v-model="userSearch.status" @change="search">
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
@@ -110,7 +110,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveEdit">确 定</el-button>
-        <el-button @click="editVisible=false">取 消</el-button>
+        <el-button @click="editVisible=false;$refs.editUser.resetFields();">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -173,14 +173,15 @@
           email: '',
           remark: '',
           workNumber: '',
-          name: ''
+          name: '',
+          code: ''
         },
         UserRule: {
           username: [
             { required: true, validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '用户名不能为空' }],
           name: [
-            { validator: checkUsername, trigger: 'blur' },
+            { required: true, validator: checkUsername, trigger: 'blur' },
             { required: true, message: '真实姓名不能为空', trigger: 'blur' }],
           code: [{ validator: checkUsername, trigger: 'blur' }],
           password: [
@@ -205,12 +206,16 @@
         //状态
         status: [
           {
-            value: 0,
-            label: '无效'
+            value: '',
+            label: '全部'
           },
           {
             value: 1,
             label: '有效'
+          },
+          {
+            value: 0,
+            label: '无效'
           }
         ],
         editVisible: false,
@@ -224,7 +229,10 @@
         pageSize: 10,
         multipleSelection: [],
         userSearch: {
-          status: 1
+          status: 1,
+          username: '',
+          name: '',
+          code: ''
         }
       }
     },
@@ -297,7 +305,8 @@
       },
       getrole() {
         this.ajax({
-          name: 'getRoles'
+          name: 'getRoles',
+          data: { status: 1 }
         }).then(res => {
           res.rows.forEach(item => {
             let obj = {}
@@ -310,6 +319,7 @@
       //新增用户
       addUsers() {
         this.addVisible = true;
+        this.$refs.addusers.resetFields();
       },
       saveAdd(ruleName) {
         this.$refs.addusers.validate((valid) => {
@@ -319,7 +329,6 @@
               data: this.addUser
             }).then(res => {
               this.getUsers();
-              this.$refs.addusers.resetFields()
               this.addVisible = false;
               this.$message.success('新增用户成功');
             });
@@ -331,26 +340,28 @@
       },
       //取消 
       cancelAddUser() {
-        this.$refs.addusers.resetFields()
         this.addVisible = false;
       },
       //编辑
       handleEdit(row, index) {
-        let arr = [];
-        row.roles.forEach(item => {
-          arr.push(item.id);
-        });
         this.editVisible = true;
-        this.editUser = {
-          name: row.name,
-          password: null,
-          remark: row.remark,
-          phone: row.phone,
-          status: row.status,
-          email: row.email,
-          roles: arr
-        }
-        this.idx = row.id;
+        this.$nextTick(() => {
+          let arr = [];
+          row.roles.forEach(item => {
+            arr.push(item.id);
+          });
+          this.$refs.editUser.resetFields();
+          this.editUser = {
+            name: row.name,
+            password: null,
+            remark: row.remark,
+            phone: row.phone,
+            status: row.status,
+            email: row.email,
+            roles: arr
+          }
+          this.idx = row.id;
+        });
       },
       // 保存编辑
       saveEdit() {

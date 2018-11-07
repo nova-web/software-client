@@ -21,7 +21,7 @@
           </el-form-item>
 
           <el-form-item label="角色名称：" prop="username">
-            <el-input class="el-input-width" v-model="roleSearch.name" @change="search" placeholder="按角色名称搜索" clearable></el-input>
+            <el-input class="el-input-width" v-model="roleSearch.name" @change="search" placeholder="输入角色名称查询" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -43,9 +43,9 @@
           <template slot-scope="scope">
             <el-button v-if="getAlcsObj.JSXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
             <el-button v-if="getAlcsObj.JSSQ" type="text" size="small" @click="handleSetAuthorize(scope.row, scope.$index)">授权</el-button>
+            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSXG" type="text" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
             <el-button v-if="scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
             <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="handleEffective(scope.row, scope.$index)">置为有效</el-button>
-            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSXG" type="text" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -74,29 +74,29 @@
     </el-dialog>
     <!-- 新增对话框 -->
     <el-dialog title="新增角色" :visible.sync="addVisible" width="30%">
-      <el-form ref="addRole" :model="addRole" :rules="role" label-width="100px" label-position="right">
+      <el-form :model="addRole" ref="addRole" :rules="RoleRule" label-width="100px" label-position="right">
         <div>
           <el-form-item label="角色名称:" prop="name">
-            <el-input v-model="addRole.name" placeholder="请输入角色名"></el-input>
+            <el-input v-model.trim="addRole.name" placeholder="请输入角色名" maxlength="30"></el-input>
           </el-form-item>
-          <el-form-item label="备注:" prop="remark">
-            <el-input type="textarea" class="inputs" v-model="addRole.remark" placeholder="请输入备注"></el-input>
+          <el-form-item label="描述:" prop="remark">
+            <el-input type="textarea" class="inputs" v-model.trim="addRole.remark" placeholder="请输入描述"></el-input>
           </el-form-item>
         </div>
       </el-form>
       <div slot="footer">
         <el-button type="primary" @click="saveAdd">确定</el-button>
-        <el-button @click="addVisible=false">取消</el-button>
+        <el-button @click="addVisible=false;$refs.addRole.resetFields()">取消</el-button>
       </div>
     </el-dialog>
     <!-- 编辑对话框 -->
     <el-dialog title="修改角色" :visible.sync="editVisible" width="30%">
-      <el-form ref="editRole" :rules="role" :model="editRole" label-width="80px" label-position="left">
-        <el-form-item prop="name" label="角色名称">
-          <el-input v-model="editRole.name" placeholder="请输入角色名"></el-input>
+      <el-form :model="editRole" ref="editRole" :rules="RoleRule" label-width="80px" label-position="left">
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model.trim="editRole.name" placeholder="请输入角色名" maxlength="30"></el-input>
         </el-form-item>
-        <el-form-item prop="remark" label="描述">
-          <el-input type="textarea" :rows="4" v-model="editRole.remark" placeholder="请输入备注"></el-input>
+        <el-form-item label="描述" prop="remark">
+          <el-input type="textarea" :rows="4" v-model.trim="editRole.remark" placeholder="请输入备注"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -163,6 +163,13 @@
             label: '有效'
           }
         ],
+        RoleRule: {
+          name: [
+            { required: true, validator: checkUsername, trigger: 'blur' },
+            { required: true, trigger: 'blur', message: '角色名称不能为空' }],
+          remark: [
+            { required: true, message: '描述不能为空', trigger: 'blur' }],
+        },
         showAcls: false, //权限树对话框
         aclsTree: [], //权限树
         effectiveVisible: false, //置为无效对话框
@@ -268,18 +275,19 @@
       },
       // 新增
       saveAdd() {
-        this.$refs.addRole.validate(valid => {
+        this.$refs.addRole.validate((valid) => {
           if(valid) {
             this.ajax({
               name: 'addRole',
               data: this.addRole
             }).then(res => {
-              this.$message.success('操作成功');
+              this.$message.success('新增角色成功');
+              this.$refs.addRole.resetFields();
               this.getRoles();
               this.addVisible = false;
             });
           }
-        })
+        });
       },
       handleEdit(row, index) {
         this.editVisible = true;
@@ -294,8 +302,9 @@
       },
       // 修改
       saveEdit() {
-        this.$refs.addRole.validate(valid => {
+        this.$refs.editRole.validate((valid) => {
           if(valid) {
+            this.editVisible = false;
             this.ajax({
               name: 'editRole',
               data: this.editRole,
@@ -303,11 +312,9 @@
             }).then(res => {
               this.$message.success('修改成功');
               this.getRoles();
-              this.editVisible = false;
             });
           }
-        })
-
+        });
       },
       // 置为无效
       deleteRole(row, index) {

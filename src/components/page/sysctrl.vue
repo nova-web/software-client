@@ -13,14 +13,14 @@
         </div>
         <el-form ref="search" :model="sysctrlSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
           <el-form-item label="服务状态：">
-            <el-select class="el-select-width" v-model="sysctrlSearch.service" @change="search">
+            <el-select class="el-select-width" v-model="sysctrlSearch.service" @change="search" clearable>
               <el-option v-for="item in service" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="产品名称：" prop="username">
-            <el-input class="el-input-width" v-model="sysctrlSearch.username" @change="search" placeholder="按产品名称搜索"></el-input>
+          <el-form-item label="产品名称：" prop="name">
+            <el-input class="el-input-width" v-model="sysctrlSearch.name" @change="search" placeholder="按产品名称搜索" clearable></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -40,8 +40,8 @@
         </el-table-column>
         <el-table-column label="操作" width="210">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.isButtonShow" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">暂停服务</el-button>
-            <el-button v-if="!scope.row.isButtonShow" type="text" size="small" @click="handleEffective(scope.row, scope.$index)">开通服务</el-button>
+            <el-button v-if="scope.row.isButtonShow" type="text" size="small" @click="stopService(scope.row, scope.$index)">暂停服务</el-button>
+            <el-button v-if="!scope.row.isButtonShow" type="text" size="small" @click="openService(scope.row, scope.$index)">开通服务</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -59,60 +59,6 @@
         </div>
       </div>
     </div>
-    <!-- 授权对话框 -->
-    <el-dialog title="授权" :visible.sync="showAcls" width="30%">
-      <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true">
-      </el-tree>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="getCheckedKeys">确定</el-button>
-        <el-button @click="showAcls=false;$refs.tree.setCheckedKeys([])">取消</el-button>
-      </div>
-    </el-dialog>
-    <!-- 新增对话框 -->
-    <el-dialog title="新增角色" :visible.sync="addVisible" width="30%">
-      <el-form :model="addRole" label-width="80px" label-position="left">
-        <div>
-          <el-form-item label="角色名称">
-            <el-input v-model="addRole.name" placeholder="请输入角色名"></el-input>
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input type="textarea" class="inputs" v-model="addRole.remark" placeholder="请输入备注"></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-      <div slot="footer">
-        <el-button type="primary" @click="saveAdd">确定</el-button>
-        <el-button @click="addVisible=false">取消</el-button>
-      </div>
-    </el-dialog>
-    <!-- 编辑对话框 -->
-    <el-dialog title="修改角色" :visible.sync="editVisible" width="30%">
-      <el-form :model="editRole" label-width="80px" label-position="left">
-        <el-form-item label="角色名称">
-          <el-input v-model="editRole.name" placeholder="请输入角色名"></el-input>
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input type="textarea" :rows="4" v-model="editRole.remark" placeholder="请输入备注"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <el-button type="primary" @click="saveEdit">确定</el-button>
-        <el-button @click="editVisible=false;">取消</el-button>
-      </div>
-    </el-dialog>
-    <!-- 删除对话框 -->
-    <el-dialog title="提示" :visible.sync="deleteRoleVisible" width="600px">
-      <div class="del-dialog-cnt">
-        <div class="ic">
-          <i class="el-icon-info icon-css"></i>
-        </div>
-        <div>删除角色：{{roleName}}，是否确定？</div>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleDeleteRoles">确 定</el-button>
-        <el-button @click="deleteRoleVisible=false">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -127,41 +73,31 @@
         cur_page: 1,
         count: 0,
         pageSize: 10,
-        roleName: String,
         disabled: false,
         SysList: [],
-        editRoleRow: {
-          name: '',
-          remark: '',
-        },
-        addVisible: false,
-        addRole: {},
-        editVisible: false,
-        editRole: {},
         idx: -1,
-        delVisible: false,
-        delIndex: Number,
         //角色搜索
         sysctrlSearch: {
-          service: 1
+          service: 1,
+          name: ''
         },
         //状态
         service: [
           {
-            value: 0,
-            label: '已关闭'
+            value: '',
+            label: '全部'
           },
           {
             value: 1,
             label: '已开通'
-          }
+          },
+          {
+            value: 0,
+            label: '已关闭'
+          },
         ],
-        showAcls: false, //权限树对话框
-        aclsTree: [], //权限树
-        effectiveVisible: false, //置为无效对话框
-        deleteRoleVisible: false, //删除对话框
         searchRules: {  // 搜索框规则
-          username: [
+          name: [
             { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
           ]
         },
@@ -175,7 +111,7 @@
     },
     methods: {
       ...mapActions(['ajax']),
-      //获取角色列表
+      //获取系统控制列表
       getSyscontrol() {
         let d = this.cur_page; //当前页
         let m = this.pageSize; //每页显示条数
@@ -227,119 +163,31 @@
         this.cur_page = Math.ceil(this.count / this.pageSize);
         this.getLog();
       },
-      //获取权限数
-      getAcls() {
+      // 暂停服务
+      stopService(row, index) {
         this.ajax({
-          name: 'getUserAclTree'
+          name: 'setSyscontrolSwitch',
+          id: row.id,
+          data: { service: 0 }
         }).then(res => {
-          this.aclsTree = this.pageAclsTree(res);
-        })
-      },
-      //配置权限树
-      pageAclsTree(data) {
-        data.forEach(item => {
-          item.label = item.name;
-          if(item.children) {
-            this.pageAclsTree(item.children);
-          }
-        });
-        return data;
-      },
-      //授权方法
-      getCheckedKeys() {
-        let aclsArr = this.$refs.tree.getCheckedKeys();
-        this.ajax({
-          name: 'setAuthorize',
-          data: { id: this.idx, acls: aclsArr }
-        }).then(res => {
-          if(res.service === 1) {
-            this.showAcls = false;
-            this.$message.success('操作成功');
-          }
-        })
-
-      },
-      handleSetAuthorize(row, index) {
-        this.idx = row.id;
-        this.showAcls = true;
-        this.ajax({
-          name: 'getRoleAcls',
-          data: { id: this.idx }
-        }).then(res => {
-          this.$refs.tree.setCheckedKeys(res);
-        });
-
-      },
-      // 新增
-      saveAdd() {
-        this.ajax({
-          name: 'addRole',
-          data: this.addRole
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getRoles();
-          this.addVisible = false;
+          this.$message.success('已暂停服务');
+          this.getSyscontrol();
         });
       },
-      handleEdit(row, index) {
-        this.editVisible = true;
-        this.editRole = {
-          name: row.name,
-          remark: row.remark
-        };
-        this.idx = row.id;
-      },
-      // 修改
-      saveEdit() {
-        this.editVisible = false;
+      // 开启服务
+      openService(row, index) {
         this.ajax({
-          name: 'editRole',
-          data: this.editRole,
-          id: this.idx
+          name: 'setSyscontrolSwitch',
+          id: row.id,
+          data: { service: 1 }
         }).then(res => {
-          this.$message.success('修改成功');
-          this.getRoles();
-        });
-      },
-      // 置为无效
-      deleteRole(row, index) {
-        this.ajax({
-          name: 'setRoleStatus',
-          data: { id: row.id, service: 0 }
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getRoles();
-        });
-      },
-      //置为有效
-      handleEffective(row, index) {
-        this.ajax({
-          name: 'setRoleStatus',
-          data: { id: row.id, service: 1 }
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getRoles();
-        });
-      },
-      //删除
-      handledeleteRole(row, index) {
-        this.deleteRoleVisible = true;
-        this.idx = row.id;
-        this.roleName = row.name;
-      },
-      handleDeleteRoles() {
-        this.deleteRoleVisible = false;
-        this.ajax({
-          name: 'deleteRole',
-          id: this.idx
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getRoles();
+          this.$message.success('已开启服务');
+          this.getSyscontrol();
         });
       },
       //搜索
       search() {
-        this.getRoles();
+        this.getSyscontrol();
       }
     }
   }

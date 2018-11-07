@@ -27,10 +27,10 @@
             <el-input class="el-input-width" v-model="syslogSearch.operateContent" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item label="时间：">
-            <el-date-picker v-model="syslogSearch.startTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" clearable>
+            <el-date-picker v-model="syslogSearch.startTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search" clearable :editable="false">
             </el-date-picker>
             &nbsp; 至 &nbsp;
-            <el-date-picker v-model="syslogSearch.endTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search" clearable>
+            <el-date-picker v-model="syslogSearch.endTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search" clearable :editable="false">
             </el-date-picker>
           </el-form-item>
           <el-form-item>

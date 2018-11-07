@@ -24,10 +24,10 @@
             <el-input class="el-input-width" maxlength="30" clearable v-model.trim="editionSearch.version" placeholder="按版本名称搜索" @change="search"></el-input>
           </el-form-item>
           <el-form-item label="更新时间：">
-            <el-date-picker class="el-input-width" v-model="editionSearch.updatedStart" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
+            <el-date-picker class="el-input-width" v-model="editionSearch.updatedStart" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search" :editable="false">
             </el-date-picker>
             &nbsp; 至 &nbsp;
-            <el-date-picker class="el-input-width" v-model="editionSearch.updatedEnd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search">
+            <el-date-picker class="el-input-width" v-model="editionSearch.updatedEnd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search" :editable="false">
             </el-date-picker>
           </el-form-item>
           <el-form-item>

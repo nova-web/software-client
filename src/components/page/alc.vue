@@ -81,7 +81,7 @@
       </div>
     </div>
 
-    <el-dialog title="修改功能" :visible.sync="editVisible" width="30%">
+    <el-dialog title="修改功能" :visible.sync="editVisible" width="30%" :before-close="editaclDiaClose">
       <el-form ref="editacl" :rules="AlcRule" :model="editFunction" label-width="80px">
         <el-form-item label="功能名称" prop="name">
           <el-input v-model.trim="editFunction.name" maxlength="30"></el-input>
@@ -98,11 +98,11 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveEdit">确 定</el-button>
-        <el-button @click="editVisible=false;$refs['editacl'].resetFields();">取 消</el-button>
+        <el-button @click="editVisible=false;">取 消</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%">
+    <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%" :before-close="addpeerDiaClose">
       <el-form ref="addpeer" :model="addParentObj" :rules="AlcRule" label-width="80px">
         <el-form-item label="功能名称" prop="name">
           <el-input v-model.trim="addParentObj.name"></el-input>
@@ -119,11 +119,11 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveAddParent">确 定</el-button>
-        <el-button @click="addParentModel=false;$refs['addpeer'].resetFields();">取 消</el-button>
+        <el-button @click="addParentModel=false;">取 消</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%">
+    <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%" :before-close="addleaverDiaClose">
       <el-form ref="addleaver" :model="addLeaverObj" :rules="AlcRule" label-width="80px">
         <el-form-item label="功能名称" prop="name">
           <el-input v-model.trim="addLeaverObj.name"></el-input>
@@ -140,7 +140,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveAddLeaver">确 定</el-button>
-        <el-button @click="addLeaverModel=false;$refs['addleaver'].resetFields();">取 消</el-button>
+        <el-button @click="addLeaverModel=false;">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -224,11 +224,14 @@
           }
         })
       },
+      editaclDiaClose(done) {
+        this.$refs.editacl.resetFields();
+        done();
+      },
       //修改
       handelModify(row) {
         this.editVisible = true;
         this.$nextTick(() => {
-          this.$refs.editacl.resetFields();
           this.idx = row.id;
           this.editFunction = {
             name: row.name,
@@ -248,7 +251,6 @@
               data: this.editFunction
             }).then(res => {
               this.initData();
-              this.$refs.editacl.resetFields();
               this.editVisible = false;
               this.$message.success('操作成功');
             })
@@ -272,11 +274,14 @@
           this.$message.success('操作成功');
         });
       },
+      addpeerDiaClose(done) {
+        this.$refs.addpeer.resetFields();
+        done();
+      },
       //新增同级菜单
       handlePeerMenus(row) {
         this.addParentModel = true;
         this.$nextTick(() => {
-          this.$refs.addpeer.resetFields();
           this.addParentObj = {
             name: null,
             remark: null,
@@ -304,11 +309,14 @@
           }
         });
       },
+      addleaverDiaClose(done) {
+        this.$refs.addleaver.resetFields();
+        done();
+      },
       //新增下级菜单
       handleLowerLevelMenu(row) {
         this.addLeaverModel = true;
         this.$nextTick(() => {
-          this.$refs.addleaver.resetFields();
           this.addLeaverObj = {
             name: null,
             remark: null,

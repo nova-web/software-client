@@ -13,7 +13,7 @@
       <div class="search-box">
         <el-form ref="search" :model="userSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
-            <el-select v-model="userSearch.status" @change="search">
+            <el-select v-model="userSearch.status" @change="search" clearable>
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
@@ -25,13 +25,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="用户名称：">
-            <el-input v-model="userSearch.username" @change="search" placeholder="输入用户名称查询"></el-input>
+            <el-input v-model="userSearch.username" @change="search" placeholder="输入用户名称查询" clearable></el-input>
           </el-form-item>
           <el-form-item label="真实姓名：">
-            <el-input v-model="userSearch.name" @change="search" placeholder="输入真实姓名查询"></el-input>
+            <el-input v-model="userSearch.name" @change="search" placeholder="输入真实姓名查询" clearable></el-input>
           </el-form-item>
           <el-form-item label="工号：">
-            <el-input v-model="userSearch.code" @change="search" placeholder="输入工号查询"></el-input>
+            <el-input v-model="userSearch.code" @change="search" placeholder="输入工号查询" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -39,7 +39,7 @@
         </el-form>
       </div>
       <el-table :data="UserList" stripe style="width: 100%;" ref="multipleTable" height="550" fit :row-class-name="tableRowStatusName">
-        <el-table-column prop="index" label="序号" sortable width="80">
+        <el-table-column prop="index" label="序号" width="80">
         </el-table-column>
         <el-table-column prop="username" label="用户名称" width="120">
         </el-table-column>
@@ -51,9 +51,9 @@
         </el-table-column>
         <el-table-column prop="code" label="工号">
         </el-table-column>
-        <el-table-column prop="phone" label="联系电话">
+        <el-table-column prop="phone" label="电话">
         </el-table-column>
-        <el-table-column prop="email" label="邮箱">
+        <el-table-column prop="email" label="邮箱" width="200">
         </el-table-column>
         <el-table-column prop="updatedAt" label="更新时间">
         </el-table-column>
@@ -83,9 +83,9 @@
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="editUser" :model="editUser" label-width="100px" :rules="UserRule" label-position="rigth">
-        <el-form-item label="用户名称:" prop="username">
+        <!-- <el-form-item label="用户名称:" prop="username">
           <el-input v-model.trim="editUser.username"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="真实姓名:" prop="name">
           <el-input v-model.trim="editUser.name"></el-input>
         </el-form-item>
@@ -109,8 +109,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisible=false">取 消</el-button>
         <el-button type="primary" @click="saveEdit">确 定</el-button>
+        <el-button @click="editVisible=false">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -321,6 +321,7 @@
               this.getUsers();
               this.$refs.addusers.resetFields()
               this.addVisible = false;
+              this.$message.success('新增用户成功');
             });
           } else {
             return false;
@@ -353,14 +354,18 @@
       },
       // 保存编辑
       saveEdit() {
-        this.editVisible = false;
-        this.ajax({
-          name: 'editUser',
-          data: this.editUser,
-          id: this.idx
-        }).then(res => {
-          this.getUsers();
-          this.$message.success('修改成功');
+        this.$refs.editUser.validate((valid) => {
+          if(valid) {
+            this.editVisible = false;
+            this.ajax({
+              name: 'editUser',
+              data: this.editUser,
+              id: this.idx
+            }).then(res => {
+              this.getUsers();
+              this.$message.success('修改成功');
+            });
+          }
         });
       },
       getRoleName(roldId) {

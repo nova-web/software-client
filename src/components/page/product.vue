@@ -59,7 +59,7 @@
         </el-table-column>
       </el-table>
       <!-- <div class="pagination">
-        <el-pagination background @current-change="handleCurrentChange" :page-size="9" :current-page="cur_page" layout="total, prev, pager, next, jumper" :total="count">
+        <el-pagination background @current-change="handleCurrentChange" :page-size="9" :current-page="cur_page" layout="a prev, pager, next, jumper" :total="count">
         </el-pagination>
       </div> -->
       <div class="pagination">

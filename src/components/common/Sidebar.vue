@@ -15,7 +15,7 @@
               <img class="checkImg" :src="item.noicon" alt="" v-else>
               <span slot="title">{{ item.title }}</span>
             </template>
-            <el-menu-item class="rel" v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index" v-show="subItem.isShow">
+            <el-menu-item class="rel" :class="{'is-active':subItem.index === path}" :style="{color: subItem.index === path ? 'rgb(67, 163, 251)' : '#fff'}" v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index" v-show="subItem.isShow">
               <img class="imgs" src="../../assets/sidebar/icon_pressed.png" alt="" v-show="subItem.index === path"> {{ subItem.title }}
             </el-menu-item>
           </el-submenu>
@@ -135,13 +135,20 @@
     computed: {
       ...mapGetters(['getAlcs']),
       onRoutes() {
-        return this.$route.path.replace('/', '');
+        if(this.$route.path.replace('/', '') === 'productDetails') {
+          return 'product'
+        } else {
+          return this.$route.path.replace('/', '');
+        }
       }
     },
     created() {
       this.getFathenIndex(this.onRoutes); //渲染icon
-
       this.select(this.onRoutes); //渲染路由
+      if(this.onRoutes === 'productDetails') {
+        this.getFathenIndex('product')
+        this.select('product');
+      }
       // 通过 Event Bus 进行组件间通信，来折叠侧边栏
       bus.$on('collapse', msg => {
         this.collapse = msg;
@@ -154,6 +161,7 @@
       bus.$on('tags', msg => {
         // 监听点击标签
         this.getFathenIndex(this.onRoutes);
+        this.select(this.onRoutes);
       })
       //重新渲染侧边栏
       this.items.forEach((items, i, Arr) => {

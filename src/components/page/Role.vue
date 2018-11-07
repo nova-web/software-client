@@ -143,6 +143,10 @@
         //状态
         status: [
           {
+            value: '',
+            label: '全部'
+          },
+          {
             value: 0,
             label: '无效'
           },

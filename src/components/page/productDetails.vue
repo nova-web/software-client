@@ -42,6 +42,18 @@
             </div>
           </div>
           <div class="list">
+            <div>适配产品:</div>
+            <div>
+              {{result.fitPro.map(item => item.name).join(",")}}
+            </div>
+          </div>
+          <div class="list">
+            <div>所属业务区:</div>
+            <div>
+              {{result.area}}
+            </div>
+          </div>
+          <div class="list">
             <div>项目经理:</div>
             <div>
               {{result.projectManager}}
@@ -54,15 +66,10 @@
             </div>
           </div>
           <div class="list">
-            <div>适配产品:</div>
-            <div>
-              {{result.fitPro.map(item => item.name).join(",")}}
-            </div>
-          </div>
-          <div class="list">
             <div>示意图:</div>
-            <div>
-              <img class="img" :src="result.logo" alt="">
+            <div class="img-box">
+              <img v-if="result.logo" class="img" :src="result.logo" alt="">
+              <div v-else class="img-normal"></div>
             </div>
           </div>
         </div>
@@ -70,7 +77,7 @@
       <div class="right">
         <div class="title">产品介绍</div>
         <div class="content">
-          {{result.productDesc.replace('', '\n')}}
+          <p v-for="item in result.productDesc.split('\n')">{{item}}</p>
         </div>
       </div>
 
@@ -194,9 +201,15 @@
   .right {
     min-width: 750px;
   }
+
   .img {
-    width: 62%;
+    width: 80%;
     height: auto;
+  }
+  .img-normal {
+    width: 80%;
+    height: 200px;
+    background: #ccc;
   }
 </style>
 

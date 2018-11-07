@@ -73,7 +73,7 @@
       <div class="right">
         <div class="title">产品介绍</div>
         <div class="content">
-          {{result.productDesc}}
+          {{result.productDesc.replace('', '\n')}}
         </div>
       </div>
 
@@ -90,7 +90,7 @@
       return {
         result: {
           name: null,
-          productDesc: null,
+          productDesc: '',
           projectManager: null,
           publishStatus: null,
           stage: null,
@@ -143,6 +143,7 @@
     display: flex;
     width: 97%;
     justify-content: space-between;
+    min-width: 1200px;
   }
   .left,
   .right {
@@ -161,16 +162,19 @@
       font-weight: 800;
     }
     .content {
+      width: 100%;
       padding: 26px 20px;
       box-sizing: border-box;
       font-size: 15px;
       color: #444;
-      overflow-y: auto;
+      min-width: 300px;
       .list {
         display: flex;
         padding: 3px 0;
         margin-bottom: 8px;
         align-items: center;
+        box-sizing: border-box;
+        width: 100%;
         > div:nth-child(1) {
           align-self: flex-start;
           width: 100px;
@@ -188,9 +192,13 @@
   }
   .left {
     width: 30%;
+    min-width: 300px;
+  }
+  .right {
+    min-width: 750px;
   }
   .img {
-    width: 200px;
+    width: 62%;
     height: auto;
   }
 </style>

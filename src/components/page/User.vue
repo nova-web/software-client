@@ -72,10 +72,10 @@
         </div>
         <div class="pagination-right">
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
-            <el-button icon="el-icon-d-arrow-left" size="small" @click="gofist"></el-button>
+            <el-button size="small" @click="gofist">首页</el-button>
           </el-pagination>
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
-            <el-button icon="el-icon-d-arrow-right" size="small" @click="goLast"></el-button>
+            <el-button size="small" @click="goLast">末页</el-button>
           </el-pagination>
         </div>
       </div>

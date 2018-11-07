@@ -25,7 +25,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="产品名称：" prop="name">
-            <el-input class="el-input-width" clearable v-model="productSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
+            <el-input class="el-input-width" clearable v-model="productSearch.name" placeholder="输入产品名称查询" @change="search"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -36,9 +36,7 @@
         <el-table-column width="60px" prop="num" label="序号"></el-table-column>
         <el-table-column label="产品名称">
           <template slot-scope="scope">
-            <div class="active" @click="handleselect(scope.row, scope.$index)">
-              <span>{{scope.row.name}}</span>
-            </div>
+            <el-button type="text" size="small" @click="handleselect(scope.row, scope.$index)">{{scope.row.name}}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="model" label="产品型号"></el-table-column>
@@ -54,9 +52,9 @@
             <el-button size="small" type="text" @click="handleEdit(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">修改</el-button>
             <el-button size="small" type="text" @click="handleDelete(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">删除</el-button>
             <el-button size="small" type="text" @click="handleOnTrial(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">试用</el-button>
+            <el-button size="small" type="text" @click="productWithdraw(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_02'">撤回</el-button>
             <el-button size="small" type="text" @click="handleselectdevice(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04' || scope.row.publishStatus === 'pro_status_02'">发布</el-button>
             <el-button size="small" type="text" @click="handleObtained(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_03'">下架</el-button>
-            <el-button size="small" type="text" @click="productWithdraw(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_02'">撤回</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -130,7 +128,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveEditProductModel">确 定</el-button>
-        <el-button @click="editProductModel = false">取 消</el-button>
+        <el-button @click="cancelEdit">取 消</el-button>
       </div>
     </el-dialog>
     <!-- 新增产品对话框 -->
@@ -188,7 +186,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveAddProduct('addProduct')">确定</el-button>
-        <el-button @click="addProductModel=false;$refs['addpro'].resetFields();">取消</el-button>
+        <el-button @click="canAddProduct()">取消</el-button>
       </div>
     </el-dialog>
 
@@ -249,7 +247,7 @@
         pro_status: [], //产品状态
         productSearch: {}, //产品搜索
         file: null, //文件
-        fileList: [{ name: '', url: '' }], // 编辑回显图片url
+        fileList: [], // 编辑回显图片url
       };
     },
     computed: {
@@ -354,6 +352,12 @@
           }
         });
       },
+      //取消新增
+      canAddProduct() {
+        this.$refs.upload.clearFiles();
+        this.addProductModel = false;
+        this.$refs['addpro'].resetFields();
+      },
       //axios
       axAjax(methods, api, datas, params) {
         return axios({
@@ -417,10 +421,12 @@
           productDesc: row.productDesc || ''
         };
         fileArr.forEach(item => {
-          item.name = row.name;
+          item.name = row.logo.slice(row.logo.lastIndexOf('/') + 1);
           item.url = row.logo;
         });
-        this.fileList = serialize(fileArr);
+        if(row.logo) {
+          this.fileList = serialize(fileArr);
+        }
         this.editProductModel = true;
         this.idx = row.id;
       },
@@ -456,7 +462,7 @@
         });
       },
       cancelEdit() {
-        this.editVisible = false;
+        this.editProductModel = false;
         this.$refs['editpro'].resetFields();
       },
       //试用

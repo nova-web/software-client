@@ -181,7 +181,7 @@
           name: [
             { required: true, validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '功能名称不能为空' }],
-          url: [{ required: true, message: 'URL不能为空', trigger: 'blur' }],
+          url: [{ required: false, message: 'URL不能为空', trigger: 'blur' }],
           code: [{ required: true, message: 'Code不能为空', trigger: 'blur' }],
           remark: [{ required: true, message: '描述不能为空', trigger: 'blur' }],
         },
@@ -431,12 +431,12 @@
           }
           if(this.alcSearch.name) {
             tmp.forEach(item => {
-              if(item.name == this.alcSearch.name) {
+              if(item.name.indexOf(this.alcSearch.name) !== -1) {
                 searchArr.push(item);
               } else {
                 if(item.children) {
                   item.children.forEach(itemChild => {
-                    if(itemChild.name == this.alcSearch.name) {
+                    if(itemChild.name.indexOf(this.alcSearch.name) !== -1) {
                       searchArr.push(itemChild);
                     }
                   })

@@ -318,7 +318,7 @@
           packages: 1
         }
         fileArr.forEach(item => {
-          item.name = row.version;
+          item.name = row.url.slice(row.url.lastIndexOf('/') + 1);
           item.url = row.url;
         });
         this.fileList = serialize(fileArr);

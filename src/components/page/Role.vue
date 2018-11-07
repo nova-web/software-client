@@ -21,7 +21,7 @@
           </el-form-item>
 
           <el-form-item label="角色名称：" prop="username">
-            <el-input class="el-input-width" v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索" clearable></el-input>
+            <el-input class="el-input-width" v-model="roleSearch.name" @change="search" placeholder="按角色名称搜索" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -142,6 +142,10 @@
         },
         //状态
         status: [
+          {
+            value: '',
+            label: '全部'
+          },
           {
             value: 0,
             label: '无效'

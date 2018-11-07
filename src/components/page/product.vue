@@ -77,7 +77,7 @@
       </div>
     </div>
     <!-- 编辑对话框 -->
-    <el-dialog title="编辑" :visible.sync="editProductModel" width="30%">
+    <el-dialog title="编辑" :visible.sync="editProductModel" width="30%" :before-close="editDia">
 
       <el-form :rules="ProRule" ref="editpro" :model="editProduct" label-width="90px" label-position="left">
         <el-form-item label="Model ID:" prop="modelId">
@@ -132,7 +132,7 @@
       </div>
     </el-dialog>
     <!-- 新增产品对话框 -->
-    <el-dialog title="新增产品" :visible.sync="addProductModel" width="30%">
+    <el-dialog title="新增产品" :visible.sync="addProductModel" width="30%" :before-close="diaClose">
       <div class="add-product">
         <el-form label-width="90px" :model="addProduct" ref="addpro" :rules="ProRule" class="demo-ruleForm">
           <el-form-item label="Model ID:" prop="modelId">
@@ -255,6 +255,22 @@
     computed: {
       ...mapGetters(['getDict', 'getCommon'])
     },
+    watch: {
+      'addProduct.type'(val) {
+        if(this.addProduct.stage) {
+          this.addProduct.stage = "";
+        }
+        if(val == 'package_01') {
+          this.stage = this.getDict.filter(item => item.type === "stage").filter(item => item.code !== "stage_01" && item.code !== "stage_02" && item.code !== "stage_03");
+        }
+        if(val == 'package_02') {
+          this.stage = this.getDict.filter(item => item.type === "stage").filter(item => item.code == "stage_01" || item.code == "stage_02" || item.code == "stage_03");
+        }
+        if(val == "") {
+          this.stage = this.getDict.filter(item => item.type === "stage")
+        }
+      }
+    },
     created() {
       this.getEquipment();
       this.getAllProduct(); //获取所有产品
@@ -306,11 +322,14 @@
         this.dept = this.getDict.filter(item => item.type === "dept");
         this.pro_status = this.getDict.filter(item => item.type === 'pro_status');
       },
+      diaClose(done) {
+        this.$refs['addpro'].resetFields();
+        done();
+      },
       //新增设备模态框
       addVisible() {
         this.addProductModel = true;
         this.$nextTick(() => {
-          this.$refs['addpro'].resetFields();
           this.$refs['upload'].clearFiles();
         })
       },
@@ -329,36 +348,34 @@
       },
       //新增产品确认
       saveAddProduct(formName) {
-        this.$nextTick(() => {
-          this.$refs.addpro.validate((valid) => {
-            if(valid) {
-              let formData = new FormData();
-              this.addProduct.modelId = this.addProduct.modelId.replace(/\\/g, "");
-              Object.keys(this.addProduct).forEach(item => {
-                formData.append(item, this.addProduct[item]);
-              });
-              if(this.file) {
-                formData.append("logo", this.file.raw);
-              }
-
-              this.axAjax('post', api.postProduct.url, formData, null)
-                .then(res => {
-                  if(res.data.errorCode === 1) {
-                    this.addProductModel = false;
-                    this.$message.success('操作成功');
-                    this.file = null;
-                    this.$refs.addpro.resetFields();
-                    this.$refs['upload'].clearFiles()
-                    this.getEquipment();
-                  } else {
-                    this.$message.error(res.data.errorMsg);
-                  }
-                })
-            } else {
-              return false;
+        this.$refs.addpro.validate((valid) => {
+          if(valid) {
+            let formData = new FormData();
+            this.addProduct.modelId = this.addProduct.modelId.replace(/\\/g, "");
+            Object.keys(this.addProduct).forEach(item => {
+              formData.append(item, this.addProduct[item]);
+            });
+            if(this.file) {
+              formData.append("logo", this.file.raw);
             }
-          });
-        })
+
+            this.axAjax('post', api.postProduct.url, formData, null)
+              .then(res => {
+                if(res.data.errorCode === 1) {
+                  this.addProductModel = false;
+                  this.$message.success('操作成功');
+                  this.file = null;
+                  this.$refs.addpro.resetFields();
+                  this.$refs['upload'].clearFiles()
+                  this.getEquipment();
+                } else {
+                  this.$message.error(res.data.errorMsg);
+                }
+              })
+          } else {
+            return false;
+          }
+        });
       },
       //取消新增
       canAddProduct() {
@@ -407,10 +424,14 @@
           return this.getDict.filter(item => item.type === "stage")
         }
       },
+      editDia(callback) {
+        this.$refs['editpro'].resetFields();
+        callback();
+      },
       handleEdit(row, index) {
         this.editProductModel = true;
         this.$nextTick(() => {
-          this.$refs['editpro'].resetFields();
+
           let dict = {};
           let fileArr = [{ name: '', url: '' }];
           this.getDict.forEach(item => {
@@ -589,23 +610,8 @@
       search() {
         this.getEquipment();
       }
-    },
-    watch: {
-      'addProduct.type'(val) {
-        if(this.addProduct.stage) {
-          this.addProduct.stage = "";
-        }
-        if(val == 'package_01') {
-          this.stage = this.getDict.filter(item => item.type === "stage").filter(item => item.code !== "stage_01" && item.code !== "stage_02" && item.code !== "stage_03");
-        }
-        if(val == 'package_02') {
-          this.stage = this.getDict.filter(item => item.type === "stage").filter(item => item.code == "stage_01" || item.code == "stage_02" || item.code == "stage_03");
-        }
-        if(val == "") {
-          this.stage = this.getDict.filter(item => item.type === "stage")
-        }
-      }
     }
+
   }
 </script>
 

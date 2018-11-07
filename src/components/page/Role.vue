@@ -10,7 +10,7 @@
     <div class="container">
       <div class="search-box">
         <div class="handle-box">
-          <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="el-icon-plus" @click="addVisible=true">新增角色</el-button>
+          <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="el-icon-plus" @click="addRoles">新增角色</el-button>
         </div>
         <el-form ref="search" :rules="searchRules" :model="roleSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
@@ -124,6 +124,14 @@
         editRoleRow: {
           name: '',
           remark: '',
+        },
+        role: {
+          name: [
+            { required: true, message: '角色名称不可为空' }
+          ],
+          remark: [
+            {}
+          ]
         },
         addVisible: false,
         addRole: {},
@@ -259,6 +267,12 @@
         });
 
       },
+      addRoles() {
+        this.addVisible = true;
+        this.$nextTick(() => {
+          this.$refs.addRole.resetFields();
+        })
+      },
       // 新增
       saveAdd() {
         this.$refs.addRole.validate((valid) => {
@@ -277,11 +291,14 @@
       },
       handleEdit(row, index) {
         this.editVisible = true;
-        this.editRole = {
-          name: row.name,
-          remark: row.remark
-        };
-        this.idx = row.id;
+        this.$nextTick(() => {
+          this.$refs.editRole.resetFields();
+          this.editRole = {
+            name: row.name,
+            remark: row.remark
+          };
+          this.idx = row.id;
+        })
       },
       // 修改
       saveEdit() {

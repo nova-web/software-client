@@ -64,10 +64,10 @@
       </div> -->
       <div class="pagination">
         <div class="pagination-left">
-          {{(cur_page - 1) * pageSize + 1 === 0 ? 1 : (cur_page - 1) * pageSize + 1}}-{{cur_page * pageSize}} 共 {{count}}
+          {{(cur_page - 1) * pageSize + 1 === 0 ? 1 : (cur_page - 1) * pageSize + 1}}-{{Math.min(cur_page * pageSize, count)}} 共 {{count}}
         </div>
         <div class="pagination-right">
-          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="sizes,slot ,prev, pager, next" :total="count">
             <el-button class="btn-next" size="small" @click="gofist">首页</el-button>
           </el-pagination>
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
@@ -245,7 +245,9 @@
         area: [], //业务区域
         dept: [], //所属产品线
         pro_status: [], //产品状态
-        productSearch: {}, //产品搜索
+        productSearch: {
+          name: ''
+        }, //产品搜索
         file: null, //文件
         fileList: [], // 编辑回显图片url
       };
@@ -307,6 +309,10 @@
       //新增设备模态框
       addVisible() {
         this.addProductModel = true;
+        this.$nextTick(() => {
+          this.$refs['addpro'].resetFields();
+          this.$refs['upload'].clearFiles();
+        })
       },
       //获取文件
       getFile(file) {
@@ -323,34 +329,36 @@
       },
       //新增产品确认
       saveAddProduct(formName) {
-        this.$refs.addpro.validate((valid) => {
-          if(valid) {
-            let formData = new FormData();
-            this.addProduct.modelId = this.addProduct.modelId.replace(/\\/g, "");
-            Object.keys(this.addProduct).forEach(item => {
-              formData.append(item, this.addProduct[item]);
-            });
-            if(this.file) {
-              formData.append("logo", this.file.raw);
-            }
+        this.$nextTick(() => {
+          this.$refs.addpro.validate((valid) => {
+            if(valid) {
+              let formData = new FormData();
+              this.addProduct.modelId = this.addProduct.modelId.replace(/\\/g, "");
+              Object.keys(this.addProduct).forEach(item => {
+                formData.append(item, this.addProduct[item]);
+              });
+              if(this.file) {
+                formData.append("logo", this.file.raw);
+              }
 
-            this.axAjax('post', api.postProduct.url, formData, null)
-              .then(res => {
-                if(res.data.errorCode === 1) {
-                  this.addProductModel = false;
-                  this.$message.success('操作成功');
-                  this.file = null;
-                  this.$refs.addpro.resetFields();
-                  this.$refs['upload'].clearFiles()
-                  this.getEquipment();
-                } else {
-                  this.$message.error(res.data.errorMsg);
-                }
-              })
-          } else {
-            return false;
-          }
-        });
+              this.axAjax('post', api.postProduct.url, formData, null)
+                .then(res => {
+                  if(res.data.errorCode === 1) {
+                    this.addProductModel = false;
+                    this.$message.success('操作成功');
+                    this.file = null;
+                    this.$refs.addpro.resetFields();
+                    this.$refs['upload'].clearFiles()
+                    this.getEquipment();
+                  } else {
+                    this.$message.error(res.data.errorMsg);
+                  }
+                })
+            } else {
+              return false;
+            }
+          });
+        })
       },
       //取消新增
       canAddProduct() {
@@ -400,35 +408,38 @@
         }
       },
       handleEdit(row, index) {
-        let dict = {};
-        let fileArr = [{ name: '', url: '' }];
-        this.getDict.forEach(item => {
-          if(!dict[item.type]) {
-            dict[item.type] = {};
-          }
-          dict[item.type][item.name] = item.code;
-        });
-        this.editProduct = {
-          modelId: row.modelId,
-          name: row.name,
-          model: row.model,
-          type: dict.package[row.type],
-          stage: dict.stage[row.stage],
-          fitPro: row.fitPro,
-          area: dict.area[row.area],
-          dept: dict.dept[row.dept],
-          projectManager: row.projectManager,
-          productDesc: row.productDesc || ''
-        };
-        fileArr.forEach(item => {
-          item.name = row.logo.slice(row.logo.lastIndexOf('/') + 1);
-          item.url = row.logo;
-        });
-        if(row.logo) {
-          this.fileList = serialize(fileArr);
-        }
         this.editProductModel = true;
-        this.idx = row.id;
+        this.$nextTick(() => {
+          this.$refs['editpro'].resetFields();
+          let dict = {};
+          let fileArr = [{ name: '', url: '' }];
+          this.getDict.forEach(item => {
+            if(!dict[item.type]) {
+              dict[item.type] = {};
+            }
+            dict[item.type][item.name] = item.code;
+          });
+          this.editProduct = {
+            modelId: row.modelId,
+            name: row.name,
+            model: row.model,
+            type: dict.package[row.type],
+            stage: dict.stage[row.stage],
+            fitPro: row.fitPro,
+            area: dict.area[row.area],
+            dept: dict.dept[row.dept],
+            projectManager: row.projectManager,
+            productDesc: row.productDesc || ''
+          };
+          fileArr.forEach(item => {
+            item.name = row.logo.slice(row.logo.lastIndexOf('/') + 1);
+            item.url = row.logo;
+          });
+          if(row.logo) {
+            this.fileList = serialize(fileArr);
+          }
+          this.idx = row.id;
+        })
       },
       //确认编辑
       saveEditProductModel() {

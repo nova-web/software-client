@@ -10,7 +10,7 @@
     <div class="container">
       <div class="search-box">
         <div class="handle-box">
-          <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="el-icon-plus" @click="addVisible=true">新增角色</el-button>
+          <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="el-icon-plus" @click="addRoles">新增角色</el-button>
         </div>
         <el-form ref="search" :rules="searchRules" :model="roleSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
@@ -74,12 +74,12 @@
     </el-dialog>
     <!-- 新增对话框 -->
     <el-dialog title="新增角色" :visible.sync="addVisible" width="30%">
-      <el-form :model="addRole" label-width="100px" label-position="right">
+      <el-form ref="addRole" :model="addRole" :rules="role" label-width="100px" label-position="right">
         <div>
-          <el-form-item label="角色名称:">
+          <el-form-item label="角色名称:" prop="name">
             <el-input v-model="addRole.name" placeholder="请输入角色名"></el-input>
           </el-form-item>
-          <el-form-item label="备注:">
+          <el-form-item label="备注:" prop="remark">
             <el-input type="textarea" class="inputs" v-model="addRole.remark" placeholder="请输入备注"></el-input>
           </el-form-item>
         </div>
@@ -91,11 +91,11 @@
     </el-dialog>
     <!-- 编辑对话框 -->
     <el-dialog title="修改角色" :visible.sync="editVisible" width="30%">
-      <el-form :model="editRole" label-width="80px" label-position="left">
-        <el-form-item label="角色名称">
+      <el-form ref="editRole" :rules="role" :model="editRole" label-width="80px" label-position="left">
+        <el-form-item prop="name" label="角色名称">
           <el-input v-model="editRole.name" placeholder="请输入角色名"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
+        <el-form-item prop="remark" label="描述">
           <el-input type="textarea" :rows="4" v-model="editRole.remark" placeholder="请输入备注"></el-input>
         </el-form-item>
       </el-form>
@@ -124,6 +124,14 @@
         editRoleRow: {
           name: '',
           remark: '',
+        },
+        role: {
+          name: [
+            { required: true, message: '角色名称不可为空' }
+          ],
+          remark: [
+            {}
+          ]
         },
         addVisible: false,
         addRole: {},
@@ -252,36 +260,54 @@
         });
 
       },
+      addRoles() {
+        this.addVisible = true;
+        this.$nextTick(() => {
+          this.$refs.addRole.resetFields();
+        })
+      },
       // 新增
       saveAdd() {
-        this.ajax({
-          name: 'addRole',
-          data: this.addRole
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.getRoles();
-          this.addVisible = false;
-        });
+        this.$refs.addRole.validate(valid => {
+          if(valid) {
+            this.ajax({
+              name: 'addRole',
+              data: this.addRole
+            }).then(res => {
+              this.$message.success('操作成功');
+              this.getRoles();
+              this.addVisible = false;
+            });
+          }
+        })
       },
       handleEdit(row, index) {
         this.editVisible = true;
-        this.editRole = {
-          name: row.name,
-          remark: row.remark
-        };
-        this.idx = row.id;
+        this.$nextTick(() => {
+          this.$refs.editRole.resetFields();
+          this.editRole = {
+            name: row.name,
+            remark: row.remark
+          };
+          this.idx = row.id;
+        })
       },
       // 修改
       saveEdit() {
-        this.editVisible = false;
-        this.ajax({
-          name: 'editRole',
-          data: this.editRole,
-          id: this.idx
-        }).then(res => {
-          this.$message.success('修改成功');
-          this.getRoles();
-        });
+        this.$refs.addRole.validate(valid => {
+          if(valid) {
+            this.ajax({
+              name: 'editRole',
+              data: this.editRole,
+              id: this.idx
+            }).then(res => {
+              this.$message.success('修改成功');
+              this.getRoles();
+              this.editVisible = false;
+            });
+          }
+        })
+
       },
       // 置为无效
       deleteRole(row, index) {

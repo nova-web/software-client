@@ -15,17 +15,17 @@
         </div>
         <el-form ref="search" :rules="searchRules" :model="productSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
-            <el-select clearable v-model="productSearch.publishStatus" @change="search">
+            <el-select class="el-select-width" clearable v-model="productSearch.publishStatus" @change="search">
               <el-option v-for=" item in pro_status" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="产品类型：">
-            <el-select clearable v-model="productSearch.type" @change="search">
+            <el-select class="el-select-width" clearable v-model="productSearch.type" @change="search">
               <el-option v-for=" item in package" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="产品名称：" prop="name">
-            <el-input clearable v-model="productSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
+            <el-input class="el-input-width" clearable v-model="productSearch.name" placeholder="按产品名称搜索" @change="search"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -70,10 +70,10 @@
         </div>
         <div class="pagination-right">
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
-            <el-button size="small" @click="gofist">首页</el-button>
+            <el-button class="btn-next" size="small" @click="gofist">首页</el-button>
           </el-pagination>
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
-            <el-button size="small" @click="goLast">末页</el-button>
+            <el-button class="btn-next" size="small" @click="goLast">末页</el-button>
           </el-pagination>
         </div>
       </div>
@@ -123,7 +123,7 @@
           <el-input v-model="editProduct.productDesc" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="示意图:" prop="upload">
-          <el-upload class="upload-demo" ref="uploadEdit" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+          <el-upload class="upload-demo" ref="uploadEdit" :file-list="fileList" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
           </el-upload>
         </el-form-item>
@@ -248,7 +248,8 @@
         dept: [], //所属产品线
         pro_status: [], //产品状态
         productSearch: {}, //产品搜索
-        file: null //文件
+        file: null, //文件
+        fileList: [{ name: '', url: '' }], // 编辑回显图片url
       };
     },
     computed: {
@@ -320,6 +321,7 @@
       //移除文件列表中的文件
       removeFile() {
         this.file = null;
+        this.fileList.shift();
       },
       //新增产品确认
       saveAddProduct(formName) {
@@ -395,13 +397,13 @@
       },
       handleEdit(row, index) {
         let dict = {};
+        let fileArr = [{ name: '', url: '' }];
         this.getDict.forEach(item => {
           if(!dict[item.type]) {
             dict[item.type] = {};
           }
           dict[item.type][item.name] = item.code;
         });
-        console.log(row);
         this.editProduct = {
           modelId: row.modelId,
           name: row.name,
@@ -414,6 +416,11 @@
           projectManager: row.projectManager,
           productDesc: row.productDesc || ''
         };
+        fileArr.forEach(item => {
+          item.name = row.name;
+          item.url = row.logo;
+        });
+        this.fileList = serialize(fileArr);
         this.editProductModel = true;
         this.idx = row.id;
       },

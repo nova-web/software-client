@@ -12,10 +12,10 @@
         </div>
         <el-form ref="search" :rules="searchRules" :model="scarchStatistics" class="demo-form-inline" :inline="true">
           <el-form-item label="设备S/N号：" prop="deviceId">
-            <el-input v-model="scarchStatistics.deviceId"></el-input>
+            <el-input class="el-input-width" v-model="scarchStatistics.deviceId"></el-input>
           </el-form-item>
           <el-form-item label="设备名称或IP：" prop="softwareIp">
-            <el-input v-model="scarchStatistics.softwareIp"></el-input>
+            <el-input class="el-input-width" v-model="scarchStatistics.softwareIp"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -46,10 +46,10 @@
         </div>
         <div class="pagination-right">
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
-            <el-button size="small" @click="gofist">首页</el-button>
+            <el-button class="btn-next" size="small" @click="gofist">首页</el-button>
           </el-pagination>
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
-            <el-button size="small" @click="goLast">末页</el-button>
+            <el-button class="btn-next" size="small" @click="goLast">末页</el-button>
           </el-pagination>
         </div>
       </div>

@@ -67,7 +67,6 @@
       this.header = {
         token: this.getCommon.token
       }
-      console.log(this.header);
     },
     computed: {
       ...mapGetters(['getCommon'])

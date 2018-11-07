@@ -60,7 +60,7 @@
       };
     },
     created() {
-      console.log(this.options)
+      // console.log(this.options)
     },
     methods: {
       save(adduser) {

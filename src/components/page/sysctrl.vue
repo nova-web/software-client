@@ -13,14 +13,14 @@
         </div>
         <el-form ref="search" :model="sysctrlSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
           <el-form-item label="服务状态：">
-            <el-select v-model="sysctrlSearch.service" @change="search">
+            <el-select class="el-select-width" v-model="sysctrlSearch.service" @change="search">
               <el-option v-for="item in service" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="产品名称：" prop="username">
-            <el-input v-model="sysctrlSearch.username" @change="search" placeholder="按产品名称搜索"></el-input>
+            <el-input class="el-input-width" v-model="sysctrlSearch.username" @change="search" placeholder="按产品名称搜索"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -51,10 +51,10 @@
         </div>
         <div class="pagination-right">
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
-            <el-button size="small" @click="gofist">首页</el-button>
+            <el-button class="btn-next" size="small" @click="gofist">首页</el-button>
           </el-pagination>
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
-            <el-button size="small" @click="goLast">末页</el-button>
+            <el-button class="btn-next" size="small" @click="goLast">末页</el-button>
           </el-pagination>
         </div>
       </div>
@@ -266,7 +266,6 @@
           name: 'getRoleAcls',
           data: { id: this.idx }
         }).then(res => {
-          console.log(res);
           this.$refs.tree.setCheckedKeys(res);
         });
 

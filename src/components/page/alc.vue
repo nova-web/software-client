@@ -14,14 +14,14 @@
         </div>
         <el-form highlight-current-row @current-change="handleCurrentChange" :rules="searchRules" :model="alcSearch" ref="search" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
-            <el-select v-model="alcSearch.status" @change="search" clearable>
+            <el-select class="el-select-width" v-model="alcSearch.status" @change="search" clearable>
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="功能名称：" prop="name">
-            <el-input v-model="alcSearch.name" placeholder="按功能名称搜索" @input="search"></el-input>
+            <el-input class="el-input-width" v-model="alcSearch.name" placeholder="按功能名称搜索" @input="search"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -255,7 +255,6 @@
       },
       //删除
       handleDelete(row) {
-        console.log(row);
         this.delVisible = true;
         this.idx = row.id;
       },

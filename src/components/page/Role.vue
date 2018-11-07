@@ -14,14 +14,14 @@
         </div>
         <el-form ref="search" :rules="searchRules" :model="roleSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
-            <el-select v-model="roleSearch.status" @change="search" clearable>
+            <el-select class="el-select-width" v-model="roleSearch.status" @change="search" clearable>
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="角色名称：" prop="username">
-            <el-input v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索" clearable></el-input>
+            <el-input class="el-input-width" v-model="roleSearch.username" @change="search" placeholder="按角色名称搜索" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -55,10 +55,10 @@
         </div>
         <div class="pagination-right">
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
-            <el-button size="small" @click="gofist">首页</el-button>
+            <el-button class="btn-next" size="small" @click="gofist">首页</el-button>
           </el-pagination>
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
-            <el-button size="small" @click="goLast">末页</el-button>
+            <el-button class="btn-next" size="small" @click="goLast">末页</el-button>
           </el-pagination>
         </div>
       </div>
@@ -176,7 +176,6 @@
           data: { pageNum: this.cur_page, pageSize: this.pageSize, ...this.roleSearch }
         }).then(res => {
           res.rows.forEach((item, index) => {
-            console.log(item);
             switch(item.status) {
               case 0:
                 item.Status = '无效';
@@ -245,7 +244,6 @@
           name: 'getRoleAcls',
           data: { id: this.idx }
         }).then(res => {
-          console.log(res);
           this.$refs.tree.setCheckedKeys(res);
         });
 

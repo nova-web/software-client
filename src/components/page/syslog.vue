@@ -13,18 +13,18 @@
         </div>
         <el-form ref="search" :model="syslogSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
           <el-form-item label="操作对象：" prop="target">
-            <el-input class="inputs" v-model="syslogSearch.target" @change="search" clearable></el-input>
+            <el-input class="el-input-width" v-model="syslogSearch.target" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item label="操作员：" prop="operator">
-            <el-input v-model="syslogSearch.operator" class="inputs" @change="search" clearable></el-input>
+            <el-input v-model="syslogSearch.operator" class="el-input-width" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item label="操作类型：">
-            <el-select class="inputs" clearable v-model="syslogSearch.operateType" @change="search">
+            <el-select class="el-select-width" clearable v-model="syslogSearch.operateType" @change="search">
               <el-option v-for="(item, index) in selectOperateType" :value="item.value" :label="item.label" :key="index"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="操作描述：" prop="operateContent">
-            <el-input v-model="syslogSearch.operateContent" @change="search" clearable></el-input>
+            <el-input class="el-input-width" v-model="syslogSearch.operateContent" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item label="时间：">
             <el-date-picker v-model="syslogSearch.startTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" clearable>
@@ -60,10 +60,10 @@
         </div>
         <div class="pagination-right">
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
-            <el-button size="small" @click="gofist">首页</el-button>
+            <el-button class="btn-next" size="small" @click="gofist">首页</el-button>
           </el-pagination>
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
-            <el-button size="small" @click="goLast">末页</el-button>
+            <el-button class="btn-next" size="small" @click="goLast">末页</el-button>
           </el-pagination>
         </div>
       </div>

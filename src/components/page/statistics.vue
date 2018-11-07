@@ -36,6 +36,7 @@
         <el-table-column prop="version" label="最新版本">
         </el-table-column>
         <el-table-column prop="deviceStatus" label="状态">
+
         </el-table-column>
         <el-table-column prop="createdAt" label="更新时间">
         </el-table-column>

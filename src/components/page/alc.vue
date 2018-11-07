@@ -227,13 +227,16 @@
       //修改
       handelModify(row) {
         this.editVisible = true;
-        this.idx = row.id;
-        this.editFunction = {
-          name: row.name,
-          remark: row.remark,
-          url: row.url,
-          code: row.code
-        };
+        this.$nextTick(() => {
+          this.$refs.editacl.resetFields();
+          this.idx = row.id;
+          this.editFunction = {
+            name: row.name,
+            remark: row.remark,
+            url: row.url,
+            code: row.code
+          };
+        })
       },
       //确认修改
       saveEdit() {
@@ -245,6 +248,7 @@
               data: this.editFunction
             }).then(res => {
               this.initData();
+              this.$refs.editacl.resetFields();
               this.editVisible = false;
               this.$message.success('操作成功');
             })
@@ -271,13 +275,16 @@
       //新增同级菜单
       handlePeerMenus(row) {
         this.addParentModel = true;
-        this.addParentObj = {
-          name: null,
-          remark: null,
-          url: null,
-          code: null,
-          parentId: row.parentId
-        }
+        this.$nextTick(() => {
+          this.$refs.addpeer.resetFields();
+          this.addParentObj = {
+            name: null,
+            remark: null,
+            url: null,
+            code: null,
+            parentId: row.parentId
+          }
+        })
       },
       //确认新增
       saveAddParent() {
@@ -300,13 +307,16 @@
       //新增下级菜单
       handleLowerLevelMenu(row) {
         this.addLeaverModel = true;
-        this.addLeaverObj = {
-          name: null,
-          remark: null,
-          url: null,
-          code: null,
-          parentId: row.id
-        }
+        this.$nextTick(() => {
+          this.$refs.addleaver.resetFields();
+          this.addLeaverObj = {
+            name: null,
+            remark: null,
+            url: null,
+            code: null,
+            parentId: row.id
+          }
+        })
       },
       saveAddLeaver() {
         this.$refs.addleaver.validate((valid) => {

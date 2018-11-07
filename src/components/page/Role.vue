@@ -146,7 +146,8 @@
         },
         //角色搜索
         roleSearch: {
-          status: 1
+          status: 1,
+          name: ''
         },
         //状态
         status: [

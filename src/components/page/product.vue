@@ -93,7 +93,7 @@
           <el-input v-model="editProduct.model"></el-input>
         </el-form-item>
         <el-form-item label="产品类型:" prop="type">
-          <el-select class="inputs" clearable v-model="editProduct.type">
+          <el-select class="inputs" clearable v-model="editProduct.type" @change="editProduct.stage=null">
             <el-option v-for=" item in package" :key="item.id" :value="item.code" :label="item.name"></el-option>
           </el-select>
         </el-form-item>
@@ -130,8 +130,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editProductModel = false">取 消</el-button>
         <el-button type="primary" @click="saveEditProductModel">确 定</el-button>
+        <el-button @click="editProductModel = false">取 消</el-button>
       </div>
     </el-dialog>
     <!-- 新增产品对话框 -->
@@ -213,7 +213,7 @@
         addProduct: {},
         searchRules: {  // 搜索框规则
           name: [
-            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' }
           ]
         },
         ProRule: {
@@ -604,8 +604,6 @@
     color: blue;
     padding: none;
   }
-  .active:active {
-  }
   .active:hover {
     cursor: pointer;
   }
@@ -615,9 +613,6 @@
     justify-content: flex-end;
   }
 
-  .add-product {
-    // padding: 0 50px;
-  }
   .inputs {
     width: 100%;
   }

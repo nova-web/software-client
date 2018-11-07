@@ -2,12 +2,9 @@
   <div class="table">
     <div class="crumbs">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i> 产品管理</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{path: '/product'}">
-          产品列表</el-breadcrumb-item>
-        <el-breadcrumb-item>
-          产品详情</el-breadcrumb-item>
+        <el-breadcrumb-item> 产品管理</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{path: '/product'}">产品列表</el-breadcrumb-item>
+        <el-breadcrumb-item>产品详情</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">

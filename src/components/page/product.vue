@@ -9,11 +9,10 @@
       </el-breadcrumb>
     </div>
     <div class="container">
-      <div class="handle-box">
-        <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增产品</el-button>
-      </div>
-
       <div class="search-box">
+        <div class="handle-box">
+          <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增产品</el-button>
+        </div>
         <el-form ref="search" :rules="searchRules" :model="productSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
             <el-select clearable v-model="productSearch.publishStatus" @change="search">
@@ -53,9 +52,9 @@
         <el-table-column width="300px" label="操作">
           <template slot-scope="scope">
             <el-button size="small" type="text" @click="handleEdit(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">修改</el-button>
+            <el-button size="small" type="text" @click="handleDelete(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">删除</el-button>
             <el-button size="small" type="text" @click="handleOnTrial(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">试用</el-button>
             <el-button size="small" type="text" @click="handleselectdevice(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04' || scope.row.publishStatus === 'pro_status_02'">发布</el-button>
-            <el-button size="small" type="text" @click="handleDelete(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">删除</el-button>
             <el-button size="small" type="text" @click="handleObtained(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_03'">下架</el-button>
             <el-button size="small" type="text" @click="productWithdraw(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_02'">撤回</el-button>
           </template>
@@ -73,7 +72,7 @@
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
             <el-button icon="el-icon-d-arrow-left" size="small" @click="gofist"></el-button>
           </el-pagination>
-          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot" :total="count">
             <el-button icon="el-icon-d-arrow-right" size="small" @click="goLast"></el-button>
           </el-pagination>
         </div>
@@ -130,8 +129,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editProductModel = false">取 消</el-button>
         <el-button type="primary" @click="saveEditProductModel">确 定</el-button>
+        <el-button @click="editProductModel = false">取 消</el-button>
       </div>
     </el-dialog>
     <!-- 新增产品对话框 -->
@@ -588,7 +587,7 @@
 
 <style scoped lang="less">
   .handle-box {
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
   }
 
   .handle-select {
@@ -614,11 +613,6 @@
   }
   .active:hover {
     cursor: pointer;
-  }
-  .search-box {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
   }
 
   .add-product {

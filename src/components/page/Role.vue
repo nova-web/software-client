@@ -8,10 +8,10 @@
 
     </div>
     <div class="container">
-      <div class="handle-box">
-        <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="el-icon-plus" @click="addVisible=true">新增角色</el-button>
-      </div>
       <div class="search-box">
+        <div class="handle-box">
+          <el-button v-if="getAlcsObj.JSXZ" type="primary" icon="el-icon-plus" @click="addVisible=true">新增角色</el-button>
+        </div>
         <el-form ref="search" :rules="searchRules" :model="roleSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
             <el-select v-model="roleSearch.status" @change="search" clearable>
@@ -57,7 +57,7 @@
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
             <el-button icon="el-icon-d-arrow-left" size="small" @click="gofist"></el-button>
           </el-pagination>
-          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot" :total="count">
             <el-button icon="el-icon-d-arrow-right" size="small" @click="goLast"></el-button>
           </el-pagination>
         </div>
@@ -362,10 +362,5 @@
   .del-dialog-cnt {
     font-size: 16px;
     text-align: center;
-  }
-  .search-box {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
   }
 </style>

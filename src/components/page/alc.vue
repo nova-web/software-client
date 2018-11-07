@@ -10,7 +10,8 @@
     </div>
     <div class="container">
       <div class="search-box">
-
+        <div class="handle-box">
+        </div>
         <el-form highlight-current-row @current-change="handleCurrentChange" :rules="searchRules" :model="alcSearch" ref="search" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
             <el-select v-model="alcSearch.status" @change="search" clearable>
@@ -513,11 +514,7 @@
     font-size: 16px;
     text-align: center;
   }
-  .search-box {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-  }
+
   .search-table {
     height: 550px;
     background: #fff;

@@ -8,15 +8,15 @@
 
     </div>
     <div class="container">
-      <div class="handle-box">
-      </div>
       <div class="search-box">
+        <div class="handle-box">
+        </div>
         <el-form ref="search" :model="syslogSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
           <el-form-item label="操作对象：" prop="target">
-            <el-input class="inputs" v-model="syslogSearch.target" @change="search"></el-input>
+            <el-input class="inputs" v-model="syslogSearch.target" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item label="操作员：" prop="operator">
-            <el-input v-model="syslogSearch.operator" class="inputs" @change="search"></el-input>
+            <el-input v-model="syslogSearch.operator" class="inputs" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item label="操作类型：">
             <el-select class="inputs" clearable v-model="syslogSearch.operateType" @change="search">
@@ -24,13 +24,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="操作描述：" prop="operateContent">
-            <el-input v-model="syslogSearch.operateContent" @change="search"></el-input>
+            <el-input v-model="syslogSearch.operateContent" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item label="时间：">
-            <el-date-picker v-model="syslogSearch.startTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
+            <el-date-picker v-model="syslogSearch.startTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" clearable>
             </el-date-picker>
             &nbsp; 至 &nbsp;
-            <el-date-picker v-model="syslogSearch.endTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search">
+            <el-date-picker v-model="syslogSearch.endTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search" clearable>
             </el-date-picker>
           </el-form-item>
           <el-form-item>
@@ -62,7 +62,7 @@
           <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="total,sizes,slot ,prev, pager, next" :total="count">
             <el-button icon="el-icon-d-arrow-left" size="small" @click="gofist"></el-button>
           </el-pagination>
-          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
+          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot" :total="count">
             <el-button icon="el-icon-d-arrow-right" size="small" @click="goLast"></el-button>
           </el-pagination>
         </div>
@@ -208,13 +208,5 @@
   .del-dialog-cnt {
     font-size: 16px;
     text-align: center;
-  }
-  .search-box {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    .inputs {
-      width: 120px;
-    }
   }
 </style>

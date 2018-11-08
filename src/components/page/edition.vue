@@ -52,7 +52,7 @@
           </template>
         </el-table-column>
         <el-table-column label="适配产品" prop="productName"></el-table-column>
-        <el-table-column label="发布时间" prop="createdAt"></el-table-column>
+        <el-table-column label="更新时间" prop="updatedAt"></el-table-column>
         <el-table-column label="操作" width="240px">
           <template slot-scope="scope">
             <el-button size="small" type="text" @click="download(scope.row)">
@@ -83,7 +83,7 @@
         </div>
       </div>
     </div>
-    <el-dialog title="新增版本" :visible.sync="addEditionModele" width="30%">
+    <el-dialog title="新增版本" :visible.sync="addEditionModele" width="30%" :before-close="closeAdd">
       <div class="add-edition">
         <el-form ref="addEdition" :rules="editionRules" label-width="90px" :model="addEdition" class="demo-ruleForm">
           <el-form-item label="版本名称:" prop="version">
@@ -117,11 +117,11 @@
         <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改版本" :visible.sync="modifyModel" width="30%">
+    <el-dialog title="修改版本" :visible.sync="modifyModel" width="30%" :before-close="closeEdit">
       <div class="add-edition">
         <el-form ref="changeEdition" :rules="editionRules" label-width="90px" :model="modifyEdition" class="demo-ruleForm">
           <el-form-item label="版本名称:" prop="version">
-            <el-input class="inputs" v-model="modifyEdition.version" placeholder=""></el-input>
+            <el-input class="inputs" v-model="modifyEdition.version" placeholder="请输入版本名称"></el-input>
           </el-form-item>
           <el-form-item label="版本类型:" prop="type">
             <el-select class="inputs" clearable v-model="modifyEdition.type" placeholder="">
@@ -129,7 +129,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="版本描述:" prop="versionLog">
-            <el-input type="textarea" class="inputs" v-model="modifyEdition.versionLog" placeholder=""></el-input>
+            <el-input type="textarea" class="inputs" v-model="modifyEdition.versionLog" placeholder="请输入版本描述"></el-input>
           </el-form-item>
           <el-form-item label="产品ID:" prop="productId">
             <el-select class="inputs" v-model="modifyEdition.productId">
@@ -164,6 +164,10 @@
         addEditionModele: false, //新增版本
         tableData: [],
         modifyEdition: {
+          version: '',
+          versionLog: '',
+          productId: '',
+          type: '',
         }, //修改版本
         fileList: [{ name: '', url: '' }],
         editionSearch: {
@@ -190,13 +194,13 @@
         },
         editionRules: {
           version: [
-            { required: true, message: '版本名称不可为空' }
+            { required: true, message: '版本名称不可为空', trigger: 'blur' }
           ],
           stage: [
             { required: true, message: '版本类型不可为空' }
           ],
           versionLog: [
-            {}
+            { required: false, message: '', trigger: 'blur' }
           ],
           productId: [
             { required: true, message: '产品ID不可为空' }
@@ -253,11 +257,14 @@
         this.stage = this.getDict.filter(item => item.type === 'stage');
         this.type = this.getDict.filter(item => item.type === 'version');
       },
+      closeAdd(done) {
+        this.$refs.addEdition.resetFields();
+        done();
+      },
       //新增
       addVisible() {
         this.addEditionModele = true;
         this.$nextTick(() => {
-          this.$refs.addEdition.resetFields();
           this.$refs.upload.clearFiles();
         })
       },
@@ -312,6 +319,10 @@
         this.fileTip = false; //文件提示
         this.addEditionModele = false;
       },
+      closeEdit(done) {
+        this.$refs.changeEdition.resetFields();
+        done();
+      },
       //修改版本
       modify(row) {
         let fileArr = [{ name: '', url: '' }];
@@ -351,8 +362,10 @@
             }).then(res => {
               if(res.data.errorCode === 1) {
                 this.$message.success('操作成功');
-                this.modifyModel = false;
                 this.$refs.uploadEdition.clearFiles()
+                this.$refs.changeEdition.resetFields();
+                this.modifyModel = false;
+                this.modifyEdition = {};
                 this.getEdition();
               } else {
                 this.$message.error(res.data.errorMsg);
@@ -371,12 +384,13 @@
       },
       //修改时添加文件
       modifyEditionGetFile(file) {
-        this.addfile = file;
+        this.file = file;
         this.$set(this.modifyEdition, 'packages', 1);
 
       },
       // 取消修改
       cancelModifyEdition() {
+        this.$refs.changeEdition.resetFields();
         this.modifyModel = false;
       },
 

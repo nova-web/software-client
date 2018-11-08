@@ -430,37 +430,34 @@
       },
       handleEdit(row, index) {
         this.editProductModel = true;
-        this.$nextTick(() => {
-
-          let dict = {};
-          let fileArr = [{ name: '', url: '' }];
-          this.getDict.forEach(item => {
-            if(!dict[item.type]) {
-              dict[item.type] = {};
-            }
-            dict[item.type][item.name] = item.code;
-          });
-          this.editProduct = {
-            modelId: row.modelId,
-            name: row.name,
-            model: row.model,
-            type: dict.package[row.type],
-            stage: dict.stage[row.stage],
-            fitPro: row.fitPro,
-            area: dict.area[row.area],
-            dept: dict.dept[row.dept],
-            projectManager: row.projectManager,
-            productDesc: row.productDesc || ''
-          };
-          fileArr.forEach(item => {
-            item.name = row.logo.slice(row.logo.lastIndexOf('/') + 1);
-            item.url = row.logo;
-          });
-          if(row.logo) {
-            this.fileList = serialize(fileArr);
+        let dict = {};
+        let fileArr = [{ name: '', url: '' }];
+        this.getDict.forEach(item => {
+          if(!dict[item.type]) {
+            dict[item.type] = {};
           }
-          this.idx = row.id;
-        })
+          dict[item.type][item.name] = item.code;
+        });
+        this.editProduct = {
+          modelId: row.modelId,
+          name: row.name,
+          model: row.model,
+          type: dict.package[row.type],
+          stage: dict.stage[row.stage],
+          fitPro: row.fitPro,
+          area: dict.area[row.area],
+          dept: dict.dept[row.dept],
+          projectManager: row.projectManager,
+          productDesc: row.productDesc || ''
+        };
+        fileArr.forEach(item => {
+          item.name = row.logo.slice(row.logo.lastIndexOf('/') + 1);
+          item.url = row.logo;
+        });
+        if(row.logo) {
+          this.fileList = serialize(fileArr);
+        }
+        this.idx = row.id;
       },
       //确认编辑
       saveEditProductModel() {

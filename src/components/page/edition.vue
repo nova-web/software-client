@@ -1,4 +1,5 @@
 <template>
+  <!-- BBCX BBXZ BBXG BBSC BBFB BBCH BBSY BBXJ -->
   <div class="edition">
     <div class="crumbs">
       <el-breadcrumb>
@@ -9,7 +10,7 @@
     <div class="container">
       <div class="search-box">
         <div class="handle-box">
-          <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增版本</el-button>
+          <el-button v-if="getAlcsObj.BBCX" type="primary" icon="el-icon-plus" @click="addVisible">新增版本</el-button>
         </div>
         <el-form ref="search" :rules="searchRules" :model="editionSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：" prop="publishStatus">
@@ -60,12 +61,12 @@
                 下载
               </a>
             </el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'" @click="modify(scope.row, scope.$index)">修改</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'" @click="deleteEdition(scope.row, scope.$index)">删除</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'" @click="packageTryout(scope.row, scope.$index)">试用</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_02' || scope.row.publishStatus === 'pro_status_04'" @click="packagePublish(scope.row, scope.$index)">发布</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_02'" @click="withdrawPublish(scope.row, scope.$index)">撤回</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_03'" @click="packageObtained(scope.row, scope.$index)">下架</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.BBXG" @click="modify(scope.row, scope.$index)">修改</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.BBSC" @click="deleteEdition(scope.row, scope.$index)">删除</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.BBSY" @click="packageTryout(scope.row, scope.$index)">试用</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_02' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.BBFB" @click="packagePublish(scope.row, scope.$index)">发布</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_02') && getAlcsObj.BBCH" @click="withdrawPublish(scope.row, scope.$index)">撤回</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_03') && getAlcsObj.BBXJ" @click="packageObtained(scope.row, scope.$index)">下架</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -215,7 +216,7 @@
       };
     },
     computed: {
-      ...mapGetters(['getDict', 'getCommon', 'getFormatDict'])
+      ...mapGetters(['getDict', 'getCommon', 'getFormatDict', 'getAlcsObj'])
     },
     created() {
       this.getEdition();

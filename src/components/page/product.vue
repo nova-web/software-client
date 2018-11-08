@@ -1,4 +1,5 @@
 <template>
+  <!-- CPCX CPXZ CPXG CPSC CPFB CPCH CPSY CPXJ -->
   <div class="download">
     <div class="crumbs">
       <el-breadcrumb>
@@ -11,7 +12,7 @@
     <div class="container">
       <div class="search-box">
         <div class="handle-box">
-          <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增产品</el-button>
+          <el-button v-if="getAlcsObj.CPXZ" type="primary" icon="el-icon-plus" @click="addVisible">新增产品</el-button>
         </div>
         <el-form ref="search" :rules="searchRules" :model="productSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
@@ -49,12 +50,12 @@
         <el-table-column width="160" prop="updatedAt" label="更新时间"></el-table-column>
         <el-table-column width="300px" label="操作">
           <template slot-scope="scope">
-            <el-button size="small" type="text" @click="handleEdit(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">修改</el-button>
-            <el-button size="small" type="text" @click="handleDelete(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">删除</el-button>
-            <el-button size="small" type="text" @click="handleOnTrial(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'">试用</el-button>
-            <el-button size="small" type="text" @click="productWithdraw(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_02'">撤回</el-button>
-            <el-button size="small" type="text" @click="handleselectdevice(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04' || scope.row.publishStatus === 'pro_status_02'">发布</el-button>
-            <el-button size="small" type="text" @click="handleObtained(scope.row, scope.$index)" v-if="scope.row.publishStatus === 'pro_status_03'">下架</el-button>
+            <el-button size="small" type="text" @click="handleEdit(scope.row, scope.$index)" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.CPXG">修改</el-button>
+            <el-button size="small" type="text" @click="handleDelete(scope.row, scope.$index)" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.CPSC">删除</el-button>
+            <el-button size="small" type="text" @click="handleOnTrial(scope.row, scope.$index)" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.CPSY">试用</el-button>
+            <el-button size="small" type="text" @click="productWithdraw(scope.row, scope.$index)" v-if="(scope.row.publishStatus === 'pro_status_02') && getAlcsObj.CPCH">撤回</el-button>
+            <el-button size="small" type="text" @click="handleselectdevice(scope.row, scope.$index)" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04' || scope.row.publishStatus === 'pro_status_02') && getAlcsObj.CPFB">发布</el-button>
+            <el-button size="small" type="text" @click="handleObtained(scope.row, scope.$index)" v-if="(scope.row.publishStatus === 'pro_status_03') && getAlcsObj.CPXJ">下架</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -253,7 +254,7 @@
       };
     },
     computed: {
-      ...mapGetters(['getDict', 'getCommon'])
+      ...mapGetters(['getDict', 'getCommon', 'getAlcsObj'])
     },
     watch: {
       'addProduct.type'(val) {

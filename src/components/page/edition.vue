@@ -98,7 +98,7 @@
           <el-form-item label="版本描述:" prop="versionLog">
             <el-input type="textarea" class="inputs" v-model="addEdition.versionLog" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="产品ID:" prop="productId">
+          <el-form-item label="适配产品:" prop="productId">
             <el-select class="inputs" v-model="addEdition.productId">
               <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
@@ -132,7 +132,7 @@
           <el-form-item label="版本描述:" prop="versionLog">
             <el-input type="textarea" class="inputs" v-model="modifyEdition.versionLog" placeholder="请输入版本描述"></el-input>
           </el-form-item>
-          <el-form-item label="产品ID:" prop="productId">
+          <el-form-item label="适配产品:" prop="productId">
             <el-select class="inputs" v-model="modifyEdition.productId">
               <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
@@ -204,7 +204,7 @@
             { required: true, message: '版本描述不可为空', trigger: 'blur' }
           ],
           productId: [
-            { required: true, message: '产品ID不可为空', trigger: 'blur' }
+            { required: true, message: '适配产品不可为空', trigger: 'blur' }
           ],
           packages: [
             { required: true, message: '请选择文件', trigger: 'blur' },

@@ -12,10 +12,10 @@
         </div>
         <el-form ref="search" :rules="searchRules" :model="scarchStatistics" class="demo-form-inline" :inline="true">
           <el-form-item label="设备S/N号：" prop="deviceId">
-            <el-input class="el-input-width" v-model="scarchStatistics.deviceId"></el-input>
+            <el-input class="el-input-width" v-model="scarchStatistics.deviceId" placeholder="输入设备S/N号查询" @change="search" clearable></el-input>
           </el-form-item>
-          <el-form-item label="设备名称或IP：" prop="softwareIp">
-            <el-input class="el-input-width" v-model="scarchStatistics.softwareIp"></el-input>
+          <el-form-item label="设备名称或IP：" prop="ipName ">
+            <el-input class="el-input-width" v-model="scarchStatistics.ipName" placeholder="输入设备名称或IP查询" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -35,8 +35,11 @@
         </el-table-column>
         <el-table-column prop="version" label="最新版本">
         </el-table-column>
-        <el-table-column prop="deviceStatus" label="状态">
-
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <span class="abnormal" v-if="scope.row.deviceStatus">{{scope.row.deviceStatus}}</span>
+            <span class="normal" v-else>正常</span>
+          </template>
         </el-table-column>
         <el-table-column prop="createdAt" label="更新时间">
         </el-table-column>
@@ -69,12 +72,15 @@
         count: 0,
         cur_page: 1,
         pageSize: 10,
-        scarchStatistics: {},
+        scarchStatistics: {
+          deviceId: '',
+          ipName: ''
+        },
         searchRules: {  // 搜索框规则
           deviceId: [
             { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
           ],
-          softwareIp: [
+          ipName: [
             { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
           ]
         },
@@ -118,15 +124,15 @@
       },
       handleSizeChange(val) {
         this.pageSize = val;
-        this.getLog();
+        this.getProductLogs();
       },
       gofist() {
         this.cur_page = 1;
-        this.getLog();
+        this.getProductLogs();
       },
       goLast() {
         this.cur_page = Math.ceil(this.count / this.pageSize);
-        this.getLog();
+        this.getProductLogs();
       },
       //搜索
       search() {
@@ -158,5 +164,11 @@
   .del-dialog-cnt {
     font-size: 16px;
     text-align: center;
+  }
+  .abnormal {
+    color: #ff6c60;
+  }
+  .normal {
+    color: #2fc25b;
   }
 </style>

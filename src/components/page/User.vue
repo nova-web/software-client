@@ -81,7 +81,7 @@
       </div>
     </div>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="30%" :before-close="editDiaClose">
       <el-form ref="editUser" :model="editUser" label-width="100px" :rules="UserRule" label-position="rigth">
         <!-- <el-form-item label="用户名称:" prop="username">
           <el-input v-model.trim="editUser.username"></el-input>
@@ -110,12 +110,12 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveEdit">确 定</el-button>
-        <el-button @click="editVisible=false;$refs.editUser.resetFields();">取 消</el-button>
+        <el-button @click="editVisible=false">取 消</el-button>
       </div>
     </el-dialog>
 
     <!-- 新增用户 -->
-    <el-dialog title="新增用户" :visible.sync="addVisible" width="30%">
+    <el-dialog title="新增用户" :visible.sync="addVisible" width="30%" :before-close="addDiaClose">
       <el-form ref="addusers" :model="addUser" label-width="100px" :rules="UserRule" label-position="rigth" class="demo-ruleForm">
         <el-form-item label="用户名称:" prop="username">
           <el-input v-model.trim="addUser.username" maxlength="30" clearable></el-input>
@@ -311,10 +311,13 @@
           });
         })
       },
+      addDiaClose(done) {
+        this.$refs.addusers.resetFields();
+        done();
+      },
       //新增用户
       addUsers() {
         this.addVisible = true;
-        this.$refs.addusers.resetFields();
       },
       saveAdd(ruleName) {
         this.$refs.addusers.validate((valid) => {
@@ -337,6 +340,10 @@
       cancelAddUser() {
         this.addVisible = false;
       },
+      editDiaClose(done) {
+        this.$refs.editUser.resetFields();
+        done();
+      },
       //编辑
       handleEdit(row, index) {
         this.editVisible = true;
@@ -345,7 +352,6 @@
           row.roles.forEach(item => {
             arr.push(item.id);
           });
-          this.$refs.editUser.resetFields();
           this.editUser = {
             name: row.name,
             password: null,

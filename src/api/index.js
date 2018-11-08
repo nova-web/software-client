@@ -35,6 +35,7 @@ axios.interceptors.response.use(
         return response;
     },
     error => {
+        console.log(error.response);
         loading = false;
         if (loadingInstance) {
             loadingInstance.close();

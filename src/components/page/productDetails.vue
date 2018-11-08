@@ -77,7 +77,8 @@
       <div class="right">
         <div class="title">产品介绍</div>
         <div class="content">
-          <p v-for="item in result.productDesc.split('\n')">{{item}}</p>
+          <!-- <p v-for="item in result.productDesc.split('\n')">{{item}}</p> -->
+          <p v-html="Trim(result.productDesc)"></p>
         </div>
       </div>
 
@@ -95,6 +96,7 @@
         result: {
           name: null,
           productDesc: '',
+          newproductDesc: '',
           projectManager: null,
           publishStatus: null,
           stage: null,
@@ -110,7 +112,7 @@
       this.getProductMessage();
     },
     computed: {
-      ...mapGetters(['getproductId', 'getDict'])
+      ...mapGetters(['getproductId', 'getDict']),
     },
     methods: {
       ...mapActions(['ajax']),
@@ -136,6 +138,9 @@
           })
           this.result = res.result;
         })
+      },
+      Trim(str) {
+        return str.replace(/\n|\r\n/g, "<br/>");
       }
     }
   }

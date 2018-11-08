@@ -198,19 +198,19 @@
             { required: true, message: '版本名称不可为空', trigger: 'blur' }
           ],
           stage: [
-            { required: true, message: '版本类型不可为空' }
+            { required: true, message: '版本类型不可为空', trigger: 'blur' }
           ],
           versionLog: [
-            { required: false, message: '', trigger: 'blur' }
+            { required: true, message: '版本描述不可为空', trigger: 'blur' }
           ],
           productId: [
-            { required: true, message: '产品ID不可为空' }
+            { required: true, message: '产品ID不可为空', trigger: 'blur' }
           ],
           packages: [
-            { required: true, message: '请选择文件', trigger: 'change' },
+            { required: true, message: '请选择文件', trigger: 'blur' },
           ],
           type: [
-            { required: true, message: '版本类型不可为空', trigger: 'change' },
+            { required: true, message: '版本类型不可为空', trigger: 'blur' },
           ]
         }
       };

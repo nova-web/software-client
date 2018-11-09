@@ -120,8 +120,8 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 65%;
-    height: 82.5%;
+    width: 55%;
+    height: 72.5%;
     background: #fff;
     display: flex;
     justify-content: space-between;

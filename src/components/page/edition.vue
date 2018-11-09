@@ -1,4 +1,5 @@
 <template>
+  <!-- BBCX BBXZ BBXG BBSC BBFB BBCH BBSY BBXJ -->
   <div class="edition">
     <div class="crumbs">
       <el-breadcrumb>
@@ -9,7 +10,7 @@
     <div class="container">
       <div class="search-box">
         <div class="handle-box">
-          <el-button type="primary" icon="el-icon-plus" @click="addVisible">新增版本</el-button>
+          <el-button v-if="getAlcsObj.BBCX" type="primary" icon="el-icon-plus" @click="addVisible">新增版本</el-button>
         </div>
         <el-form ref="search" :rules="searchRules" :model="editionSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：" prop="publishStatus">
@@ -60,12 +61,12 @@
                 下载
               </a>
             </el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'" @click="modify(scope.row, scope.$index)">修改</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'" @click="deleteEdition(scope.row, scope.$index)">删除</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04'" @click="packageTryout(scope.row, scope.$index)">试用</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_02' || scope.row.publishStatus === 'pro_status_04'" @click="packagePublish(scope.row, scope.$index)">发布</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_02'" @click="withdrawPublish(scope.row, scope.$index)">撤回</el-button>
-            <el-button size="small" type="text" v-if="scope.row.publishStatus === 'pro_status_03'" @click="packageObtained(scope.row, scope.$index)">下架</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.BBXG" @click="modify(scope.row, scope.$index)">修改</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.BBSC" @click="deleteEdition(scope.row, scope.$index)">删除</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.BBSY" @click="packageTryout(scope.row, scope.$index)">试用</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_02' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.BBFB" @click="packagePublish(scope.row, scope.$index)">发布</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_02') && getAlcsObj.BBCH" @click="withdrawPublish(scope.row, scope.$index)">撤回</el-button>
+            <el-button size="small" type="text" v-if="(scope.row.publishStatus === 'pro_status_03') && getAlcsObj.BBXJ" @click="packageObtained(scope.row, scope.$index)">下架</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -97,7 +98,7 @@
           <el-form-item label="版本描述:" prop="versionLog">
             <el-input type="textarea" class="inputs" v-model="addEdition.versionLog" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="产品ID:" prop="productId">
+          <el-form-item label="适配产品:" prop="productId">
             <el-select class="inputs" v-model="addEdition.productId">
               <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
@@ -110,6 +111,8 @@
               <div class="tips" v-show="fileTip">请上传版本包</div>
             </transition>
           </el-form-item>
+
+          <el-progress v-show="progressModel" class="progress" :percentage="parseInt(progress)" :status="parseInt(progress)===100?'success':''"></el-progress>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -131,7 +134,7 @@
           <el-form-item label="版本描述:" prop="versionLog">
             <el-input type="textarea" class="inputs" v-model="modifyEdition.versionLog" placeholder="请输入版本描述"></el-input>
           </el-form-item>
-          <el-form-item label="产品ID:" prop="productId">
+          <el-form-item label="适配产品:" prop="productId">
             <el-select class="inputs" v-model="modifyEdition.productId">
               <el-option v-for="item in fitPro" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
@@ -142,6 +145,8 @@
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
           </el-form-item>
+          <el-progress v-show="progressModel" class="progress" :percentage="parseInt(progress)" :status="parseInt(progress)===100?'success':''"></el-progress>
+
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -197,25 +202,27 @@
             { required: true, message: '版本名称不可为空', trigger: 'blur' }
           ],
           stage: [
-            { required: true, message: '版本类型不可为空' }
+            { required: true, message: '版本类型不可为空', trigger: 'blur' }
           ],
           versionLog: [
-            { required: false, message: '', trigger: 'blur' }
+            { required: true, message: '版本描述不可为空', trigger: 'blur' }
           ],
           productId: [
-            { required: true, message: '产品ID不可为空' }
+            { required: true, message: '适配产品不可为空', trigger: 'blur' }
           ],
           packages: [
-            { required: true, message: '请选择文件', trigger: 'change' },
+            { required: true, message: '请选择文件', trigger: 'blur' },
           ],
           type: [
-            { required: true, message: '版本类型不可为空', trigger: 'change' },
+            { required: true, message: '版本类型不可为空', trigger: 'blur' },
           ]
-        }
+        },
+        progress: 0,
+        progressModel: false
       };
     },
     computed: {
-      ...mapGetters(['getDict', 'getCommon', 'getFormatDict'])
+      ...mapGetters(['getDict', 'getCommon', 'getFormatDict', 'getAlcsObj'])
     },
     created() {
       this.getEdition();
@@ -259,6 +266,8 @@
       },
       closeAdd(done) {
         this.$refs.addEdition.resetFields();
+        this.progressModel = false;
+        this.progress = 0;
         done();
       },
       //新增
@@ -270,9 +279,12 @@
       },
       //新增确认
       saveAddEdition() {
+
+
         let formData = new FormData();
         this.$refs.addEdition.validate(valid => {
           if(valid) {
+
             delete this.addEdition.package;
             if(this.addfile) {
               Object.keys(this.addEdition).forEach(item => {
@@ -283,10 +295,19 @@
                 method: 'post',
                 url: api.addPackages.url,
                 data: formData,
-                headers: { 'token': this.getCommon.token }
+                headers: { 'token': this.getCommon.token },
+                timeout: 1000000,
+                onUploadProgress: (event) => {
+                  if(event.lengthComputable) {
+                    this.progressModel = true;
+                    let complete = (event.loaded / event.total * 100 | 0) + '%';
+                    this.progress = complete;
+                  }
+                }
               }).then(res => {
                 if(res.data.errorCode === 1) {
                   this.$message.success('操作成功');
+                  this.progressModel = false;
                   this.addfile = null;
                   this.$refs.addEdition.resetFields();
                   this.$refs.upload.clearFiles();
@@ -306,7 +327,7 @@
             return false;
           }
         })
-
+        console.log(this.progress);
       },
       //移除文件列表中得文件
       removeFile() {
@@ -321,6 +342,8 @@
       },
       closeEdit(done) {
         this.$refs.changeEdition.resetFields();
+        this.progressModel = false;
+        this.progress = 0;
         done();
       },
       //修改版本
@@ -358,10 +381,19 @@
               method: 'put',
               url: api.putPackages.url + `/${this.idx}`,
               data: formData,
-              headers: { 'token': this.getCommon.token }
+              headers: { 'token': this.getCommon.token },
+              timeout: 1000000,
+              onUploadProgress: (event) => {
+                if(event.lengthComputable) {
+                  this.progressModel = true;
+                  let complete = (event.loaded / event.total * 100 | 0) + '%';
+                  this.progress = complete;
+                }
+              }
             }).then(res => {
               if(res.data.errorCode === 1) {
                 this.$message.success('操作成功');
+                this.progressModel = false;
                 this.$refs.uploadEdition.clearFiles()
                 this.$refs.changeEdition.resetFields();
                 this.modifyModel = false;

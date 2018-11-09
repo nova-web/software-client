@@ -95,6 +95,7 @@
         result: {
           name: null,
           productDesc: '',
+          newproductDesc: '',
           projectManager: null,
           publishStatus: null,
           stage: null,
@@ -110,7 +111,7 @@
       this.getProductMessage();
     },
     computed: {
-      ...mapGetters(['getproductId', 'getDict'])
+      ...mapGetters(['getproductId', 'getDict']),
     },
     methods: {
       ...mapActions(['ajax']),
@@ -136,6 +137,9 @@
           })
           this.result = res.result;
         })
+      },
+      Trim(str) {
+        return str.replace(/\n|\r\n/g, "<br/>");
       }
     }
   }

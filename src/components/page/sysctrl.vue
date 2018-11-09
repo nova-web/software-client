@@ -40,8 +40,8 @@
         </el-table-column>
         <el-table-column label="操作" width="210">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.isButtonShow" type="text" size="small" @click="stopService(scope.row, scope.$index)">暂停服务</el-button>
-            <el-button v-if="!scope.row.isButtonShow" type="text" size="small" @click="openService(scope.row, scope.$index)">开通服务</el-button>
+            <el-button v-if="scope.row.isButtonShow && getAlcsObj.XTKZKG" type="text" size="small" @click="stopService(scope.row, scope.$index)">暂停服务</el-button>
+            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.XTKZKG" type="text" size="small" @click="openService(scope.row, scope.$index)">开通服务</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -16,9 +16,9 @@
 </template>
 
 <script>
-  import vHead from './Header.vue';
-  import vSidebar from './Sidebar.vue';
-  import vTags from './Tags.vue';
+  import vHead from './header.vue';
+  import vSidebar from './sidebar.vue';
+  import vTags from './tags.vue';
   import bus from './bus';
   import { mapGetters } from 'vuex';
   import { getLoc } from '../../utils';

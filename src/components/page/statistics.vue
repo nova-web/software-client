@@ -103,7 +103,8 @@
           name: 'getProductLogs',
           data: {
             pageNum: this.cur_page,
-            pageSize: this.pageSize
+            pageSize: this.pageSize,
+            ...this.scarchStatistics
           }
         }).then(res => {
           this.count = res.count;

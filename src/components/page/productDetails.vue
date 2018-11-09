@@ -76,9 +76,8 @@
       </div>
       <div class="right">
         <div class="title">产品介绍</div>
-        <div class="content">
-          <!-- <p v-for="item in result.productDesc.split('\n')">{{item}}</p> -->
-          <p v-if="result.productDesc" v-html="Trim(result.productDesc)"></p>
+        <div class="content" v-if="result.productDesc">
+          <p v-for="item in result.productDesc.split('\n')">{{item}}</p>
         </div>
       </div>
 

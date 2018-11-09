@@ -10,7 +10,7 @@ let loading = false;
 let timer = null;
 let loadingInstance;
 
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 1000000;
 
 //添加请求拦截器
 axios.interceptors.request.use(
@@ -35,7 +35,6 @@ axios.interceptors.response.use(
         return response;
     },
     error => {
-        console.log(error.response);
         loading = false;
         if (loadingInstance) {
             loadingInstance.close();

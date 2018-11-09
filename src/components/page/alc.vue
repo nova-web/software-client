@@ -202,7 +202,9 @@
         expandAll: {
           type: Boolean,
           default: false
-        }
+        },
+        searchNameData: [],
+        searchArr: []
       }
     },
     created() {
@@ -213,15 +215,16 @@
       ...mapActions(['ajax']),
       initData() {
         this.ajax({
-          name: 'getAcls',
-          data: { ...this.alcSearch }
+          name: 'getAcls'
         }).then(res => {
           this.acls = res;
-          if(this.indexArr.length) {
-            this.indexArr.forEach(item => {
-              this.formatData[item]._expanded = true;
-            })
-          }
+          this.searchNameData = res;
+          console.log(res);
+          // if(this.indexArr.length) {
+          //   this.indexArr.forEach(item => {
+          //     this.formatData[item]._expanded = true;
+          //   })
+          // }
         })
       },
       editaclDiaClose(done) {
@@ -366,12 +369,11 @@
         })
       },
       handleCurrentChange(val) {
-
         this.currentRow = val;
       },
       //搜索
       search() {
-        this.initData();
+        // this.initData();
       },
       showRow: function(row) {
         const show = (row.row.parent ? (row.row.parent._expanded && row.row.parent._show) : true)
@@ -380,14 +382,7 @@
       },
       // 切换下级是否展开
       toggleExpanded(trIndex, row) {
-        const record = this.formatData[trIndex]
-        this.indexArr.push(trIndex);
-        if(row._expanded) {
-          this.indexArr = this.indexArr.filter(item => {
-            return item !== trIndex;
-          })
-        }
-        record._expanded = !record._expanded
+        this.$set(this.formatData[trIndex], '_expanded', !this.formatData[trIndex]._expanded);
       },
       // 图标显示
       iconShow(index, record) {
@@ -402,90 +397,207 @@
           }
         }
         return temp;
+      },
+      searchData(data, str) {
+        data.forEach(item => {
+          if(item.name.indexOf(str) !== -1) {
+            this.searchArr.push(item);
+          } else {
+            if(item.children) {
+              item.children.forEach(itemSon => {
+                if(itemSon.name.indexOf(str) !== -1) {
+                  this.searchArr.push(itemSon);
+                } else {
+                  if(itemSon.children) {
+                    itemSon.children.forEach(itemGroundSon => {
+                      if(itemGroundSon.name.indexOf(str) !== -1) {
+                        this.searchArr.push(itemGroundSon);
+                      }
+                    })
+                  }
+                }
+              })
+            }
+          }
+        })
       }
     },
     computed: {
       ...mapGetters(['getAlcs', 'getAlcsObj']),
       formatData: function() {
-        let tmp
-        if(!Array.isArray(this.acls)) {
-          tmp = [this.acls]
-        } else {
-          tmp = this.acls
-        }
-        const func = treeToArray
-        let searchArr = [];
-        let childrenArrs = []
-        if(this.alcSearch.status || this.alcSearch.name) {
-          if(this.alcSearch.status) {
-            tmp.forEach(item => {
-              if(item.status == this.alcSearch.status) {
-                searchArr.push(item);
-                searchArr.forEach(item => {
-                  if(item.children) {
-                    item.children.forEach(items => {
-                      if(items.status == this.alcSearch.status) {
-                        childrenArrs.push(items);
-                      }
-                    })
+        let tmp;
+        if(this.acls.length > 0 && this.searchNameData.length > 0) {
+          if(!Array.isArray(this.acls)) {
+            tmp = [this.acls];
+          } else {
+            tmp = this.acls;
+          }
+          const func = treeToArray;
+          let data = func.apply(null, [tmp, this.expandAll.default]);
+          if(this.alcSearch.status || this.alcSearch.name) {
+            if(this.alcSearch.status == '0') {
+              data = data.filter(item => {
+                return item.status == this.alcSearch.status;
+              })
+              data.forEach(item => {
+                if(item._level > 1) {
+                  item.parent._show = true;
+                  if(item.parent.status == '1') {
+                    item.parent._expanded = true;
                   }
-                  item.children = serialize(childrenArrs);
-                  childrenArrs = [];
-                })
-              } else {
+                }
+                item._show = true;
+              });
+            }
+            if(this.alcSearch.status == '1') {
+              data = data.filter(item => {
+                return item.status == this.alcSearch.status;
+              });
+              data.forEach(item => {
                 if(item.children) {
-                  item.children.forEach(itemChild => {
-                    if(itemChild.status == this.alcSearch.status) {
-                      searchArr.push(itemChild);
+                  item.children.forEach(itemChildren => {
+                    if(itemChildren.status == '0') {
+                      item.children = [];
                     }
                   })
                 }
-              }
+              })
+            }
+            if(this.alcSearch.name) {
+              // searchArr = data.filter(item => {
+              //   if(!item.parent) {
+              //     if(item.name.indexOf(this.alcSearch.name) !== -1) {
+              //       return item;
+              //     }
+              //   }
 
-            })
-            tmp = serialize(searchArr);
+              // });
+              // console.log(searchArr);
+              // searchArr.forEach(item => {
+              //   if(item.parent) {
+              //     item.parent._expanded = true;
+              //   }
+              // })
+              // this.acls.forEach(item => {
+              //   if(item.name.indexOf(this.alcSearch.name) !== -1) {
+              //     searchArr.push(item)
+              //   } else {
 
-            searchArr = [];
-          }
-          if(this.alcSearch.name) {
-            tmp.forEach(item => {
-              if(item.name.indexOf(this.alcSearch.name) !== -1) {
-                searchArr.push(item);
-              } else {
-                if(item.children) {
-                  item.children.forEach(itemChild => {
-                    if(itemChild.name.indexOf(this.alcSearch.name) !== -1) {
-                      searchArr.push(itemChild);
-                    }
-                  })
+              //   }
+              // })
+              this.searchData(this.searchNameData, this.alcSearch.name);
+              data = func.apply(null, [this.searchArr, this.expandAll.default]);
+              data.forEach(item => {
+                if(item._level <= 1) {
+                  if(item.parent) {
+                    item.parent._expanded = true;
+                  }
                 }
-              }
-            })
-            tmp = serialize(searchArr);
-            searchArr = [];
+              })
+              // console.log(data);
+              this.searchArr = [];
+
+            }
+            if(this.alcSearch.name && this.alcSearch.status) {
+
+            }
           }
-          if(this.alcSearch.name && this.alcSearch.status) {
-            tmp.forEach(item => {
-              if(item.name == this.alcSearch.name && item.status == this.alcSearch.status) {
-                searchArr.push(item);
-              } else {
-                if(item.children) {
-                  item.children.forEach(itemChild => {
-                    if(itemChild.name == this.alcSearch.name && itemChild.status == this.alcSearch.status) {
-                      searchArr.push(itemChild);
-                    }
-                  })
-                }
-              }
-            })
-            tmp = serialize(searchArr);
-            searchArr = [];
-          }
+          return data;
         }
-        return func.apply(null, [tmp, this.expandAll.default])
+
+
+
+        //搜索逻辑
+        // let searchArr = [];
+        // let childrenArrs = []
+        // if(this.alcSearch.status || this.alcSearch.name) {
+        //   if(this.alcSearch.status) {
+        //     tmp.forEach(item => {
+        //       if(item.status == this.alcSearch.status) {
+        //         if(item.children) {
+        //           item.children.forEach((itemScrend, index) => {
+        //             if(itemScrend.status != this.alcSearch.status) {
+        //               item.children.splice(index);
+        //             } else {
+        //               if(itemScrend.children) {
+        //                 itemScrend.children.forEach((itemThirdChild, index, arr) => {
+        //                   if(itemThirdChild.status != this.alcSearch.status) {
+        //                     itemScrend.children.splice(index);
+        //                   }
+        //                 })
+        //               }
+        //             }
+        //           })
+        //         }
+        //         searchArr.push(item);
+        //       } else {
+        //         if(item.children) {
+        //           item.children.forEach(itemChild => {
+        //             if(itemChild.status == this.alcSearch.status) {
+        //               searchArr.push(itemChild);
+        //             } else {
+        //               if(itemChild.children) {
+        //                 itemChild.children.forEach(itemThirdChild => {
+        //                   if(itemThirdChild.status == this.alcSearch.status) {
+        //                     searchArr.push(itemThirdChild);
+        //                   }
+        //                 })
+        //               }
+        //             }
+        //           })
+        //         }
+        //       }
+        //     })
+        //     tmp = serialize(searchArr);
+
+        //     searchArr = [];
+        //   }
+        //   if(this.alcSearch.name) {
+        //     tmp.forEach(item => {
+        //       if(item.name.indexOf(this.alcSearch.name) !== -1) {
+        //         searchArr.push(item);
+        //       } else {
+        //         if(item.children) {
+        //           item.children.forEach(itemChild => {
+        //             if(itemChild.name.indexOf(this.alcSearch.name) !== -1) {
+        //               searchArr.push(itemChild);
+        //             } else {
+        //               if(itemChild.children) {
+        //                 itemChild.children.forEach(itemThirdChild => {
+        //                   if(itemThirdChild.name.indexOf(this.alcSearch.name) !== -1) {
+        //                     searchArr.push(itemThirdChild);
+        //                   }
+        //                 });
+        //               }
+        //             }
+        //           })
+        //         }
+        //       }
+        //     })
+        //     tmp = serialize(searchArr);
+        //     searchArr = [];
+        //   }
+        //   if(this.alcSearch.name && this.alcSearch.status) {
+        //     tmp.forEach(item => {
+        //       if(item.name.indexOf(this.alcSearch.name) !== -1 && item.status == this.alcSearch.status) {
+        //         searchArr.push(item);
+        //       } else {
+        //         if(item.children) {
+        //           item.children.forEach(itemChild => {
+        //             if(itemChild.name.indexOf(this.alcSearch.name) !== -1 && itemChild.status == this.alcSearch.status) {
+        //               searchArr.push(itemChild);
+        //             }
+        //           })
+        //         }
+        //       }
+        //     })
+        //     tmp = serialize(searchArr);
+        //     searchArr = [];
+        //   }
+        // }
+
       }
     }
-
   }
 </script>
 <style>

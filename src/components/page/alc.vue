@@ -21,7 +21,7 @@
           </el-form-item>
 
           <el-form-item label="功能名称：" prop="name">
-            <el-input class="el-input-width" v-model="alcSearch.name" placeholder="按功能名称搜索" @input="search"></el-input>
+            <input style="height: 32px;" class="el-input__inner" v-model.lazy.trim="alcSearch.name" placeholder="按功能名称搜索" @change="search" />
           </el-form-item>
 
           <el-form-item>
@@ -30,7 +30,7 @@
         </el-form>
       </div>
       <div class="search-table">
-        <el-table ref="table" @current-change="handleCurrentChange" highlight-current-row :data="formatData" :row-style="showRow" v-bind="$attrs" stripe style="width: 100%" max-height="600" fit :row-class-name="tableRowStatusName">
+        <el-table ref="table" @current-change="handleCurrentChange" highlight-current-row :data="formatData" :row-style="showRow" v-bind="$attrs" stripe style="width: 100%" max-height="550" fit :row-class-name="tableRowStatusName">
 
           <el-table-column type="index" width="50" label="序号">
           </el-table-column>
@@ -201,7 +201,7 @@
         },
         expandAll: {
           type: Boolean,
-          default: false
+          default: true
         },
         searchNameData: [],
         searchArr: []
@@ -217,14 +217,8 @@
         this.ajax({
           name: 'getAcls'
         }).then(res => {
-          this.acls = res;
-          this.searchNameData = res;
           console.log(res);
-          // if(this.indexArr.length) {
-          //   this.indexArr.forEach(item => {
-          //     this.formatData[item]._expanded = true;
-          //   })
-          // }
+          this.acls = res;
         })
       },
       editaclDiaClose(done) {
@@ -373,7 +367,17 @@
       },
       //搜索
       search() {
-        // this.initData();
+        // console.log(this.formatData);
+        // if(!this.alcSearch.name) {
+        //   this.formatData.forEach(item => {
+        //     if(item._level <= 1) {
+        //       console.log(item);
+        //       this.$set(item, '_expanded', false);
+        //     }
+        //   })
+        //   console.log(1);
+        // }
+
       },
       showRow: function(row) {
         const show = (row.row.parent ? (row.row.parent._expanded && row.row.parent._show) : true)
@@ -424,9 +428,9 @@
     },
     computed: {
       ...mapGetters(['getAlcs', 'getAlcsObj']),
-      formatData: function() {
+      formatData() {
         let tmp;
-        if(this.acls.length > 0 && this.searchNameData.length > 0) {
+        if(this.acls.length > 0 && this.acls.length > 0) {
           if(!Array.isArray(this.acls)) {
             tmp = [this.acls];
           } else {
@@ -434,6 +438,7 @@
           }
           const func = treeToArray;
           let data = func.apply(null, [tmp, this.expandAll.default]);
+
           if(this.alcSearch.status || this.alcSearch.name) {
             if(this.alcSearch.status == '0') {
               data = data.filter(item => {
@@ -464,29 +469,9 @@
               })
             }
             if(this.alcSearch.name) {
-              // searchArr = data.filter(item => {
-              //   if(!item.parent) {
-              //     if(item.name.indexOf(this.alcSearch.name) !== -1) {
-              //       return item;
-              //     }
-              //   }
-
-              // });
-              // console.log(searchArr);
-              // searchArr.forEach(item => {
-              //   if(item.parent) {
-              //     item.parent._expanded = true;
-              //   }
-              // })
-              // this.acls.forEach(item => {
-              //   if(item.name.indexOf(this.alcSearch.name) !== -1) {
-              //     searchArr.push(item)
-              //   } else {
-
-              //   }
-              // })
-              this.searchData(this.searchNameData, this.alcSearch.name);
+              this.searchData(this.acls, this.alcSearch.name);
               data = func.apply(null, [this.searchArr, this.expandAll.default]);
+              this.searchArr = [];
               data.forEach(item => {
                 if(item._level <= 1) {
                   if(item.parent) {
@@ -494,108 +479,19 @@
                   }
                 }
               })
-              // console.log(data);
-              this.searchArr = [];
-
             }
             if(this.alcSearch.name && this.alcSearch.status) {
-
+              data = data.filter(item => {
+                if(item.status == this.alcSearch.status) {
+                  if(item.name.indexOf(this.alcSearch.name) !== -1) {
+                    return item;
+                  }
+                }
+              })
             }
           }
           return data;
         }
-
-
-
-        //搜索逻辑
-        // let searchArr = [];
-        // let childrenArrs = []
-        // if(this.alcSearch.status || this.alcSearch.name) {
-        //   if(this.alcSearch.status) {
-        //     tmp.forEach(item => {
-        //       if(item.status == this.alcSearch.status) {
-        //         if(item.children) {
-        //           item.children.forEach((itemScrend, index) => {
-        //             if(itemScrend.status != this.alcSearch.status) {
-        //               item.children.splice(index);
-        //             } else {
-        //               if(itemScrend.children) {
-        //                 itemScrend.children.forEach((itemThirdChild, index, arr) => {
-        //                   if(itemThirdChild.status != this.alcSearch.status) {
-        //                     itemScrend.children.splice(index);
-        //                   }
-        //                 })
-        //               }
-        //             }
-        //           })
-        //         }
-        //         searchArr.push(item);
-        //       } else {
-        //         if(item.children) {
-        //           item.children.forEach(itemChild => {
-        //             if(itemChild.status == this.alcSearch.status) {
-        //               searchArr.push(itemChild);
-        //             } else {
-        //               if(itemChild.children) {
-        //                 itemChild.children.forEach(itemThirdChild => {
-        //                   if(itemThirdChild.status == this.alcSearch.status) {
-        //                     searchArr.push(itemThirdChild);
-        //                   }
-        //                 })
-        //               }
-        //             }
-        //           })
-        //         }
-        //       }
-        //     })
-        //     tmp = serialize(searchArr);
-
-        //     searchArr = [];
-        //   }
-        //   if(this.alcSearch.name) {
-        //     tmp.forEach(item => {
-        //       if(item.name.indexOf(this.alcSearch.name) !== -1) {
-        //         searchArr.push(item);
-        //       } else {
-        //         if(item.children) {
-        //           item.children.forEach(itemChild => {
-        //             if(itemChild.name.indexOf(this.alcSearch.name) !== -1) {
-        //               searchArr.push(itemChild);
-        //             } else {
-        //               if(itemChild.children) {
-        //                 itemChild.children.forEach(itemThirdChild => {
-        //                   if(itemThirdChild.name.indexOf(this.alcSearch.name) !== -1) {
-        //                     searchArr.push(itemThirdChild);
-        //                   }
-        //                 });
-        //               }
-        //             }
-        //           })
-        //         }
-        //       }
-        //     })
-        //     tmp = serialize(searchArr);
-        //     searchArr = [];
-        //   }
-        //   if(this.alcSearch.name && this.alcSearch.status) {
-        //     tmp.forEach(item => {
-        //       if(item.name.indexOf(this.alcSearch.name) !== -1 && item.status == this.alcSearch.status) {
-        //         searchArr.push(item);
-        //       } else {
-        //         if(item.children) {
-        //           item.children.forEach(itemChild => {
-        //             if(itemChild.name.indexOf(this.alcSearch.name) !== -1 && itemChild.status == this.alcSearch.status) {
-        //               searchArr.push(itemChild);
-        //             }
-        //           })
-        //         }
-        //       }
-        //     })
-        //     tmp = serialize(searchArr);
-        //     searchArr = [];
-        //   }
-        // }
-
       }
     }
   }

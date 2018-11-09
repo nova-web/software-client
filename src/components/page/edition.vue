@@ -162,6 +162,8 @@
   import axios from 'axios';
   import { api } from '../../api';
   import { checkUsername } from '../../utils/rules';
+  const CancelToken = axios.CancelToken;
+  let cancel;
   export default {
     data() {
       return {
@@ -218,7 +220,8 @@
           ]
         },
         progress: 0,
-        progressModel: false
+        progressModel: false,
+        cancel: null, //取消请求
       };
     },
     computed: {
@@ -227,6 +230,7 @@
     created() {
       this.getEdition();
       this.getAllProduct();
+
     },
     methods: {
       ...mapActions(['ajax']),
@@ -273,18 +277,16 @@
       //新增
       addVisible() {
         this.addEditionModele = true;
+        this.progressModel = false;
         this.$nextTick(() => {
           this.$refs.upload.clearFiles();
         })
       },
       //新增确认
       saveAddEdition() {
-
-
         let formData = new FormData();
         this.$refs.addEdition.validate(valid => {
           if(valid) {
-
             delete this.addEdition.package;
             if(this.addfile) {
               Object.keys(this.addEdition).forEach(item => {
@@ -297,6 +299,9 @@
                 data: formData,
                 headers: { 'token': this.getCommon.token },
                 timeout: 1000000,
+                cancelToken: new CancelToken(function executor(c) {
+                  cancel = c;
+                }),
                 onUploadProgress: (event) => {
                   if(event.lengthComputable) {
                     this.progressModel = true;
@@ -317,6 +322,9 @@
                   this.$message.error(res.data.errorMsg);
                 }
               })
+                .catch(res => {
+                  this.$message.error('操作失败');
+                })
             } else {
               this.fileTip = true;
             }
@@ -327,7 +335,6 @@
             return false;
           }
         })
-        console.log(this.progress);
       },
       //移除文件列表中得文件
       removeFile() {
@@ -339,6 +346,10 @@
         this.$refs.upload.clearFiles();
         this.fileTip = false; //文件提示
         this.addEditionModele = false;
+        if(typeof cancel === 'function') {
+          cancel('终止请求'); //取消请求
+        }
+
       },
       closeEdit(done) {
         this.$refs.changeEdition.resetFields();
@@ -348,6 +359,7 @@
       },
       //修改版本
       modify(row) {
+        this.progressModel = false;
         let fileArr = [{ name: '', url: '' }];
         this.modifyEdition = {
           version: row.version,
@@ -383,6 +395,9 @@
               data: formData,
               headers: { 'token': this.getCommon.token },
               timeout: 1000000,
+              cancelToken: new CancelToken(function executor(c) {
+                cancel = c;
+              }),
               onUploadProgress: (event) => {
                 if(event.lengthComputable) {
                   this.progressModel = true;
@@ -402,7 +417,9 @@
               } else {
                 this.$message.error(res.data.errorMsg);
               }
-            });
+            }).catch(res => {
+              this.$message.error('操作失败');
+            })
           } else {
             this.fileTip = true;
             return false;
@@ -424,6 +441,10 @@
       cancelModifyEdition() {
         this.$refs.changeEdition.resetFields();
         this.modifyModel = false;
+        if(typeof cancel === 'function') {
+          cancel('终止请求'); //取消请求
+        }
+        this.progressModel = false;
       },
 
       //删除

@@ -202,7 +202,9 @@
         expandAll: {
           type: Boolean,
           default: false
-        }
+        },
+        searchNameData: [],
+        searchArr: []
       }
     },
     created() {
@@ -213,10 +215,11 @@
       ...mapActions(['ajax']),
       initData() {
         this.ajax({
-          name: 'getAcls',
-          data: { ...this.alcSearch }
+          name: 'getAcls'
         }).then(res => {
           this.acls = res;
+          this.searchNameData = res;
+          console.log(res);
           // if(this.indexArr.length) {
           //   this.indexArr.forEach(item => {
           //     this.formatData[item]._expanded = true;
@@ -379,7 +382,6 @@
       },
       // 切换下级是否展开
       toggleExpanded(trIndex, row) {
-        console.log(trIndex);
         this.$set(this.formatData[trIndex], '_expanded', !this.formatData[trIndex]._expanded);
       },
       // 图标显示
@@ -397,33 +399,40 @@
         return temp;
       },
       searchData(data, str) {
-        let arr = [];
-        if(data) {
-          data.forEach(item => {
-            if(item.name.indexOf(str) !== -1) {
-              arr.push(item)
-            } else {
-              if(item.children) {
-                this.searchData(item.children);
-              }
+        data.forEach(item => {
+          if(item.name.indexOf(str) !== -1) {
+            this.searchArr.push(item);
+          } else {
+            if(item.children) {
+              item.children.forEach(itemSon => {
+                if(itemSon.name.indexOf(str) !== -1) {
+                  this.searchArr.push(itemSon);
+                } else {
+                  if(itemSon.children) {
+                    itemSon.children.forEach(itemGroundSon => {
+                      if(itemGroundSon.name.indexOf(str) !== -1) {
+                        this.searchArr.push(itemGroundSon);
+                      }
+                    })
+                  }
+                }
+              })
             }
-          })
-        }
-        return arr;
+          }
+        })
       }
     },
     computed: {
       ...mapGetters(['getAlcs', 'getAlcsObj']),
       formatData: function() {
         let tmp;
-        if(this.acls.length > 0) {
+        if(this.acls.length > 0 && this.searchNameData.length > 0) {
           if(!Array.isArray(this.acls)) {
             tmp = [this.acls];
           } else {
             tmp = this.acls;
           }
           const func = treeToArray;
-          let searchArr = [];
           let data = func.apply(null, [tmp, this.expandAll.default]);
           if(this.alcSearch.status || this.alcSearch.name) {
             if(this.alcSearch.status == '0') {
@@ -476,8 +485,18 @@
 
               //   }
               // })
-              console.log(this.acls);
-              data = func.apply(null, [this.searchData(this.acls, this.alcSearch.name), this.expandAll.default]);
+              this.searchData(this.searchNameData, this.alcSearch.name);
+              data = func.apply(null, [this.searchArr, this.expandAll.default]);
+              data.forEach(item => {
+                if(item._level <= 1) {
+                  if(item.parent) {
+                    item.parent._expanded = true;
+                  }
+                }
+              })
+              // console.log(data);
+              this.searchArr = [];
+
             }
             if(this.alcSearch.name && this.alcSearch.status) {
 

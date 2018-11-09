@@ -18,14 +18,14 @@ const routes = [
             },
             {
                 path: '/upload',
-                component: resolve => require(['../components/page/Upload.vue'], resolve),
+                component: resolve => require(['../components/page/upload.vue'], resolve),
                 meta: { title: '下载', keepAlive: false, code: '' }
             }
         ]
     },
     {
         path: '/login',
-        component: resolve => require(['../components/page/Login.vue'], resolve)
+        component: resolve => require(['../components/page/login.vue'], resolve)
     },
     {
         path: '/404',
@@ -44,7 +44,7 @@ const routes = [
 let routerArr = [
     {
         path: '/user',
-        component: resolve => require(['../components/page/User.vue'], resolve),
+        component: resolve => require(['../components/page/user.vue'], resolve),
         meta: { title: '用户管理', keepAlive: false, code: 'YHGL' }
     },
     {
@@ -54,7 +54,7 @@ let routerArr = [
     },
     {
         path: '/Role',
-        component: resolve => require(['../components/page/Role.vue'], resolve),
+        component: resolve => require(['../components/page/role.vue'], resolve),
         meta: { title: '角色管理', keepAlive: false, code: 'JSGL' }
     },
     {

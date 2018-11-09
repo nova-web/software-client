@@ -66,19 +66,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="pagination">
-        <div class="pagination-left">
-          {{(cur_page - 1) * pageSize + 1 === 0 ? 1 : (cur_page - 1) * pageSize + 1}}-{{Math.min(cur_page * pageSize, count)}} 共 {{count}}
-        </div>
-        <div class="pagination-right">
-          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="sizes,slot ,prev, pager, next" :total="count">
-            <el-button class="btn-next" size="small" @click="gofist">首页</el-button>
-          </el-pagination>
-          <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" layout=" slot,jumper" :total="count">
-            <el-button class="btn-next" size="small" @click="goLast">末页</el-button>
-          </el-pagination>
-        </div>
-      </div>
+      <ve-pagination :cur_page="cur_page" :pageSize="pageSize" :count="count" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" @gofist="gofist" @goLast="goLast"></ve-pagination>
     </div>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%" :before-close="editDiaClose">

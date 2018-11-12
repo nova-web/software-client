@@ -21,7 +21,7 @@
           </el-form-item>
 
           <el-form-item label="功能名称：" prop="name">
-            <input style="height: 32px;" class="el-input__inner" v-model.lazy.trim="alcSearch.name" placeholder="输入功能名称查询" @change="search" />
+            <el-input style="height: 32px;" clearable v-model.lazy.trim="alcSearch.name" placeholder="输入功能名称查询" @change="search" />
           </el-form-item>
 
           <el-form-item>
@@ -45,11 +45,9 @@
           </el-table-column>
           <el-table-column label="功能名称">
             <template slot-scope="scope">
-              <!-- {{scope.row._level}} -->
               <span v-if="scope.row._level > 0" v-for="space in scope.row._level" :key="space" class="ms-tree-margin" />
               <span>
               {{scope.row.name}}
-              {{scope.row._level}}
             </span>
             </template>
           </el-table-column>
@@ -283,6 +281,7 @@
         }
         this.tmp = [];
       },
+      //树状数据
       createTree(arr, acls) {
         arr.forEach(item => {
           let children = acls.filter(acl => acl.parentId === item.id);

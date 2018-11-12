@@ -5,8 +5,8 @@
         <el-menu-item index="index"> -->
       <!-- <i class="el-icon-tickets"></i> -->
       <!-- <span slot="title">首页</span>
-        </el-menu-item> -->
-      <!-- </template> -->
+        </el-menu-item>
+      </template> -->
       <template v-for="(item, i) in items">
         <template v-if="item.subs">
           <el-submenu :index="item.index" :key="item.index" v-show="item.isShow">

@@ -12,10 +12,10 @@
         </div>
         <el-form ref="search" :rules="searchRules" :model="scarchStatistics" class="demo-form-inline" :inline="true">
           <el-form-item label="设备S/N号：" prop="deviceId">
-            <el-input class="el-input-width" v-model="scarchStatistics.deviceId" placeholder="输入设备S/N号查询" @change="search" clearable></el-input>
+            <el-input class="el-input-width" v-model="scarchStatistics.deviceId" placeholder="输入设备S/N号模糊查询" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item label="设备名称或IP：" prop="ipName ">
-            <el-input class="el-input-width" v-model="scarchStatistics.ipName" placeholder="输入设备名称或IP查询" @change="search" clearable></el-input>
+            <el-input class="el-input-width" v-model="scarchStatistics.ipName" placeholder="输入设备名称或IP模糊查询" @change="search" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>

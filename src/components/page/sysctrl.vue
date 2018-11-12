@@ -20,7 +20,7 @@
           </el-form-item>
 
           <el-form-item label="产品名称：" prop="name">
-            <el-input class="el-input-width" v-model="sysctrlSearch.name" @change="search" placeholder="按产品名称搜索" clearable></el-input>
+            <el-input class="el-input-width" v-model="sysctrlSearch.name" @change="search" placeholder="输入产品名称查询" clearable></el-input>
           </el-form-item>
 
           <el-form-item>

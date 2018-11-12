@@ -12,10 +12,10 @@
         </div>
         <el-form ref="search" :model="syslogSearch" :rules="searchRules" class="demo-form-inline" :inline="true">
           <el-form-item label="操作对象：" prop="target">
-            <el-input class="el-input-width" v-model="syslogSearch.target" @change="search" clearable placeholder="输入操作对象搜索"></el-input>
+            <el-input class="el-input-width" v-model="syslogSearch.target" @change="search" clearable placeholder="输入操作对象查询"></el-input>
           </el-form-item>
           <el-form-item label="操作员：" prop="operator">
-            <el-input v-model="syslogSearch.operator" class="el-input-width" @change="search" clearable placeholder="输入操作员搜索"></el-input>
+            <el-input v-model="syslogSearch.operator" class="el-input-width" @change="search" clearable placeholder="输入操作员查询"></el-input>
           </el-form-item>
           <el-form-item label="操作类型：">
             <el-select class="el-select-width" clearable v-model="syslogSearch.operateType" @change="search">
@@ -23,7 +23,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="操作描述：" prop="operateContent">
-            <el-input class="el-input-width" v-model="syslogSearch.operateContent" @change="search" clearable placeholder="输入操作描述搜索"></el-input>
+            <el-input class="el-input-width" v-model="syslogSearch.operateContent" @change="search" clearable placeholder="输入操作描述查询"></el-input>
           </el-form-item>
           <el-form-item label="时间：">
             <el-date-picker v-model="syslogSearch.startTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" @change="search" clearable :editable="false">

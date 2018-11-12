@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="产品名称：" prop="name">
-            <el-input class="el-input-width" clearable v-model="productSearch.name" placeholder="输入产品名称查询" @change="search"></el-input>
+            <el-input class="el-input-width" clearable v-model.trim="productSearch.name" placeholder="输入产品名称查询" @change="search"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -605,10 +605,6 @@
 </script>
 
 <style scoped lang="less">
-  .handle-box {
-    // margin-bottom: 20px;
-  }
-
   .handle-select {
     width: 120px;
   }

@@ -19,7 +19,7 @@ const routes = [
             {
                 path: '/product',
                 component: resolve => require(['../components/page/product.vue'], resolve),
-                meta: { title: '产品管理', keepAlive: false, code: 'CPLB' }
+                meta: { title: '产品列表', keepAlive: false, code: 'CPLB' }
             },
             {
                 path: '/upload',

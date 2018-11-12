@@ -28,7 +28,7 @@
             <el-input class="el-input-width" v-model.trim="userSearch.username" @change="search" placeholder="输入用户名称查询" clearable></el-input>
           </el-form-item>
           <el-form-item label="真实姓名：">
-            <el-input class="el-input-width" v-model.trim="userSearch.name" @change="search" placeholder="输入真实姓名查询" clearable></el-input>
+            <el-input class="el-input-width" v-model.trim="userSearch.name" @change="search" placeholder="输入用户真实姓名查询" clearable></el-input>
           </el-form-item>
           <el-form-item label="工号：">
             <el-input class="el-input-width" v-model.trim="userSearch.code" @change="search" placeholder="输入工号查询" clearable></el-input>

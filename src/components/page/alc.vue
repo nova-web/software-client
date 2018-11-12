@@ -21,7 +21,7 @@
           </el-form-item>
 
           <el-form-item label="功能名称：" prop="name">
-            <input style="height: 32px;" class="el-input__inner" v-model.lazy.trim="alcSearch.name" placeholder="按功能名称搜索" @change="search" />
+            <input style="height: 32px;" class="el-input__inner" v-model.lazy.trim="alcSearch.name" placeholder="输入功能名称查询" @change="search" />
           </el-form-item>
 
           <el-form-item>

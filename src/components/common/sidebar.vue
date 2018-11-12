@@ -252,7 +252,7 @@
   }
   .rel {
     position: relative;
-    padding-left: 62px !important;
+    padding-left: 78px !important;
     .imgs {
       height: 100%;
       position: absolute;

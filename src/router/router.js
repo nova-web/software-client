@@ -4,7 +4,7 @@ import router from '.';
 const routes = [
     {
         path: '/',
-        redirect: '/index'
+        redirect: '/product'
     },
     {
         path: '/',
@@ -15,6 +15,11 @@ const routes = [
                 path: '/index',
                 component: resolve => require(['../components/page/index.vue'], resolve),
                 meta: { title: '首页', keepAlive: false, code: '' }
+            },
+            {
+                path: '/product',
+                component: resolve => require(['../components/page/product.vue'], resolve),
+                meta: { title: '产品管理', keepAlive: false, code: 'CPLB' }
             },
             {
                 path: '/upload',

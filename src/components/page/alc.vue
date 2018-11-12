@@ -30,7 +30,7 @@
         </el-form>
       </div>
       <div class="search-table">
-        <el-table ref="table" @current-change="handleCurrentChange" highlight-current-row :data="formatData" :row-style="showRow" v-bind="$attrs" stripe style="width: 100%" max-height="550" fit :row-class-name="tableRowStatusName">
+        <el-table ref="table" @current-change="handleCurrentChange" highlight-current-row :data="alcData" :row-style="showRow" v-bind="$attrs" stripe style="width: 100%" max-height="550" fit :row-class-name="tableRowStatusName">
 
           <el-table-column type="index" width="50" label="序号">
           </el-table-column>
@@ -202,10 +202,13 @@
         },
         expandAll: {
           type: Boolean,
-          default: true
+          default: false
         },
         searchNameData: [],
-        searchArr: []
+        searchArr: [],
+        alcData: [], //权限表数据
+        treeData: [], //缓存数据
+        tmp: []
       }
     },
     created() {
@@ -218,9 +221,82 @@
         this.ajax({
           name: 'getAcls'
         }).then(res => {
-          console.log(res);
-          this.acls = res;
+          this.treeData = this.dataExpansion(res);
+          this.alcData = this.pageAlcData(res);
         })
+      },
+      //渲染数据
+      pageAlcData(data) {
+        let tmp;
+        if(data.length > 0) {
+          if(!Array.isArray(data)) {
+            tmp = [data];
+          } else {
+            tmp = data;
+          }
+          const func = treeToArray;
+          let tableData = func.apply(null, [tmp, this.expandAll.default]);
+          return tableData;
+        }
+      },
+      // 切换下级是否展开
+      toggleExpanded(trIndex, row) {
+        this.$set(this.alcData[trIndex], '_expanded', !this.alcData[trIndex]._expanded);
+      },
+      //数据展开
+      dataExpansion(data) {
+        let tmp = [];
+        if(data.length > 0) {
+          data.forEach((record) => {
+            tmp.push(record);
+            if(record.children) {
+              const children = this.dataExpansion(record.children);
+              tmp = tmp.concat(children);
+            }
+          })
+        }
+        return tmp;
+      },
+      //搜索
+      search() {
+        let arr = [];
+        if(this.alcSearch.status) {
+          if(this.alcSearch.name) {
+            this.tmp = this.treeData.filter(item => item.status == this.alcSearch.status);
+            this.tmp = this.tmp.filter(item => item.name.indexOf(this.alcSearch.name) !== -1);
+            arr = this.tmp.filter(item => !item.parentId);
+            this.createTree(arr, this.tmp);
+            this.alcData = this.pageAlcData(arr);
+          } else {
+            this.tmp = this.treeData.filter(item => item.status == this.alcSearch.status);
+            arr = this.tmp.filter(item => !item.parentId);
+            this.createTree(arr, this.tmp);
+            this.alcData = this.pageAlcData(arr);
+          }
+        } else if(this.alcSearch.name) {
+          this.tmp = this.treeData.filter(item => item.name.indexOf(this.alcSearch.name) !== -1);
+          arr = this.tmp.filter(item => !item.parentId);
+          this.createTree(arr, this.tmp);
+          this.alcData = this.pageAlcData(arr);
+        } else {
+          this.initData();
+        }
+        this.tmp = [];
+      },
+      createTree(arr, acls) {
+        arr.forEach(item => {
+          let children = acls.filter(acl => acl.parentId === item.id);
+          if(children.length) {
+            item.children = children;
+            this.createTree(children, acls);
+          }
+        });
+      },
+      //展开逻辑
+      showRow: function(row) {
+        const show = (row.row.parent ? (row.row.parent._expanded && row.row.parent._show) : true)
+        this.$set(row.row, '_show', show);
+        return show ? 'animation:treeTableShow .3s;' : 'display:none;'
       },
       editaclDiaClose(done) {
         this.$refs.editacl.resetFields();
@@ -366,29 +442,7 @@
       handleCurrentChange(val) {
         this.currentRow = val;
       },
-      //搜索
-      search() {
-        // console.log(this.formatData);
-        // if(!this.alcSearch.name) {
-        //   this.formatData.forEach(item => {
-        //     if(item._level <= 1) {
-        //       console.log(item);
-        //       this.$set(item, '_expanded', false);
-        //     }
-        //   })
-        //   console.log(1);
-        // }
 
-      },
-      showRow: function(row) {
-        const show = (row.row.parent ? (row.row.parent._expanded && row.row.parent._show) : true)
-        row.row._show = show
-        return show ? 'animation:treeTableShow .3s;' : 'display:none;'
-      },
-      // 切换下级是否展开
-      toggleExpanded(trIndex, row) {
-        this.$set(this.formatData[trIndex], '_expanded', !this.formatData[trIndex]._expanded);
-      },
       // 图标显示
       iconShow(index, record) {
         return (index === 0 && record.children && record.children.length > 0)
@@ -428,72 +482,72 @@
       }
     },
     computed: {
-      ...mapGetters(['getAlcs', 'getAlcsObj']),
-      formatData() {
-        let tmp;
-        if(this.acls.length > 0 && this.acls.length > 0) {
-          if(!Array.isArray(this.acls)) {
-            tmp = [this.acls];
-          } else {
-            tmp = this.acls;
-          }
-          const func = treeToArray;
-          let data = func.apply(null, [tmp, this.expandAll.default]);
+      ...mapGetters(['getAlcs', 'getAlcsObj'])
+      // formatData() {
+      //   let tmp;
+      //   if(this.acls.length > 0 && this.acls.length > 0) {
+      //     if(!Array.isArray(this.acls)) {
+      //       tmp = [this.acls];
+      //     } else {
+      //       tmp = this.acls;
+      //     }
+      //     const func = treeToArray;
+      //     let data = func.apply(null, [tmp, this.expandAll.default]);
 
-          if(this.alcSearch.status || this.alcSearch.name) {
-            if(this.alcSearch.status == '0') {
-              data = data.filter(item => {
-                return item.status == this.alcSearch.status;
-              })
-              data.forEach(item => {
-                if(item._level > 1) {
-                  item.parent._show = true;
-                  if(item.parent.status == '1') {
-                    item.parent._expanded = true;
-                  }
-                }
-                item._show = true;
-              });
-            }
-            if(this.alcSearch.status == '1') {
-              data = data.filter(item => {
-                return item.status == this.alcSearch.status;
-              });
-              data.forEach(item => {
-                if(item.children) {
-                  item.children.forEach(itemChildren => {
-                    if(itemChildren.status == '0') {
-                      item.children = [];
-                    }
-                  })
-                }
-              })
-            }
-            if(this.alcSearch.name) {
-              this.searchData(this.acls, this.alcSearch.name);
-              data = func.apply(null, [this.searchArr, this.expandAll.default]);
-              this.searchArr = [];
-              data.forEach(item => {
-                if(item._level <= 1) {
-                  if(item.parent) {
-                    item.parent._expanded = true;
-                  }
-                }
-              })
-            }
-            if(this.alcSearch.name && this.alcSearch.status) {
-              data = data.filter(item => {
-                if(item.status == this.alcSearch.status) {
-                  if(item.name.indexOf(this.alcSearch.name) !== -1) {
-                    return item;
-                  }
-                }
-              })
-            }
-          }
-          return data;
-        }
-      }
+      //     if(this.alcSearch.status || this.alcSearch.name) {
+      //       if(this.alcSearch.status == '0') {
+      //         data = data.filter(item => {
+      //           return item.status == this.alcSearch.status;
+      //         })
+      //         data.forEach(item => {
+      //           if(item._level > 1) {
+      //             item.parent._show = true;
+      //             if(item.parent.status == '1') {
+      //               item.parent._expanded = true;
+      //             }
+      //           }
+      //           item._show = true;
+      //         });
+      //       }
+      //       if(this.alcSearch.status == '1') {
+      //         data = data.filter(item => {
+      //           return item.status == this.alcSearch.status;
+      //         });
+      //         data.forEach(item => {
+      //           if(item.children) {
+      //             item.children.forEach(itemChildren => {
+      //               if(itemChildren.status == '0') {
+      //                 item.children = [];
+      //               }
+      //             })
+      //           }
+      //         })
+      //       }
+      //       if(this.alcSearch.name) {
+      //         this.searchData(this.acls, this.alcSearch.name);
+      //         data = func.apply(null, [this.searchArr, this.expandAll.default]);
+      //         this.searchArr = [];
+      //         data.forEach(item => {
+      //           if(item._level <= 1) {
+      //             if(item.parent) {
+      //               item.parent._expanded = true;
+      //             }
+      //           }
+      //         })
+      //       }
+      //       if(this.alcSearch.name && this.alcSearch.status) {
+      //         data = data.filter(item => {
+      //           if(item.status == this.alcSearch.status) {
+      //             if(item.name.indexOf(this.alcSearch.name) !== -1) {
+      //               return item;
+      //             }
+      //           }
+      //         })
+      //       }
+      //     }
+      //     return data;
+      //   }
+      // }
     }
   }
 </script>

@@ -7,7 +7,7 @@
       <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="sizes,slot ,prev, pager, next" :total="count">
         <el-button class="btn-next" size="small" @click="gofist">首页</el-button>
       </el-pagination>
-      <el-pagination background layout=" slot,jumper" :total="count">
+      <el-pagination background layout=" slot,jumper" :total="count" @current-change="handleCurrentChange">
         <el-button class="btn-next" size="small" @click="goLast">末页</el-button>
       </el-pagination>
     </div>
@@ -42,7 +42,6 @@
         this.$emit('gofist', 1);
       },
       goLast() {
-
         this.$emit('goLast', Math.ceil(this.count / this.pageSize));
       }
     }

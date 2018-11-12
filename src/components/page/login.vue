@@ -80,7 +80,7 @@
           this.setDict(res);
         })
         window.location.reload();
-        this.$router.push({ name: 'index' });
+        this.$router.push({ name: 'product' });
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {

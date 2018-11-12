@@ -46,9 +46,10 @@
           <el-table-column label="功能名称">
             <template slot-scope="scope">
               <!-- {{scope.row._level}} -->
-              <span v-if="scope.row._level > 1" v-for="space in scope.row._level" :key="space" class="ms-tree-margin" />
+              <span v-if="scope.row._level > 0" v-for="space in scope.row._level" :key="space" class="ms-tree-margin" />
               <span>
               {{scope.row.name}}
+              {{scope.row._level}}
             </span>
             </template>
           </el-table-column>
@@ -511,7 +512,7 @@
   @space-width: 18px;
   .ms-tree-margin {
     display: inline-block;
-    width: 8px;
+    width: 12px;
   }
   .ms-tree-space {
     position: relative;

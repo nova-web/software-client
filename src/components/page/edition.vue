@@ -294,11 +294,15 @@
                   if(event.lengthComputable) {
                     this.progressModel = true;
                     let complete = (event.loaded / event.total * 100 | 0) + '%';
+                    if(parseInt(complete) >= 99) {
+                      complete = 99 + '%';
+                    }
                     this.progress = complete;
                   }
                 }
               }).then(res => {
                 if(res.data.errorCode === 1) {
+                  this.progress = 100;
                   this.$message.success('操作成功');
                   this.progressModel = false;
                   this.addfile = null;
@@ -390,11 +394,15 @@
                 if(event.lengthComputable) {
                   this.progressModel = true;
                   let complete = (event.loaded / event.total * 100 | 0) + '%';
+                  if(parseInt(complete) >= 99) {
+                    complete = 99 + '%';
+                  }
                   this.progress = complete;
                 }
               }
             }).then(res => {
               if(res.data.errorCode === 1) {
+                this.progress = 100;
                 this.$message.success('操作成功');
                 this.progressModel = false;
                 this.$refs.uploadEdition.clearFiles()

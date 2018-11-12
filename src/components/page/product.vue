@@ -64,7 +64,7 @@
     <!-- 编辑对话框 -->
     <el-dialog title="编辑" :visible.sync="editProductModel" width="30%" :before-close="editDia">
 
-      <el-form :rules="ProRule" ref="editpro" :model="editProduct" label-width="90px" label-position="left">
+      <el-form :rules="ProRule" ref="editpro" :model="editProduct" label-width="90px">
         <el-form-item label="Model ID:" prop="modelId">
           <el-input v-model="editProduct.modelId"></el-input>
         </el-form-item>
@@ -94,8 +94,8 @@
             <el-option v-for="item in area" :key="item.id" :value="item.code" :label="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属产品线:" prop="dept">
-          <el-select class="inputs" clearable v-model="editProduct.dept">
+        <el-form-item label="所属产品线:" prop="dept" label-width="100px" style="margin-left: -10px;">
+          <el-select class="inputs" clearable v-model="editProduct.dept" item-width="50">
             <el-option v-for="item in dept" :key="item.id" :value="item.code" :label="item.name"></el-option>
           </el-select>
         </el-form-item>
@@ -149,7 +149,7 @@
               <el-option v-for="item in area" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属产品线:" prop="dept">
+          <el-form-item label="所属产品线:" prop="dept" label-width="100px" style="margin-left: -10px;">
             <el-select class="inputs" clearable v-model="addProduct.dept" placeholder="请选择所属产品线">
               <el-option v-for="item in dept" :key="item.id" :value="item.code" :label="item.name"></el-option>
             </el-select>

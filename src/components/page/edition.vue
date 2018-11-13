@@ -260,6 +260,7 @@
         this.$refs.addEdition.resetFields();
         this.progressModel = false;
         this.progress = 0;
+        this.fileTip = false; //文件提示
         done();
       },
       //新增
@@ -280,43 +281,56 @@
               Object.keys(this.addEdition).forEach(item => {
                 formData.append(item, this.addEdition[item]);
               })
-              formData.append("package", this.addfile.raw);
               axios({
                 method: 'post',
-                url: api.addPackages.url,
+                url: api.packagePreAdd.url,
                 data: formData,
                 headers: { 'token': this.getCommon.token },
-                timeout: 1000000,
-                cancelToken: new CancelToken(function executor(c) {
-                  cancel = c;
-                }),
-                onUploadProgress: (event) => {
-                  if(event.lengthComputable) {
-                    this.progressModel = true;
-                    let complete = (event.loaded / event.total * 100 | 0) + '%';
-                    if(parseInt(complete) >= 99) {
-                      complete = 99 + '%';
-                    }
-                    this.progress = complete;
-                  }
-                }
+                timeout: 1000000
               }).then(res => {
                 if(res.data.errorCode === 1) {
-                  this.progress = 100;
-                  this.$message.success('操作成功');
-                  this.progressModel = false;
-                  this.addfile = null;
-                  this.$refs.addEdition.resetFields();
-                  this.$refs.upload.clearFiles();
-                  this.addEditionModele = false;
-                  this.getEdition();
+                  formData.append("package", this.addfile.raw);
+                  axios({
+                    method: 'post',
+                    url: api.addPackages.url,
+                    data: formData,
+                    headers: { 'token': this.getCommon.token },
+                    timeout: 1000000,
+                    cancelToken: new CancelToken(function executor(c) {
+                      cancel = c;
+                    }),
+                    onUploadProgress: (event) => {
+                      if(event.lengthComputable) {
+                        this.progressModel = true;
+                        let complete = (event.loaded / event.total * 100 | 0) + '%';
+                        if(parseInt(complete) >= 99) {
+                          complete = 99 + '%';
+                        }
+                        this.progress = complete;
+                      }
+                    }
+                  }).then(res => {
+                    if(res.data.errorCode === 1) {
+                      this.progress = 100;
+                      this.$message.success('操作成功');
+                      this.progressModel = false;
+                      this.addfile = null;
+                      this.$refs.addEdition.resetFields();
+                      this.$refs.upload.clearFiles();
+                      this.addEditionModele = false;
+                      this.getEdition();
+                    } else {
+                      this.$message.error(res.data.errorMsg);
+                    }
+                  })
+                    .catch(res => {
+                      this.$message.error('操作失败');
+                    })
                 } else {
                   this.$message.error(res.data.errorMsg);
                 }
               })
-                .catch(res => {
-                  this.$message.error('操作失败');
-                })
+
             } else {
               this.fileTip = true;
             }
@@ -378,44 +392,58 @@
             Object.keys(this.modifyEdition).forEach(item => {
               formData.append(item, this.modifyEdition[item]);
             });
-            if(this.file) {
-              formData.append('package', this.file.raw);
-            }
             axios({
-              method: 'put',
-              url: api.putPackages.url + `/${this.idx}`,
+              method: 'post',
+              url: api.packagePreAdd.url,
               data: formData,
               headers: { 'token': this.getCommon.token },
-              timeout: 1000000,
-              cancelToken: new CancelToken(function executor(c) {
-                cancel = c;
-              }),
-              onUploadProgress: (event) => {
-                if(event.lengthComputable) {
-                  this.progressModel = true;
-                  let complete = (event.loaded / event.total * 100 | 0) + '%';
-                  if(parseInt(complete) >= 99) {
-                    complete = 99 + '%';
-                  }
-                  this.progress = complete;
-                }
-              }
+              timeout: 1000000
             }).then(res => {
               if(res.data.errorCode === 1) {
-                this.progress = 100;
-                this.$message.success('操作成功');
-                this.progressModel = false;
-                this.$refs.uploadEdition.clearFiles()
-                this.$refs.changeEdition.resetFields();
-                this.modifyModel = false;
-                this.modifyEdition = {};
-                this.getEdition();
+                if(this.file) {
+                  formData.append('package', this.file.raw);
+                }
+                axios({
+                  method: 'put',
+                  url: api.putPackages.url + `/${this.idx}`,
+                  data: formData,
+                  headers: { 'token': this.getCommon.token },
+                  timeout: 1000000,
+                  cancelToken: new CancelToken(function executor(c) {
+                    cancel = c;
+                  }),
+                  onUploadProgress: (event) => {
+                    if(event.lengthComputable) {
+                      this.progressModel = true;
+                      let complete = (event.loaded / event.total * 100 | 0) + '%';
+                      if(parseInt(complete) >= 99) {
+                        complete = 99 + '%';
+                      }
+                      this.progress = complete;
+                    }
+                  }
+                }).then(res => {
+                  if(res.data.errorCode === 1) {
+                    this.progress = 100;
+                    this.$message.success('操作成功');
+                    this.progressModel = false;
+                    this.$refs.uploadEdition.clearFiles()
+                    this.$refs.changeEdition.resetFields();
+                    this.modifyModel = false;
+                    this.modifyEdition = {};
+                    this.getEdition();
+                  } else {
+                    this.$message.error(res.data.errorMsg);
+                  }
+                }).catch(res => {
+                  this.$message.error('操作失败');
+                })
               } else {
+                this.modifyEdition.packages = 1;
                 this.$message.error(res.data.errorMsg);
               }
-            }).catch(res => {
-              this.$message.error('操作失败');
             })
+
           } else {
             this.fileTip = true;
             return false;

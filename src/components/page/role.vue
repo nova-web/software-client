@@ -19,7 +19,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item label="角色名称：" prop="username">
             <el-input class="el-input-width" v-model="roleSearch.name" @change="search" placeholder="输入角色名称查询" clearable></el-input>
           </el-form-item>

@@ -21,7 +21,7 @@
           </el-form-item>
 
           <el-form-item label="权限名称：" prop="name">
-            <el-input style="height: 32px;" clearable v-model.lazy.trim="alcSearch.name" placeholder="输入权限名称查询" @change="search" />
+            <el-input style="height: 32px;" clearable v-model="alcSearch.name" placeholder="输入权限名称查询" @change="search" />
           </el-form-item>
 
           <el-form-item>
@@ -217,7 +217,10 @@
       ...mapActions(['ajax']),
       initData() {
         this.ajax({
-          name: 'getAcls'
+          name: 'getAcls',
+          data: {
+            ...this.alcSearch
+          }
         }).then(res => {
           this.treeData = this.dataExpansion(res);
           this.alcData = this.pageAlcData(res);
@@ -257,29 +260,30 @@
       },
       //搜索
       search() {
-        let arr = [];
-        if(this.alcSearch.status) {
-          if(this.alcSearch.name) {
-            this.tmp = this.treeData.filter(item => item.status == this.alcSearch.status);
-            this.tmp = this.tmp.filter(item => item.name.indexOf(this.alcSearch.name) !== -1);
-            arr = this.tmp.filter(item => !item.parentId);
-            this.createTree(arr, this.tmp);
-            this.alcData = this.pageAlcData(arr);
-          } else {
-            this.tmp = this.treeData.filter(item => item.status == this.alcSearch.status);
-            arr = this.tmp.filter(item => !item.parentId);
-            this.createTree(arr, this.tmp);
-            this.alcData = this.pageAlcData(arr);
-          }
-        } else if(this.alcSearch.name) {
-          this.tmp = this.treeData.filter(item => item.name.indexOf(this.alcSearch.name) !== -1);
-          arr = this.tmp.filter(item => !item.parentId);
-          this.createTree(arr, this.tmp);
-          this.alcData = this.pageAlcData(arr);
-        } else {
-          this.initData();
-        }
-        this.tmp = [];
+        // let arr = [];
+        // if(this.alcSearch.status) {
+        //   if(this.alcSearch.name) {
+        //     this.tmp = this.treeData.filter(item => item.status == this.alcSearch.status);
+        //     this.tmp = this.tmp.filter(item => item.name.indexOf(this.alcSearch.name) !== -1);
+        //     arr = this.tmp.filter(item => !item.parentId);
+        //     this.createTree(arr, this.tmp);
+        //     this.alcData = this.pageAlcData(arr);
+        //   } else {
+        //     this.tmp = this.treeData.filter(item => item.status == this.alcSearch.status);
+        //     arr = this.tmp.filter(item => !item.parentId);
+        //     this.createTree(arr, this.tmp);
+        //     this.alcData = this.pageAlcData(arr);
+        //   }
+        // } else if(this.alcSearch.name) {
+        //   this.tmp = this.treeData.filter(item => item.name.indexOf(this.alcSearch.name) !== -1);
+        //   arr = this.tmp.filter(item => !item.parentId);
+        //   this.createTree(arr, this.tmp);
+        //   this.alcData = this.pageAlcData(arr);
+        // } else {
+        //   this.initData();
+        // }
+        // this.tmp = [];
+        this.initData();
       },
       //树状数据
       createTree(arr, acls) {

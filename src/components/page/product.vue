@@ -62,8 +62,7 @@
       <ve-pagination :cur_page="cur_page" :pageSize="pageSize" :count="count" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" @gofist="gofist" @goLast="goLast"></ve-pagination>
     </div>
     <!-- 编辑对话框 -->
-    <el-dialog title="编辑" :visible.sync="editProductModel" width="30%" :before-close="editDia">
-
+    <el-dialog title="编辑" :visible.sync="editProductModel" width="30%" :close-on-click-modal="false">
       <el-form :rules="ProRule" ref="editpro" :model="editProduct" label-width="90px">
         <el-form-item label="Model ID:" prop="modelId">
           <el-input v-model="editProduct.modelId"></el-input>
@@ -117,7 +116,7 @@
       </div>
     </el-dialog>
     <!-- 新增产品对话框 -->
-    <el-dialog title="新增产品" :visible.sync="addProductModel" width="30%" :before-close="diaClose">
+    <el-dialog title="新增产品" :visible.sync="addProductModel" width="30%" :before-close="diaClose" :close-on-click-modal="false">
       <div class="add-product">
         <el-form label-width="90px" :model="addProduct" ref="addpro" :rules="ProRule" class="demo-ruleForm">
           <el-form-item label="Model ID:" prop="modelId">
@@ -192,7 +191,17 @@
         editProductModel: false,
         editProduct: {}, //修改产品
         addProductModel: false,
-        addProduct: {},
+        addProduct: {
+          modelId: null,
+          name: null,
+          model: null,
+          type: [],
+          stage: [],
+          fitPro: [],
+          area: [],
+          dept: [],
+          projectManager: null,
+        },
         searchRules: {  // 搜索框规则
           name: [
             { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' }
@@ -307,6 +316,7 @@
         this.dept = this.getDict.filter(item => item.type === "dept");
         this.pro_status = this.getDict.filter(item => item.type === 'pro_status');
       },
+      //新增框，关闭前回掉
       diaClose(done) {
         this.$refs['addpro'].resetFields();
         done();

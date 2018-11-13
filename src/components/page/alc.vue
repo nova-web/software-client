@@ -21,7 +21,7 @@
           </el-form-item>
 
           <el-form-item label="权限名称：" prop="name">
-            <el-input style="height: 32px;" clearable v-model="alcSearch.name" placeholder="输入权限名称查询" @change="search" />
+            <el-input style="height: 32px;" clearable v-model.trim="alcSearch.name" placeholder="输入权限名称查询" @change="search" />
           </el-form-item>
 
           <el-form-item>

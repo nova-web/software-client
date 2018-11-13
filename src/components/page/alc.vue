@@ -80,7 +80,7 @@
       </div>
     </div>
 
-    <el-dialog title="修改权限" :visible.sync="editVisible" width="30%" :before-close="editaclDiaClose">
+    <el-dialog title="修改权限" :visible.sync="editVisible" width="30%" :before-close="editaclDiaClose" :close-on-click-modal="false">
       <el-form ref="editacl" :rules="AlcRule" :model="editFunction" label-width="80px">
         <el-form-item label="权限名称" prop="name">
           <el-input v-model.trim="editFunction.name" maxlength="30"></el-input>
@@ -101,7 +101,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%" :before-close="addpeerDiaClose">
+    <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%" :before-close="addpeerDiaClose" :close-on-click-modal="false">
       <el-form ref="addpeer" :model="addParentObj" :rules="AlcRule" label-width="80px">
         <el-form-item label="权限名称" prop="name">
           <el-input v-model.trim="addParentObj.name"></el-input>
@@ -122,7 +122,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%" :before-close="addleaverDiaClose">
+    <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%" :before-close="addleaverDiaClose" :close-on-click-modal="false">
       <el-form ref="addleaver" :model="addLeaverObj" :rules="AlcRule" label-width="80px">
         <el-form-item label="权限名称" prop="name">
           <el-input v-model.trim="addLeaverObj.name"></el-input>

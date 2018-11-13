@@ -51,7 +51,7 @@
       <ve-pagination :cur_page="cur_page" :pageSize="pageSize" :count="count" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" @gofist="gofist" @goLast="goLast"></ve-pagination>
     </div>
     <!-- 授权对话框 -->
-    <el-dialog title="授权" :visible.sync="showAcls" width="30%">
+    <el-dialog title="授权" :visible.sync="showAcls" width="30%" :close-on-click-modal="false">
       <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true">
       </el-tree>
       <div slot="footer" class="dialog-footer">
@@ -60,7 +60,7 @@
       </div>
     </el-dialog>
     <!-- 新增对话框 -->
-    <el-dialog title="新增角色" :visible.sync="addVisible" width="30%">
+    <el-dialog title="新增角色" :visible.sync="addVisible" width="30%" :close-on-click-modal="false">
       <el-form :model="addRole" ref="addRole" :rules="RoleRule" label-width="100px" label-position="right">
         <div>
           <el-form-item label="角色名称:" prop="name">
@@ -77,7 +77,7 @@
       </div>
     </el-dialog>
     <!-- 编辑对话框 -->
-    <el-dialog title="修改角色" :visible.sync="editVisible" width="30%">
+    <el-dialog title="修改角色" :visible.sync="editVisible" width="30%" :close-on-click-modal="false">
       <el-form :model="editRole" ref="editRole" :rules="RoleRule" label-width="80px" label-position="left">
         <el-form-item label="角色名称" prop="name">
           <el-input v-model.trim="editRole.name" placeholder="请输入角色名" maxlength="30"></el-input>

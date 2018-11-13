@@ -72,7 +72,7 @@
       </el-table>
       <ve-pagination :cur_page="cur_page" :pageSize="pageSize" :count="count" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" @gofist="gofist" @goLast="goLast"></ve-pagination>
     </div>
-    <el-dialog title="新增版本" :visible.sync="addEditionModele" width="30%" :before-close="closeAdd">
+    <el-dialog title="新增版本" :visible.sync="addEditionModele" width="30%" :before-close="closeAdd" :close-on-click-modal="false">
       <div class="add-edition">
         <el-form ref="addEdition" :rules="editionRules" label-width="90px" :model="addEdition" class="demo-ruleForm">
           <el-form-item label="版本名称:" prop="version">
@@ -108,7 +108,7 @@
         <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改版本" :visible.sync="modifyModel" width="30%" :before-close="closeEdit">
+    <el-dialog title="修改版本" :visible.sync="modifyModel" width="30%" :before-close="closeEdit" :close-on-click-modal="false">
       <div class="add-edition">
         <el-form ref="changeEdition" :rules="editionRules" label-width="90px" :model="modifyEdition" class="demo-ruleForm">
           <el-form-item label="版本名称:" prop="version">
@@ -398,8 +398,8 @@
               formData.append(item, this.modifyEdition[item]);
             });
             axios({
-              method: 'post',
-              url: api.packagePreAdd.url,
+              method: 'put',
+              url: api.packagePreEdit.url + `/${this.idx}`,
               data: formData,
               headers: { 'token': this.getCommon.token },
               timeout: 1000000
@@ -614,10 +614,6 @@
   }
 </script>
 <style scoped lang="less">
-  .handle-box {
-    margin-bottom: 20px;
-  }
-
   .ent-inputs {
     width: 200px;
   }

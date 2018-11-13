@@ -138,10 +138,6 @@
     display: flex;
     justify-content: space-around;
   }
-  .handle-box {
-    margin-bottom: 20px;
-  }
-
   .handle-select {
     width: 120px;
   }

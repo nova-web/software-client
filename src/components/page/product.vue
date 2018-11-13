@@ -62,7 +62,8 @@
       <ve-pagination :cur_page="cur_page" :pageSize="pageSize" :count="count" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" @gofist="gofist" @goLast="goLast"></ve-pagination>
     </div>
     <!-- 编辑对话框 -->
-    <el-dialog title="编辑" :visible.sync="editProductModel" width="30%" :close-on-click-modal="false">
+    <el-dialog title="编辑" :visible.sync="editProductModel" width="30%" :before-close="editDia" :close-on-click-modal="false">
+
       <el-form :rules="ProRule" ref="editpro" :model="editProduct" label-width="90px">
         <el-form-item label="Model ID:" prop="modelId">
           <el-input v-model="editProduct.modelId"></el-input>

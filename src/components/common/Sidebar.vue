@@ -77,16 +77,16 @@
             code: "QXGL",
             subs: [
               {
-                index: 'Role',
-                title: '角色管理',
-                isShow: false,
-                code: 'JSGL'
-              },
-              {
                 index: 'user',
                 title: '用户管理',
                 isShow: false,
                 code: 'YHGL'
+              },
+              {
+                index: 'Role',
+                title: '角色管理',
+                isShow: false,
+                code: 'JSGL'
               },
               {
                 index: 'alc',

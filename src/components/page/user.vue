@@ -69,7 +69,7 @@
       <ve-pagination :cur_page="cur_page" :pageSize="pageSize" :count="count" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" @gofist="gofist" @goLast="goLast"></ve-pagination>
     </div>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%" :before-close="editDiaClose">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="30%" :before-close="editDiaClose" :close-on-click-modal="false">
       <el-form ref="editUser" :model="editUser" label-width="100px" :rules="UserRule" label-position="rigth">
         <!-- <el-form-item label="用户名称:" prop="username">
           <el-input v-model.trim="editUser.username"></el-input>
@@ -103,7 +103,7 @@
     </el-dialog>
 
     <!-- 新增用户 -->
-    <el-dialog title="新增用户" :visible.sync="addVisible" width="30%" :before-close="addDiaClose">
+    <el-dialog title="新增用户" :visible.sync="addVisible" width="30%" :before-close="addDiaClose" :close-on-click-modal="false">
       <el-form ref="addusers" :model="addUser" label-width="100px" :rules="UserRule" label-position="rigth" class="demo-ruleForm">
         <el-form-item label="用户名称:" prop="username">
           <el-input v-model.trim="addUser.username" maxlength="30" clearable></el-input>
@@ -450,10 +450,6 @@
 </script>
 
 <style scoped>
-  .handle-box {
-    margin-bottom: 20px;
-  }
-
   .handle-select {
     width: 120px;
   }

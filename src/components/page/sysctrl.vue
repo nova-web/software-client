@@ -129,7 +129,6 @@
       },
       // tableRowStatusName 根据有效无效修改 row 样式
       tableRowStatusName({ row, rowIndex }) {
-        console.log(row.service);
         if(row.service == '已关闭') {
           return 'invalid-row'
         } else {
@@ -188,9 +187,6 @@
     margin: auto;
     display: flex;
     justify-content: space-around;
-  }
-  .handle-box {
-    margin-bottom: 20px;
   }
 
   .handle-select {

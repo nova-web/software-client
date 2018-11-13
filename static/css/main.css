@@ -8,7 +8,7 @@ body,
 #app,
 .wrapper {
     width: 100%;
-    min-width: 1300px;
+    min-width: 1366px;
     height: 100%;
     overflow: auto;
 }
@@ -22,7 +22,7 @@ a {
 }
 
 .content-box {
-    min-width: 1050px;
+    min-width: 1301px;
     position: absolute;
     left: 250px;
     right: 0;
@@ -48,7 +48,6 @@ a {
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
-    min-width: 1400px;
 }
 
 .crumbs {

@@ -107,6 +107,14 @@
           {
             value: 7,
             label: '下架'
+          },
+          {
+            value: 8,
+            label: '置为有效'
+          },
+          {
+            value: 9,
+            label: '置为无效'
           }
         ],
         searchRules: {  // 搜索框规则
@@ -184,9 +192,6 @@
     margin: auto;
     display: flex;
     justify-content: space-around;
-  }
-  .handle-box {
-    margin-bottom: 20px;
   }
 
   .handle-select {

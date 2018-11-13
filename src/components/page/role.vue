@@ -144,12 +144,12 @@
             label: '全部'
           },
           {
-            value: 0,
-            label: '无效'
-          },
-          {
             value: 1,
             label: '有效'
+          },
+          {
+            value: 0,
+            label: '无效'
           }
         ],
         RoleRule: {
@@ -370,9 +370,6 @@
     margin: auto;
     display: flex;
     justify-content: space-around;
-  }
-  .handle-box {
-    margin-bottom: 20px;
   }
 
   .handle-select {

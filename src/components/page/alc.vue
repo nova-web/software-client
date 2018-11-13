@@ -4,7 +4,7 @@
     <div class="crumbs">
       <el-breadcrumb>
         <el-breadcrumb-item>权限管理</el-breadcrumb-item>
-        <el-breadcrumb-item>功能管理</el-breadcrumb-item>
+        <el-breadcrumb-item>权限管理</el-breadcrumb-item>
       </el-breadcrumb>
 
     </div>
@@ -20,8 +20,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="功能名称：" prop="name">
-            <el-input style="height: 32px;" clearable v-model.lazy.trim="alcSearch.name" placeholder="输入功能名称查询" @change="search" />
+          <el-form-item label="权限名称：" prop="name">
+            <el-input style="height: 32px;" clearable v-model.lazy.trim="alcSearch.name" placeholder="输入权限名称查询" @change="search" />
           </el-form-item>
 
           <el-form-item>
@@ -43,7 +43,7 @@
              </span>
             </template>
           </el-table-column>
-          <el-table-column label="功能名称">
+          <el-table-column label="权限名称">
             <template slot-scope="scope">
               <span v-if="scope.row._level > 0" v-for="space in scope.row._level" :key="space" class="ms-tree-margin" />
               <span>
@@ -80,9 +80,9 @@
       </div>
     </div>
 
-    <el-dialog title="修改功能" :visible.sync="editVisible" width="30%" :before-close="editaclDiaClose">
+    <el-dialog title="修改权限" :visible.sync="editVisible" width="30%" :before-close="editaclDiaClose">
       <el-form ref="editacl" :rules="AlcRule" :model="editFunction" label-width="80px">
-        <el-form-item label="功能名称" prop="name">
+        <el-form-item label="权限名称" prop="name">
           <el-input v-model.trim="editFunction.name" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="URL" prop="url">
@@ -103,7 +103,7 @@
 
     <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%" :before-close="addpeerDiaClose">
       <el-form ref="addpeer" :model="addParentObj" :rules="AlcRule" label-width="80px">
-        <el-form-item label="功能名称" prop="name">
+        <el-form-item label="权限名称" prop="name">
           <el-input v-model.trim="addParentObj.name"></el-input>
         </el-form-item>
         <el-form-item label="URL" prop="url">
@@ -124,7 +124,7 @@
 
     <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%" :before-close="addleaverDiaClose">
       <el-form ref="addleaver" :model="addLeaverObj" :rules="AlcRule" label-width="80px">
-        <el-form-item label="功能名称" prop="name">
+        <el-form-item label="权限名称" prop="name">
           <el-input v-model.trim="addLeaverObj.name"></el-input>
         </el-form-item>
         <el-form-item label="URL" prop="url">
@@ -179,7 +179,7 @@
         AlcRule: {  // 弹出框内容的验证规则 name url code remark
           name: [
             { required: true, validator: checkUsername, trigger: 'blur' },
-            { required: true, trigger: 'blur', message: '功能名称不能为空' }],
+            { required: true, trigger: 'blur', message: '权限名称不能为空' }],
           url: [{ required: false, message: 'URL不能为空', trigger: 'blur' }],
           code: [{ required: true, message: 'Code不能为空', trigger: 'blur' }],
           remark: [{ required: true, message: '描述不能为空', trigger: 'blur' }],

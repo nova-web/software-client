@@ -581,10 +581,6 @@
   }
 </script>
 <style scoped lang="less">
-  .handle-box {
-    margin-bottom: 20px;
-  }
-
   .ent-inputs {
     width: 200px;
   }

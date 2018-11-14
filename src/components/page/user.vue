@@ -402,6 +402,7 @@
       //搜索
       search() {
         this.getUsers();
+        this.gofist();
       },
       //置为有效
       handleEffective(row, index) {

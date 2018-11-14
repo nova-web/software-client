@@ -126,6 +126,7 @@
       //搜索
       search() {
         this.getProductLogs();
+        this.gofist();
       }
     }
   }

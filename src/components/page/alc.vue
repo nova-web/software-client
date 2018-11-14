@@ -284,6 +284,7 @@
         // }
         // this.tmp = [];
         this.initData();
+        this.gofist();
       },
       //树状数据
       createTree(arr, acls) {

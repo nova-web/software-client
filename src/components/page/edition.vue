@@ -609,6 +609,7 @@
       //搜索
       search() {
         this.getEdition();
+        this.gofist();
       }
     }
   }

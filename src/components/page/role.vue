@@ -341,6 +341,7 @@
       //搜索
       search() {
         this.getRoles();
+        this.gofist();
       },
       //分页
       handleCurrentChange(val) {

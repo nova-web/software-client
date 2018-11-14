@@ -609,6 +609,7 @@
       },
       search() {
         this.getEquipment();
+        this.gofist();
       }
     }
 

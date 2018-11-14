@@ -75,7 +75,7 @@
 
       },
       cancel() {
-        this.$refs['adduser'].clearValidate();
+        this.$refs['adduser'].resetField();
         this.$emit('cancel');
       }
     }

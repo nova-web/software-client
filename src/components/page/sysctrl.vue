@@ -176,6 +176,7 @@
       //搜索
       search() {
         this.getSyscontrol();
+        this.gofist();
       }
     }
   }

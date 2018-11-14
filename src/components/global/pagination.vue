@@ -9,7 +9,7 @@
           <i class="el-icon-d-arrow-left"></i>
         </button>
       </el-pagination>
-      <el-pagination background layout=" slot,jumper" :total="count" @current-change="handleCurrentChange">
+      <el-pagination background layout=" slot,jumper" :total="count" @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page">
         <button type="button" class="btn-next" @click="goLast">
           <i class="el-icon-d-arrow-right"></i>
         </button>

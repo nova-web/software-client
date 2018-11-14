@@ -65,9 +65,9 @@
     <el-dialog title="编辑" :visible.sync="editProductModel" width="30%" :before-close="editDia" :close-on-click-modal="false">
 
       <el-form :rules="ProRule" ref="editpro" :model="editProduct" label-width="90px">
-        <el-form-item label="Model ID:" prop="modelId">
+        <!-- <el-form-item label="Model ID:" prop="modelId">
           <el-input v-model="editProduct.modelId"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="产品名称:" prop="name">
           <el-input v-model="editProduct.name"></el-input>
         </el-form-item>
@@ -442,7 +442,7 @@
           dict[item.type][item.name] = item.code;
         });
         this.editProduct = {
-          modelId: row.modelId,
+          // modelId: row.modelId,
           name: row.name,
           model: row.model,
           type: dict.package[row.type],

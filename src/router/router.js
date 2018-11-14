@@ -20,13 +20,13 @@ const routes = [
                 path: '/product',
                 component: resolve => require(['../components/page/product.vue'], resolve),
                 meta: { title: '产品列表', keepAlive: false, code: 'CPLB' }
-            },
-            {
-                path: '/upload',
-                component: resolve => require(['../components/page/upload.vue'], resolve),
-                meta: { title: '下载', keepAlive: false, code: '' }
             }
         ]
+    },
+    {
+        path: '/upload',
+        component: resolve => require(['../components/page/upload.vue'], resolve),
+        meta: { title: '下载', keepAlive: false, code: '' }
     },
     {
         path: '/login',

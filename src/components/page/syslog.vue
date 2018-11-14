@@ -181,6 +181,7 @@
       //搜索
       search() {
         this.getLog();
+        this.gofist();
       }
     }
   }

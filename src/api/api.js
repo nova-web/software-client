@@ -54,7 +54,11 @@ let api = {
     getSyscontrol: { url: 'syscontrol', method: 'get' },
     setSyscontrolSwitch: { url: 'syscontrol/:id', method: 'put' }, // 系统控制开关
     //统计分析
-    getProductLogs: { url: 'product/logs', method: 'get' }
+    getProductLogs: { url: 'product/logs', method: 'get' },
+    //demo
+    productReport: { url: 'product/report', method: 'post' },
+    // package/newlist?modelId=model2
+    packageNewlist: { url: 'package/newlist', method: 'get' }
 };
 
 for (var k in api) {

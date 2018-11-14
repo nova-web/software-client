@@ -1,25 +1,53 @@
 <template>
   <div>
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
+    <!-- <div class="crumbs"> -->
+    <!-- <el-breadcrumb separator="/">
         <el-breadcrumb-item>
           <i class="el-icon-date"></i> 表单</el-breadcrumb-item>
         <el-breadcrumb-item>文件上传</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
+      </el-breadcrumb> -->
+    <!-- </div> -->
     <div class="container">
-      <div class="content-title">文件上传</div>
+      <div class="content-title">demo</div>
+      <div class="content-title">
+        <el-button @click="postDataModel = true">上报设备信息</el-button>
+        <el-input placeholder="输入modelID" v-model="modelId" @blur="initData"></el-input>
+      </div>
+      <el-table :data="tableData" height="531"></el-table>
+      <el-dialog title="新增版本" :visible.sync="postDataModel" width="30%" :before-close="editDia">
+        <el-form :model="postData" label-width="90px">
+          <el-form-item label="model Id:">
+            <el-input v-model="postData.modelId"></el-input>
+          </el-form-item>
+          <el-form-item label="设备ID:">
+            <el-input v-model="postData.deviceId"></el-input>
+          </el-form-item>
+          <el-form-item label="版本:">
+            <el-input v-model="postData.version"></el-input>
+          </el-form-item>
+          <el-form-item label="分辨率:">
+            <el-input v-model="postData.deviceInfo.screen"></el-input>
+          </el-form-item>
+          <el-form-item label="状态:">
+            <el-input v-model="postData.deviceStatus"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="surePost">确 定</el-button>
+          <el-button @click="cancelPost">取 消</el-button>
+        </div>
+      </el-dialog>
       <!-- <div class="plugins-tips">
         Element UI自带上传组件。 访问地址：
         <a href="http://element.eleme.io/#/zh-CN/component/upload" target="_blank">Element UI Upload</a>
       </div> -->
-      <el-upload class="upload-demo" :headers="header" :data="{'aaa': 'aaaaa'}" drag action="proxy/upload" :show-file-list="true" :on-progress='uploadIng'>
+      <!-- <el-upload class="upload-demo" :headers="header" :data="{'aaa': 'aaaaa'}" drag action="proxy/upload" :show-file-list="true" :on-progress='uploadIng'>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或
           <em>点击上传</em>
         </div>
         <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-      </el-upload>
+      </el-upload> -->
       <!-- <div class="content-title">支持裁剪</div> -->
       <!-- <div class="plugins-tips">
         vue-cropperjs：一个封装了 cropperjs 的 Vue 组件。 访问地址：
@@ -59,7 +87,19 @@
         imgSrc: '',
         cropImg: '',
         dialogVisible: false,
-        header: {}
+        header: {},
+        tableData: [],
+        postDataModel: false,
+        postData: {
+          modelId: null,
+          deviceId: null,
+          version: null,
+          deviceInfo: {
+            screen: null
+          },
+          deviceStatus: null
+        },
+        modelId: 'model2'
       }
     },
     created() {
@@ -73,6 +113,52 @@
     },
 
     methods: {
+      ...mapActions(['ajax']),
+      initData() {
+        this.ajax({
+          name: 'packageNewlist',
+          data: {
+            modelId: this.modelId
+          }
+        }).then(res => {
+          console.log(res);
+          this.tableData = res.data;
+        })
+      },
+      surePost() {
+        this.ajax({
+          name: 'productReport',
+          data: this.postData
+        }).then(res => {
+          if(res.data.errorCode === 1) {
+            this.postDataModel = false;
+          }
+        })
+      },
+      cancelPost() {
+        this.postDataModel = false;
+        this.postData = {
+          modelId: null,
+          deviceId: null,
+          version: null,
+          deviceInfo: {
+            screen: null
+          },
+          deviceStatus: null
+        };
+      },
+      editDia(done) {
+        this.postData = {
+          modelId: null,
+          deviceId: null,
+          version: null,
+          deviceInfo: {
+            screen: null
+          },
+          deviceStatus: null
+        };
+        done();
+      },
       uploadIng(event, file, filelists) {
         console.log(event);
         console.log(file);

@@ -71,7 +71,6 @@
           name: 'getUserAclCodes'
         }).then(res => {
           this.setAlcs(res);
-          // window.location.href = 'http://172.16.6.247:8080/'
 
         })
         await this.ajax({
@@ -80,6 +79,7 @@
           this.setDict(res);
         })
         window.location.reload();
+        // window.location.href = 'http://172.16.6.247:8080/#/product'
         this.$router.push({ name: 'product' });
       },
       submitForm(formName) {

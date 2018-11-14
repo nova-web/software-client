@@ -77,7 +77,7 @@ let routerArr = [
         name: 'edition',
         path: '/edition',
         component: resolve => require(['../components/page/edition.vue'], resolve),
-        meta: { title: '版本管理', keepAlive: false, code: 'BBLB' }
+        meta: { title: '版本列表', keepAlive: false, code: 'BBLB' }
     },
     // nie
     {

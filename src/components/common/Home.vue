@@ -1,15 +1,15 @@
 <template>
   <div class="wrapper">
     <v-head></v-head>
-    <v-sidebar ref="sideBar"></v-sidebar>
-    <div class="content-box" :class="{'content-collapse':collapse}">
-      <v-tags></v-tags>
-      <div class="content">
-        <transition name="move" mode="out-in">
-
-          <router-view></router-view>
-
-        </transition>
+    <div class="content-wap">
+      <v-sidebar ref="sideBar"></v-sidebar>
+      <div class="content-box" :class="{'content-collapse':collapse}">
+        <v-tags></v-tags>
+        <div class="content">
+          <transition name="move" mode="out-in">
+            <router-view></router-view>
+          </transition>
+        </div>
       </div>
     </div>
   </div>

@@ -175,7 +175,7 @@
           ],
           email: [
             { message: '请输入邮箱地址', trigger: 'blur' },
-            { type: 'email', message: '请按正确的邮箱格式输入', trigger: ['blur', 'change'] }
+            { type: 'email', message: '请按正确的邮箱格式输入', trigger: 'blur' }
           ]
         },
         newAddUser: {

@@ -21,8 +21,11 @@ a {
     text-decoration: none;
 }
 
+.content-wap {
+    display: flex;
+}
+
 .content-box {
-    min-width: 1301px;
     position: absolute;
     left: 250px;
     right: 0;

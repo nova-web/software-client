@@ -169,7 +169,12 @@
           name: '',
           version: ''
         },
-        addEdition: {}, //新增版本
+        addEdition: {
+          version: null,
+          stage: [],
+          versionLog: null,
+          productId: []
+        }, //新增版本
         pro_status: [], // 版本状态
         cur_page: 1,
         count: 0,
@@ -393,8 +398,8 @@
               formData.append(item, this.modifyEdition[item]);
             });
             axios({
-              method: 'post',
-              url: api.packagePreAdd.url,
+              method: 'put',
+              url: api.packagePreEdit.url + `/${this.idx}`,
               data: formData,
               headers: { 'token': this.getCommon.token },
               timeout: 1000000

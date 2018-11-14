@@ -47,6 +47,7 @@ let api = {
     packageWithdraw: { url: 'package/withdraw', method: 'post' }, //撤回
     packageObtained: { url: 'package/obtained', method: 'post' }, //下架
     packagePreAdd: { url: 'package/preAdd', method: 'post' }, //上传文件前验证
+    packagePreEdit: { url: 'package/preUpdate', method: 'post' },
     //操作审计
     getLogs: { url: 'logs', method: 'get' }, //操作审计列表
     // 系统控制

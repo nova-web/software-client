@@ -192,7 +192,17 @@
         editProductModel: false,
         editProduct: {}, //修改产品
         addProductModel: false,
-        addProduct: {},
+        addProduct: {
+          modelId: null,
+          name: null,
+          model: null,
+          type: [],
+          stage: [],
+          fitPro: [],
+          area: [],
+          dept: [],
+          projectManager: null,
+        },
         searchRules: {  // 搜索框规则
           name: [
             { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' }
@@ -307,6 +317,7 @@
         this.dept = this.getDict.filter(item => item.type === "dept");
         this.pro_status = this.getDict.filter(item => item.type === 'pro_status');
       },
+      //新增框，关闭前回掉
       diaClose(done) {
         this.$refs['addpro'].resetFields();
         done();

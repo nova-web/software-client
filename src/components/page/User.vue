@@ -39,11 +39,11 @@
         </el-form>
       </div>
       <el-table :data="UserList" stripe style="width: 100%;" ref="multipleTable" height="550" fit :row-class-name="tableRowStatusName">
-        <el-table-column prop="index" label="序号" width="80">
+        <el-table-column prop="index" label="序号" width="60">
         </el-table-column>
-        <el-table-column prop="username" label="用户名称" width="120">
+        <el-table-column prop="username" label="用户名称">
         </el-table-column>
-        <el-table-column prop="Status" label="状态" width="80">
+        <el-table-column prop="Status" label="状态" width="60">
         </el-table-column>
         <el-table-column prop="roleName" label="角色">
         </el-table-column>
@@ -53,11 +53,11 @@
         </el-table-column>
         <el-table-column prop="phone" label="电话">
         </el-table-column>
-        <el-table-column prop="email" label="邮箱" width="200">
+        <el-table-column prop="email" label="邮箱">
         </el-table-column>
         <el-table-column prop="updatedAt" label="更新时间">
         </el-table-column>
-        <el-table-column label="操作" width="280">
+        <el-table-column label="操作" width="150">
           <template slot-scope="scope">
             <el-button v-if="getAlcsObj.YHXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
             <el-button v-if="scope.row.isButtonShow && getAlcsObj.YHSZZT" type="text" @click="handleEffective(scope.row, scope.$index)" size="small">置为有效</el-button>

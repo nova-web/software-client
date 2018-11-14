@@ -27,6 +27,7 @@ a {
 
 .content-box {
     position: absolute;
+    min-width: 1115px;
     left: 250px;
     right: 0;
     top: 70px;

@@ -11,6 +11,7 @@ import 'babel-polyfill';
 import Blob from './utils/Blob.js';
 import Export2Excel from './utils/Export2Excel.js';
 import components from './components/global/index.js'; // 加载公共组件
+import './assets/font_d1a7qi6i25d/iconfont.css';
 Object.keys(components).forEach(key => {
     var name = key.replace(/(\w)/, v => v.toUpperCase()); //首字母大写
     Vue.component(`ve${name}`, components[key]);

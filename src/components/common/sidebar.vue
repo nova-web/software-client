@@ -11,8 +11,9 @@
         <template v-if="item.subs">
           <el-submenu :index="item.index" :key="item.index" v-show="item.isShow">
             <template slot="title">
-              <img class="checkImg" :src="item.preicon" alt="" v-if="item.isClose">
-              <img class="checkImg" :src="item.noicon" alt="" v-else>
+              <!-- <img class="checkImg" :src="item.preicon" alt="" v-if="item.isClose"> -->
+              <!-- <img class="checkImg" :src="item.noicon" alt="" v-else> -->
+              <img class="checkImg" :src="item.noicon" alt="">
               <span slot="title">{{ item.title }}</span>
             </template>
             <el-menu-item class="rel" :class="{'is-active':subItem.index === path}" :style="{color: subItem.index === path ? 'rgb(67, 163, 251)' : '#fff'}" v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index" v-show="subItem.isShow">
@@ -266,7 +267,7 @@
   .el-submenu.is-opened {
     .el-submenu__title {
       > span {
-        color: #43a3fb !important;
+        // color: #43a3fb !important;
       }
     }
   }

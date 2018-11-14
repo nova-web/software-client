@@ -11,9 +11,23 @@
       <div class="content-title">demo</div>
       <div class="content-title">
         <el-button @click="postDataModel = true">上报设备信息</el-button>
-        <el-input placeholder="输入modelID" v-model="modelId" @blur="initData"></el-input>
+        <div class="search-bosx">
+          <el-input clearable class="inputs" placeholder="输入modelID" v-model="modelId" @blur="initData"></el-input>
+          <el-button type="primary">获取列表</el-button>
+        </div>
+
       </div>
-      <el-table :data="tableData" height="531"></el-table>
+      <el-table :data="tableData" height="531">
+        <el-table-column label="版本号" width="240px">
+          <template slot-scope="scope">
+            <el-button size="small" type="text">
+              <a class="downloadText" :href="scope.row.url">
+                {{scope.row.version}}
+              </a>
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
       <el-dialog title="新增版本" :visible.sync="postDataModel" width="30%" :before-close="editDia">
         <el-form :model="postData" label-width="90px">
           <el-form-item label="model Id:">
@@ -76,7 +90,6 @@
   import bus from '../common/bus';
   import { mapActions, mapMutations, mapGetters } from 'vuex';
   export default {
-    name: 'upload',
     components: {
       VueCropper
     },
@@ -99,14 +112,11 @@
           },
           deviceStatus: null
         },
-        modelId: 'model2'
+        modelId: 'v1'
       }
     },
     created() {
       this.cropImg = this.defaultSrc;
-      this.header = {
-        token: this.getCommon.token
-      }
     },
     computed: {
       ...mapGetters(['getCommon'])
@@ -121,8 +131,8 @@
             modelId: this.modelId
           }
         }).then(res => {
-          console.log(res);
-          this.tableData = res.data;
+          this.tableData = res;
+          console.log(this.tableData);
         })
       },
       surePost() {
@@ -202,7 +212,18 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+  .search-bosx {
+    display: flex;
+    align-items: center;
+    .inputs {
+      width: 400px;
+    }
+    .el-button {
+      height: 32px;
+      margin-left: 40px;
+    }
+  }
   .content-title {
     font-weight: 400;
     line-height: 50px;

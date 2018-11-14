@@ -8,14 +8,24 @@
       </el-breadcrumb> -->
     <!-- </div> -->
     <div class="container">
-      <div class="content-title">demo</div>
+      <div class="content-title">上报设备信息</div>
       <div class="content-title">
         <el-button @click="postDataModel = true">上报设备信息</el-button>
-        <div class="search-bosx">
-          <el-input clearable class="inputs" placeholder="输入modelID" v-model="modelId" @blur="initData"></el-input>
-          <el-button type="primary">获取列表</el-button>
-        </div>
 
+      </div>
+      <div class="content-title">
+        升级固件包
+      </div>
+      <div class="search-bosx">
+        <div>
+          <span>Model Id: &nbsp;</span>
+          <el-input clearable class="inputs" placeholder="输入modelID" v-model="modelId" @blur="initData"></el-input>
+        </div>
+        <div>
+          <span>版本号: &nbsp;</span>
+          <el-input clearable class="inputs" placeholder="输入版本号" v-model="version" @blur="initData"></el-input>
+        </div>
+        <el-button type="primary">获取列表</el-button>
       </div>
       <el-table :data="tableData" height="531">
         <el-table-column label="版本号" width="240px">
@@ -28,7 +38,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-dialog title="新增版本" :visible.sync="postDataModel" width="30%" :before-close="editDia">
+      <el-dialog title="上报设备信息" :visible.sync="postDataModel" width="30%" :before-close="editDia">
         <el-form :model="postData" label-width="90px">
           <el-form-item label="model Id:">
             <el-input v-model="postData.modelId"></el-input>
@@ -112,7 +122,8 @@
           },
           deviceStatus: null
         },
-        modelId: 'v1'
+        modelId: '',
+        version: ''
       }
     },
     created() {
@@ -128,11 +139,11 @@
         this.ajax({
           name: 'packageNewlist',
           data: {
-            modelId: this.modelId
+            modelId: this.modelId,
+            version: this.version
           }
         }).then(res => {
           this.tableData = res;
-          console.log(this.tableData);
         })
       },
       surePost() {
@@ -140,9 +151,8 @@
           name: 'productReport',
           data: this.postData
         }).then(res => {
-          if(res.data.errorCode === 1) {
-            this.postDataModel = false;
-          }
+          this.postDataModel = false;
+
         })
       },
       cancelPost() {
@@ -214,14 +224,21 @@
 
 <style scoped lang="less">
   .search-bosx {
-    display: flex;
-    align-items: center;
+    > div {
+      margin-top: 10px;
+    }
+    span {
+      display: inline-block;
+      width: 100px;
+    }
     .inputs {
-      width: 400px;
+      width: 150px;
     }
     .el-button {
       height: 32px;
-      margin-left: 40px;
+      margin-left: 173px;
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
   }
   .content-title {

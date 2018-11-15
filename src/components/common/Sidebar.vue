@@ -264,11 +264,11 @@
   .checkImg {
     margin-right: 10px;
   }
-  .el-submenu.is-opened {
-    .el-submenu__title {
-      > span {
-        // color: #43a3fb !important;
-      }
-    }
-  }
+  // .el-submenu.is-opened {
+  //   .el-submenu__title {
+  //     > span {
+  // color: #43a3fb !important;
+  //     }
+  //   }
+  // }
 </style>

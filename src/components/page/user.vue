@@ -19,7 +19,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="角色：">
-            <el-select class="el-select-width" v-model.trim="userSearch.roleId" clearable @change="search">
+            <el-select class="el-select-width" v-model="userSearch.roleId" clearable @change="search">
               <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
@@ -75,13 +75,13 @@
           <el-input v-model.trim="editUser.username"></el-input>
         </el-form-item> -->
         <el-form-item label="真实姓名:" prop="name">
-          <el-input v-model.trim="editUser.name"></el-input>
+          <el-input v-model="editUser.name"></el-input>
         </el-form-item>
         <el-form-item label="密码:">
-          <el-input v-model.trim="editUser.password"></el-input>
+          <el-input v-model="editUser.password"></el-input>
         </el-form-item>
         <el-form-item label="工号:" prop="code">
-          <el-input v-model.trim="editUser.code" maxlength="30" clearable></el-input>
+          <el-input v-model="editUser.code" maxlength="30" clearable></el-input>
         </el-form-item>
         <el-form-item label="用户角色:" prop="roles">
           <el-select v-model="editUser.roles" multiple collapse-tags>
@@ -161,10 +161,10 @@
         },
         UserRule: {
           username: [
-            { validator: checkUsername, trigger: 'change' },
+            { validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '用户名不能为空' }],
           name: [
-            { required: true, validator: checkUsername, trigger: 'blur' },
+            { validator: checkUsername, trigger: 'blur' },
             { required: true, message: '真实姓名不能为空', trigger: 'blur' }],
           code: [{ validator: checkUsername, trigger: 'blur' }],
           password: [

@@ -211,11 +211,11 @@
         },
         ProRule: {
           modelId: [
-            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' },
+            { validator: checkFolder, message: '不可输入特殊字符', trigger: 'blur' },
             { required: true, message: 'Model ID不能为空', trigger: 'blur' }
           ],
           name: [
-            { validator: checkFolder, message: '不可输入特殊字符', trigger: 'blur' },
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' },
             { required: true, trigger: 'blur', message: '产品名称不能为空' }],
           model: [
             { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' },

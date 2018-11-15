@@ -264,7 +264,7 @@
   // .el-submenu.is-opened {
   //   .el-submenu__title {
   //     > span {
-  // color: #43a3fb !important;
+  //       color: #43a3fb !important;
   //     }
   //   }
   // }

@@ -173,7 +173,7 @@
         ],
         searchRules: {  // 搜索框规则
           name: [
-            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' }
           ]
         },
         AlcRule: {  // 弹出框内容的验证规则 name url code remark

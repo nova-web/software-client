@@ -119,13 +119,13 @@
         ],
         searchRules: {  // 搜索框规则
           target: [
-            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' }
           ],
           operator: [
-            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' }
           ],
           operateContent: [
-            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' }
           ]
         },
       };

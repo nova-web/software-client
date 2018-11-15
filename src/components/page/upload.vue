@@ -32,20 +32,21 @@
         <el-button type="primary">获取列表</el-button>
       </div>
       <el-table :data="tableData" height="531">
+
+        <el-table-column prop="version" label="版本号"></el-table-column>
+        <el-table-column prop="publishStatus" label="状态"></el-table-column>
+        <el-table-column prop="versionType" label="版本类型"></el-table-column>
+        <el-table-column prop="log" label="日志"></el-table-column>
+        <el-table-column prop="createdAt" label="创建时间"></el-table-column>
         <el-table-column label="版本号" width="240px">
           <template slot-scope="scope">
             <el-button size="small" type="text">
               <a class="downloadText" :href="scope.row.url">
-                {{scope.row.version}}
+                更新
               </a>
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="version" label="版本名称"></el-table-column>
-        <el-table-column prop="publishStatus" label="状态"></el-table-column>
-        <el-table-column prop="versionType" label="版本类型"></el-table-column>
-        <el-table-column prop="log" label="日志"></el-table-column>
-        <el-table-column prop="createdAt" label="更新时间"></el-table-column>
       </el-table>
       <el-dialog title="上报设备信息" :visible.sync="postDataModel" width="30%" :before-close="editDia">
         <el-form :model="postData" label-width="90px">

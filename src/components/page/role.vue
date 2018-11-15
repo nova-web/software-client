@@ -19,7 +19,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="角色名称：" prop="username">
+          <el-form-item label="角色名称：" prop="name">
             <el-input class="el-input-width" v-model="roleSearch.name" @change="search" placeholder="输入角色名称查询" clearable></el-input>
           </el-form-item>
           <el-form-item>
@@ -114,6 +114,7 @@
         },
         role: {
           name: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' },
             { required: true, message: '角色名称不可为空' }
           ],
           remark: [
@@ -127,8 +128,8 @@
         idx: -1,
         delIndex: Number,
         searchRules: {  // 搜索框规则
-          username: [
-            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          name: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' }
           ]
         },
         //角色搜索
@@ -153,7 +154,7 @@
         ],
         RoleRule: {
           name: [
-            { required: true, validator: checkUsername, trigger: 'blur' },
+            { validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '角色名称不能为空' }],
           remark: [
             { required: true, message: '描述不能为空', trigger: 'blur' }],

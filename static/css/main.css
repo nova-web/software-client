@@ -23,6 +23,7 @@ a {
 
 .content-wap {
     display: flex;
+    width: 100%;
 }
 
 .content-box {

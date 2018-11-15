@@ -2,7 +2,8 @@
   <div class="header">
     <!-- 折叠按钮 -->
     <div class="collapse" @click="collapseChage">
-      <img src="../../assets/header/shousuo.png" alt="">
+      <img v-if="!collapse" src="../../assets/header/shou.png" alt="">
+      <img v-else src="../../assets/header/zhan.png" alt="">
     </div>
     <div class="collapse-b">
       <img src="../../assets/header/icon_logo.png" alt="">
@@ -121,7 +122,10 @@
   .collapse {
     float: left;
     cursor: pointer;
-    line-height: 70px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-left: 22px;
   }
   .collapse-b {
     float: left;

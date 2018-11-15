@@ -24,16 +24,13 @@ a {
 .content-wap {
     display: flex;
     width: 100%;
+    overflow: hidden;
+    height: calc(100% - 70px);
 }
 
 .content-box {
-    position: absolute;
-    min-width: 1115px;
-    left: 250px;
-    right: 0;
-    top: 70px;
-    bottom: 0;
-    overflow-y: scroll;
+    flex: auto;
+    overflow-y: auto;
     -webkit-transition: left 0.3s ease-in-out;
     transition: left 0.3s ease-in-out;
     background: #f0f0f0;
@@ -44,9 +41,9 @@ a {
     padding: 30px;
 }
 
-.content-collapse {
+/* .content-collapse {
     left: 65px;
-}
+} */
 
 .container {
     padding: 30px 30px 20px 30px;

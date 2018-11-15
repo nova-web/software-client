@@ -5,9 +5,7 @@
       <img v-if="!collapse" src="../../assets/header/shou.png" alt="">
       <img v-else src="../../assets/header/zhan.png" alt="">
     </div>
-    <div class="collapse-b">
-      <img src="../../assets/header/icon_logo.png" alt="">
-    </div>
+    <div class="collapse-b"><img src="../../assets/header/icon_logo.png" alt=""></div>
     <div class="logo">后台管理系统</div>
     <div class="header-right">
       <div class="header-user-con">
@@ -125,12 +123,19 @@
     display: flex;
     align-items: center;
     height: 100%;
-    padding-left: 22px;
+    padding-left: 20px;
   }
   .collapse-b {
     float: left;
     padding-right: 21px;
+    box-sizing: border-box;
+
     padding-top: 2px;
+    height: 70px;
+    img {
+      display: block;
+      height: 100%;
+    }
   }
   .header .logo {
     float: left;

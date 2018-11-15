@@ -37,7 +37,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="sylogData" stripe style="width: 100%" height="568" fit :row-class-name="tableRowStatusName">
+      <el-table :data="sylogData" stripe style="width: 100%" height="531" fit :row-class-name="tableRowStatusName">
         <el-table-column prop="num" label="序号" width="60px">
         </el-table-column>
         <el-table-column prop="target" label="操作对象" width="280px">

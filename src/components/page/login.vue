@@ -18,7 +18,7 @@
               <el-input v-model="ruleForm.username" placeholder="username"></el-input>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+              <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')" style="margin-top: 5px;"></el-input>
             </el-form-item>
             <div class="login-btn">
               <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
@@ -176,5 +176,7 @@
   .login-btn button {
     width: 100%;
     height: 36px;
+    font-size: 16px;
+    margin-top: 10px;
   }
 </style>

@@ -37,19 +37,19 @@
         <el-table-column width="60px" prop="num" label="序号"></el-table-column>
         <el-table-column prop="modelId" label="model Id">
         </el-table-column>
-        <el-table-column label="产品名称">
+        <el-table-column width="120" label="产品名称">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="handleselect(scope.row, scope.$index)">{{scope.row.name}}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="model" label="产品型号"></el-table-column>
-        <el-table-column prop="type" label="产品类型"></el-table-column>
+        <el-table-column width="70" prop="type" label="产品类型"></el-table-column>
         <el-table-column prop="version" label="最新版本"></el-table-column>
-        <el-table-column prop="publishStateName" label="状态"></el-table-column>
+        <el-table-column width="60" prop="publishStateName" label="状态"></el-table-column>
         <el-table-column prop="stage" label="产品阶段"></el-table-column>
-        <el-table-column prop="area" label="所属业务区域"></el-table-column>
-        <el-table-column prop="dept" label="所属产品线"></el-table-column>
-        <el-table-column width="160" prop="updatedAt" label="更新时间"></el-table-column>
+        <el-table-column width="95" prop="area" label="所属业务区域"></el-table-column>
+        <el-table-column width="85" prop="dept" label="所属产品线"></el-table-column>
+        <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
         <el-table-column width="200px" label="操作">
           <template slot-scope="scope">
             <el-button size="small" type="text" @click="handleEdit(scope.row, scope.$index)" v-if="(scope.row.publishStatus === 'pro_status_01' || scope.row.publishStatus === 'pro_status_04') && getAlcsObj.CPXG">修改</el-button>

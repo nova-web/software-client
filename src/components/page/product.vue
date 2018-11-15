@@ -35,13 +35,12 @@
       </div>
       <el-table :data="tableData" stripe height="531" style="width: 100%">
         <el-table-column width="60px" prop="num" label="序号"></el-table-column>
-        <el-table-column prop="modelId" label="model Id">
-        </el-table-column>
         <el-table-column label="产品名称">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="handleselect(scope.row, scope.$index)">{{scope.row.name}}</el-button>
           </template>
         </el-table-column>
+        <el-table-column prop="modelId" label="model Id"></el-table-column>
         <el-table-column prop="model" label="产品型号"></el-table-column>
         <el-table-column prop="type" label="产品类型"></el-table-column>
         <el-table-column prop="version" label="最新版本"></el-table-column>

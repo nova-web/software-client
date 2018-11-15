@@ -188,13 +188,17 @@
         addfile: null, //文件
         file: null,
         searchRules: {
-          name: [
+          productName: [
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
+          ],
+          version: [
             { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
           ]
         },
         editionRules: {
           version: [
-            { required: true, message: '版本名称不可为空', trigger: 'blur' }
+            { required: true, message: '版本名称不可为空', trigger: 'blur' },
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' }
           ],
           stage: [
             { required: true, message: '版本类型不可为空', trigger: 'blur' }

@@ -211,7 +211,7 @@
         },
         ProRule: {
           modelId: [
-            { required: true, validator: checkFolder, trigger: 'blur' },
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'change' },
             { required: true, message: 'Model ID不能为空', trigger: 'blur' }
           ],
           name: [

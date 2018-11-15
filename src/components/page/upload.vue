@@ -25,6 +25,10 @@
           <span>版本号: &nbsp;</span>
           <el-input clearable class="inputs" placeholder="输入版本号" v-model="version" @blur="initData"></el-input>
         </div>
+        <div>
+          <span>版本数量: &nbsp;</span>
+          <el-input clearable class="inputs" placeholder="输入获取的版本数量" v-model=" limit" @blur="initData"></el-input>
+        </div>
         <el-button type="primary">获取列表</el-button>
       </div>
       <el-table :data="tableData" height="531">
@@ -37,6 +41,11 @@
             </el-button>
           </template>
         </el-table-column>
+        <el-table-column prop="version" label="版本名称"></el-table-column>
+        <el-table-column prop="publishStatus" label="状态"></el-table-column>
+        <el-table-column prop="versionType" label="版本类型"></el-table-column>
+        <el-table-column prop="log" label="日志"></el-table-column>
+        <el-table-column prop="createdAt" label="更新时间"></el-table-column>
       </el-table>
       <el-dialog title="上报设备信息" :visible.sync="postDataModel" width="30%" :before-close="editDia">
         <el-form :model="postData" label-width="90px">
@@ -65,7 +74,7 @@
         Element UI自带上传组件。 访问地址：
         <a href="http://element.eleme.io/#/zh-CN/component/upload" target="_blank">Element UI Upload</a>
       </div> -->
-      <!-- <el-upload class="upload-demo" :headers="header" :data="{'aaa': 'aaaaa'}" drag action="proxy/upload" :show-file-list="true" :on-progress='uploadIng'>
+      <!-- <el-upload class="upload-demo" :headers="header" :data="{ 'aaa': 'aaaaa'}" drag action="proxy/upload" :show-file-list="true" :on-progress='uploadIng'>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或
           <em>点击上传</em>
@@ -123,7 +132,8 @@
           deviceStatus: null
         },
         modelId: '',
-        version: ''
+        version: '',
+        limit: ''
       }
     },
     created() {
@@ -140,7 +150,8 @@
           name: 'packageNewlist',
           data: {
             modelId: this.modelId,
-            version: this.version
+            version: this.version,
+            limit: this.limit
           }
         }).then(res => {
           this.tableData = res;

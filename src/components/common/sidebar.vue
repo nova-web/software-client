@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <el-menu class="sidebar-el-menu" @close="close" @open="open" @select="select" :default-active="onRoutes" :collapse="collapse" background-color="#2f2f38" text-color="#fff" active-text-color="#43a3fb" :router="true">
+    <el-menu class="sidebar-el-menu" unique-opened @close="close" @open="open" @select="select" :default-active="onRoutes" :collapse="collapse" background-color="#2f2f38" text-color="#fff" active-text-color="#43a3fb" :router="true">
       <!-- <template>
         <el-menu-item index="index">
           <i class="el-icon-tickets"></i>
@@ -267,7 +267,7 @@
   // .el-submenu.is-opened {
   //   .el-submenu__title {
   //     > span {
-  // color: #43a3fb !important;
+  //       color: #43a3fb !important;
   //     }
   //   }
   // }

@@ -161,7 +161,7 @@
         },
         UserRule: {
           username: [
-            { required: true, validator: checkUsername, trigger: 'blur' },
+            { validator: checkUsername, trigger: 'change' },
             { required: true, trigger: 'blur', message: '用户名不能为空' }],
           name: [
             { required: true, validator: checkUsername, trigger: 'blur' },

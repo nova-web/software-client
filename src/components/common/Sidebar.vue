@@ -226,7 +226,6 @@
 <style scoped lang="less">
   .sidebar {
     overflow-y: scroll;
-    flex-shrink: 0;
     .sidebar-el-menu {
       .el-menu-item:active {
         background: rgba(0, 0, 0, 0.6);
@@ -249,7 +248,7 @@
   }
   .rel {
     position: relative;
-    text-indent: 40px;
+    padding-left: 78px !important;
     .imgs {
       height: 100%;
       position: absolute;
@@ -259,7 +258,6 @@
   }
   .checkImg {
     margin-right: 10px;
-    width: 25px;
   }
   // .el-submenu.is-opened {
   //   .el-submenu__title {

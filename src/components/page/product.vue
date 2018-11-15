@@ -211,14 +211,14 @@
         },
         ProRule: {
           modelId: [
-            { required: true, validator: checkFolder, trigger: 'blur' },
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' },
             { required: true, message: 'Model ID不能为空', trigger: 'blur' }
           ],
           name: [
-            { required: true, validator: checkUsername, trigger: 'blur' },
+            { validator: checkFolder, message: '不可输入特殊字符', trigger: 'blur' },
             { required: true, trigger: 'blur', message: '产品名称不能为空' }],
           model: [
-            { required: true, validator: checkUsername, trigger: 'blur' },
+            { validator: checkUsername, message: '不可输入特殊字符', trigger: 'blur' },
             { required: true, trigger: 'blur', message: '产品型号不能为空' }],
           type: [{ required: true, message: '请选择产品类型', trigger: 'blur' }],
           stage: [{ required: true, message: '请选择产品阶段', trigger: 'blur' }],
@@ -226,7 +226,7 @@
           area: [{ required: true, message: '请选择业务区域', trigger: 'blur' }],
           dept: [{ required: true, message: '请选择所属产品线', trigger: 'blur' }],
           projectManager: [
-            { required: true, validator: checkUsername, trigger: 'blur' },
+            { validator: checkUsername, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '请输入产品项目经理' }]
         },
         cancelvisible: {

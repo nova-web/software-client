@@ -21,7 +21,7 @@
           </el-form-item>
 
           <el-form-item label="权限名称：" prop="name">
-            <el-input style="height: 32px;" clearable v-model.trim="alcSearch.name" placeholder="输入权限名称查询" @change="search" />
+            <el-input style="height: 32px;width: 105px" clearable v-model.trim="alcSearch.name" placeholder="输入权限名称查询" @change="search" />
           </el-form-item>
 
           <el-form-item>
@@ -163,12 +163,12 @@
         indexArr: [],
         status: [
           {
-            value: '0',
-            label: '无效'
-          },
-          {
             value: '1',
             label: '有效'
+          },
+          {
+            value: '0',
+            label: '无效'
           }
         ],
         searchRules: {  // 搜索框规则

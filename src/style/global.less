@@ -17,14 +17,14 @@
 .el-input-width {
     width: 160px;
 }
-@media screen and (max-width: 1366px) {
-    // .content {
-    //     padding: 30px 2px !important;
-    // }
-    // .container {
-    //     width: 1265px;
-    //     padding: 30px 4px !important;
-    // }
+
+@media screen and (max-width: 1919px) {
+    .sidebar-el-menu:not(.el-menu--collapse) {
+        width: 225px !important;
+    }
+    .el-form-item__label {
+        padding: 0 6px 0 0;
+    }
     .search-box {
         width: 100%;
         display: flex;
@@ -37,7 +37,7 @@
         width: 80px;
     }
     .el-input-width {
-        width: 105px !important;
+        width: 95px !important;
     }
     .el-date-editor.el-input,
     .el-date-editor.el-input__inner {
@@ -48,5 +48,17 @@
     }
     .el-input--suffix .el-input__inner {
         padding-right: 0;
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    .container {
+        padding: 10px !important;
+    }
+    .sidebar-el-menu:not(.el-menu--collapse) {
+        width: 200px !important;
+    }
+    .el-form-item__label {
+        padding: 0 0px 0 0;
     }
 }

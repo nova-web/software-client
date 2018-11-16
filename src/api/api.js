@@ -9,6 +9,7 @@ let api = {
     deleteUser: { url: 'users/:id', method: 'delete' },
     addUser: { url: 'users', method: 'post' },
     editUser: { url: 'users/:id', method: 'put' },
+    getUserRoles: { url: 'getUserRoles', method: 'get' },
     // 角色
     getRoles: { url: 'roles' },
     deleteRole: { url: 'roles/:id', method: 'delete' },

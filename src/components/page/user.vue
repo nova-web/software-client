@@ -13,14 +13,14 @@
         </div>
         <el-form ref="search" :model="userSearch" class="demo-form-inline" :inline="true">
           <el-form-item label="状态：">
-            <el-select class="el-select-width" v-model="userSearch.status" @change="search">
+            <el-select class="el-select-width" v-model="userSearch.status" @change="search" clearable>
               <el-option v-for="item in status" :key="item.num" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="角色：">
             <el-select class="el-select-width" v-model="userSearch.roleId" clearable @change="search">
-              <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
+              <el-option v-for="item in allRoles" :key="item.value" :value="item.value" :label="item.label">
               </el-option>
             </el-select>
           </el-form-item>
@@ -85,7 +85,7 @@
         </el-form-item>
         <el-form-item label="用户角色:" prop="roles">
           <el-select v-model="editUser.roles" multiple collapse-tags>
-            <el-option v-for="item in options" :key="item.num" :value="item.value" :label="item.label">
+            <el-option v-for="item in editUserRoles" :key="item.value" :value="item.value" :label="item.label">
             </el-option>
           </el-select>
         </el-form-item>
@@ -116,7 +116,7 @@
         </el-form-item>
         <el-form-item label="用户角色:" prop="roles">
           <el-select class="inputs" v-model="addUser.roles" placeholder="请选择角色" multiple collapse-tags>
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            <el-option v-for="item in userRoles" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
@@ -189,10 +189,6 @@
         //状态
         status: [
           {
-            value: '',
-            label: '全部'
-          },
-          {
             value: 1,
             label: '有效'
           },
@@ -204,6 +200,9 @@
         editVisible: false,
         editUser: {},
         options: [],
+        allRoles: [],
+        userRoles: [],
+        editUserRoles: [],
         idx: -1,
         delIndex: Number,
         delVisible: false,
@@ -212,7 +211,7 @@
         pageSize: 10,
         multipleSelection: [],
         userSearch: {
-          status: 1,
+          status: '',
           username: '',
           name: '',
           code: ''
@@ -221,7 +220,8 @@
     },
     created() {
       this.getUsers();
-      this.getrole();
+      this.getUserRoles();
+      this.getRoles();
     },
     computed: {
       ...mapGetters(['getAlcs', 'getAlcsObj'])
@@ -286,16 +286,28 @@
 
         });
       },
-      getrole() {
+      getUserRoles() {
+        this.ajax({
+          name: 'getUserRoles'
+        }).then(res => {
+          res.forEach(item => {
+            let obj = {}
+            obj.value = item.id;
+            obj.label = item.name;
+            this.userRoles.push(obj);
+          });
+        })
+      },
+      getRoles() {
         this.ajax({
           name: 'getRoles',
-          data: { status: 1 }
+          data: { status: 1, pageSize: 1000 }
         }).then(res => {
           res.rows.forEach(item => {
             let obj = {}
             obj.value = item.id;
             obj.label = item.name;
-            this.options.push(obj);
+            this.allRoles.push(obj);
           });
         })
       },
@@ -336,9 +348,12 @@
       handleEdit(row, index) {
         this.editVisible = true;
         this.$nextTick(() => {
-          let arr = [];
-          row.roles.forEach(item => {
-            arr.push(item.id);
+          let currentRoles = row.roles.map(r => ({ value: r.id, label: r.name })).concat(this.userRoles);
+          this.editUserRoles = [];
+          currentRoles.forEach(item => {
+            if(this.editUserRoles.findIndex(f => f.value === item.value) === -1) {
+              this.editUserRoles.push(item);
+            }
           });
           this.editUser = {
             name: row.name,
@@ -348,7 +363,7 @@
             code: row.code,
             status: row.status,
             email: row.email,
-            roles: arr
+            roles: row.roles.map(r => r.id)
           }
           this.idx = row.id;
         });

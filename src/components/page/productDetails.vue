@@ -139,7 +139,7 @@
         })
       },
       Trim(str) {
-        return str.replace(/\n|\r\n/g, "<br/>");
+        // return str.replace(/\n|\r\n/g, "<br/>");
       }
     }
   }
@@ -147,7 +147,7 @@
 <style scoped lang="less">
   .container {
     padding: 30px;
-    height: 658px;
+    height: 648px;
     display: flex;
     width: 97%;
     justify-content: space-between;
@@ -209,6 +209,7 @@
   .img {
     width: 80%;
     height: auto;
+    max-height: 200px;
   }
   .img-normal {
     width: 80%;

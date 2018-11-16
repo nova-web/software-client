@@ -66,15 +66,11 @@
         idx: -1,
         //角色搜索
         sysctrlSearch: {
-          service: 1,
+          service: '',
           name: ''
         },
         //状态
         service: [
-          {
-            value: '',
-            label: '全部'
-          },
           {
             value: 1,
             label: '已开通'

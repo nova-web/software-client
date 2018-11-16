@@ -134,15 +134,11 @@
         },
         //角色搜索
         roleSearch: {
-          status: 1,
+          status: '',
           name: ''
         },
         //状态
         status: [
-          {
-            value: '',
-            label: '全部'
-          },
           {
             value: 1,
             label: '有效'

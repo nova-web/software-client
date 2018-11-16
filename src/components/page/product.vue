@@ -468,7 +468,7 @@
         this.$refs.editpro.validate((valid) => {
           if(valid) {
             let formData = new FormData();
-            this.editProduct.modelId = this.editProduct.modelId.replace(/\\/g, "");
+            // this.editProduct.modelId = this.editProduct.modelId.replace(/\\/g, "");
             Object.keys(this.editProduct).forEach(item => {
               formData.append(item, this.editProduct[item]);
             });

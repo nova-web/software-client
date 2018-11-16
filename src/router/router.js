@@ -4,7 +4,7 @@ import router from '.';
 const routes = [
     {
         path: '/',
-        redirect: '/product'
+        redirect: '/index'
     },
     {
         path: '/',
@@ -15,11 +15,6 @@ const routes = [
                 path: '/index',
                 component: resolve => require(['../components/page/index.vue'], resolve),
                 meta: { title: '首页', keepAlive: false, code: '' }
-            },
-            {
-                path: '/product',
-                component: resolve => require(['../components/page/product.vue'], resolve),
-                meta: { title: '产品列表', keepAlive: false, code: 'CPLB' }
             }
         ]
     },
@@ -48,24 +43,9 @@ const routes = [
 
 let routerArr = [
     {
-        path: '/user',
-        component: resolve => require(['../components/page/user.vue'], resolve),
-        meta: { title: '用户管理', keepAlive: false, code: 'YHGL' }
-    },
-    {
         path: '/product',
         component: resolve => require(['../components/page/product.vue'], resolve),
         meta: { title: '产品管理', keepAlive: false, code: 'CPLB' }
-    },
-    {
-        path: '/Role',
-        component: resolve => require(['../components/page/role.vue'], resolve),
-        meta: { title: '角色管理', keepAlive: false, code: 'JSGL' }
-    },
-    {
-        path: '/alc',
-        component: resolve => require(['../components/page/alc.vue'], resolve),
-        meta: { title: '权限管理', keepAlive: false, code: 'GNGL' }
     },
     {
         name: 'productDetails',
@@ -78,6 +58,21 @@ let routerArr = [
         path: '/edition',
         component: resolve => require(['../components/page/edition.vue'], resolve),
         meta: { title: '版本列表', keepAlive: false, code: 'BBLB' }
+    },
+    {
+        path: '/user',
+        component: resolve => require(['../components/page/user.vue'], resolve),
+        meta: { title: '用户管理', keepAlive: false, code: 'YHGL' }
+    },
+    {
+        path: '/role',
+        component: resolve => require(['../components/page/role.vue'], resolve),
+        meta: { title: '角色管理', keepAlive: false, code: 'JSGL' }
+    },
+    {
+        path: '/alc',
+        component: resolve => require(['../components/page/alc.vue'], resolve),
+        meta: { title: '权限管理', keepAlive: false, code: 'GNGL' }
     },
     // nie
     {
@@ -109,5 +104,8 @@ if (store.getters.getAlcs.length) {
             item.children = item.children.concat(routerArr);
         }
     });
+    if (routerArr.length) {
+        routes[0].redirect = routerArr[0].path;
+    }
 }
 export default routes;

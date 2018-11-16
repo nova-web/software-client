@@ -576,6 +576,7 @@
         this.$refs.search.validate(valid => {
           if(valid) {
             this.getEdition();
+            this.gofist();
           } else {
             return
           }
@@ -609,11 +610,6 @@
       goLast() {
         this.cur_page = Math.ceil(this.count / this.pageSize);
         this.getEdition();
-      },
-      //搜索
-      search() {
-        this.getEdition();
-        this.gofist();
       }
     }
   }

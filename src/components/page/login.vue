@@ -33,7 +33,9 @@
 </template>
 
 <script>
-  import { mapActions, mapMutations } from 'vuex';
+  import { mapActions, mapMutations, mapGetters } from 'vuex';
+  import store from '../../store';
+
   export default {
     data: function() {
       return {
@@ -50,6 +52,17 @@
           ]
         }
       }
+    },
+    beforeRouteEnter(to, from, next) {
+      if(store.getters.getCommon.token && store.getters.getCommon.logining) {
+        store.commit('setCommon', { logining: false });
+        next('/');
+      } else {
+        next();
+      }
+    },
+    computed: {
+      ...mapGetters(['getCommon'])
     },
     methods: {
       ...mapActions(['ajax']),
@@ -78,9 +91,9 @@
         }).then(res => {
           this.setDict(res);
         })
+
+        this.setCommon({ logining: true });
         window.location.reload();
-        // window.location.href = 'http://172.16.6.247:8080/#/product'
-        this.$router.push({ name: 'product' });
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {

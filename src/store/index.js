@@ -9,7 +9,8 @@ export default new Vuex.Store({
     strict: process.env.NODE_ENV !== 'production', //在非生产环境下，使用严格模式
     state: {
         common: getSen('common') || {
-            token: ''
+            token: '',
+            logining: false //登录成功后刷新页面，如果为true则进入系统
         },
         cacheData: getSen('cacheData') || {},
         lang: getLoc('lang') || 'zh',

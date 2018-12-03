@@ -20,7 +20,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="角色名称：" prop="name">
-            <el-input class="el-input-width" v-model="roleSearch.name" @change="search" placeholder="输入角色名称查询" clearable></el-input>
+            <el-input class="el-input-width" v-model.trim="roleSearch.name" @change="search" placeholder="输入角色名称查询" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -43,7 +43,7 @@
             <el-button v-if="getAlcsObj.JSXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
             <el-button v-if="getAlcsObj.JSSQ" type="text" size="small" @click="handleSetAuthorize(scope.row, scope.$index)">授权</el-button>
             <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSXG" type="text" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
-            <el-button v-if="scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
+            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
             <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="handleEffective(scope.row, scope.$index)">置为有效</el-button>
           </template>
         </el-table-column>
@@ -60,7 +60,7 @@
       </div>
     </el-dialog>
     <!-- 新增对话框 -->
-    <el-dialog title="新增角色" :visible.sync="addVisible" width="30%" :close-on-click-modal="false">
+    <el-dialog title="新增角色" :visible.sync="addVisible" width="30%" :before-close="addDiaClose" :close-on-click-modal="false">
       <el-form :model="addRole" ref="addRole" :rules="RoleRule" label-width="100px" label-position="right">
         <div>
           <el-form-item label="角色名称:" prop="name">
@@ -77,7 +77,7 @@
       </div>
     </el-dialog>
     <!-- 编辑对话框 -->
-    <el-dialog title="修改角色" :visible.sync="editVisible" width="30%" :close-on-click-modal="false">
+    <el-dialog title="修改角色" :visible.sync="editVisible" width="30%" :before-close="editDiaClose" :close-on-click-modal="false">
       <el-form :model="editRole" ref="editRole" :rules="RoleRule" label-width="80px" label-position="left">
         <el-form-item label="角色名称" prop="name">
           <el-input v-model.trim="editRole.name" placeholder="请输入角色名" maxlength="30"></el-input>
@@ -88,7 +88,7 @@
       </el-form>
       <div slot="footer">
         <el-button type="primary" @click="saveEdit">确定</el-button>
-        <el-button @click="editVisible=false;">取消</el-button>
+        <el-button @click="editVisible=false;$refs.editRole.resetFields()">取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -254,9 +254,10 @@
       },
       addRoles() {
         this.addVisible = true;
-        this.$nextTick(() => {
-          this.$refs.addRole.resetFields();
-        })
+      },
+      addDiaClose(done) {
+        this.$refs.addRole.resetFields();
+        done();
       },
       // 新增
       saveAdd() {
@@ -267,8 +268,8 @@
               data: this.addRole
             }).then(res => {
               this.$message.success('新增角色成功');
-              this.$refs.addRole.resetFields();
               this.getRoles();
+              this.$refs.addRole.resetFields();
               this.addVisible = false;
             });
           }
@@ -277,13 +278,16 @@
       handleEdit(row, index) {
         this.editVisible = true;
         this.$nextTick(() => {
-          this.$refs.editRole.resetFields();
           this.editRole = {
             name: row.name,
             remark: row.remark
           };
           this.idx = row.id;
         })
+      },
+      editDiaClose(done) {
+        this.$refs.editRole.resetFields();
+        done();
       },
       // 修改
       saveEdit() {
@@ -296,6 +300,7 @@
               id: this.idx
             }).then(res => {
               this.$message.success('修改成功');
+              this.$refs.editRole.resetFields();
               this.getRoles();
             });
           }

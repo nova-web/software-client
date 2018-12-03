@@ -104,7 +104,7 @@
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveAddEdition">确定</el-button>
+        <el-button type="primary" @click="saveAddEdition" :disabled="addBtnDisabled">确定</el-button>
         <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
       </div>
     </el-dialog>
@@ -175,6 +175,7 @@
           versionLog: null,
           productId: []
         }, //新增版本
+        addBtnDisabled: false,
         pro_status: [], // 版本状态
         cur_page: 1,
         count: 0,
@@ -282,11 +283,13 @@
       },
       //新增确认
       saveAddEdition() {
+        this.addBtnDisabled = true;
         let formData = new FormData();
         this.$refs.addEdition.validate(valid => {
           if(valid) {
             delete this.addEdition.package;
             if(this.addfile) {
+              // this.addBtnDisabled = true;
               Object.keys(this.addEdition).forEach(item => {
                 formData.append(item, this.addEdition[item]);
               })
@@ -321,6 +324,7 @@
                   }).then(res => {
                     if(res.data.errorCode === 1) {
                       this.progress = 100;
+                      this.addBtnDisabled = false;
                       this.$message.success('操作成功');
                       this.progressModel = false;
                       this.addfile = null;
@@ -344,6 +348,7 @@
               this.fileTip = true;
             }
           } else {
+            this.addBtnDisabled = false;
             if(!this.addfile) {
               this.fileTip = true;
             }
@@ -359,6 +364,8 @@
       addCancel() {
         this.$refs.addEdition.resetFields()
         this.$refs.upload.clearFiles();
+        this.progressModel = false;
+        this.progress = 0;
         this.fileTip = false; //文件提示
         this.addEditionModele = false;
         if(typeof cancel === 'function') {

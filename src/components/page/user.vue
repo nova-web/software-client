@@ -300,8 +300,7 @@
       },
       getRoles() {
         this.ajax({
-          name: 'getRoles',
-          data: { status: 1, pageSize: 1000 }
+          name: 'getAllRoles'
         }).then(res => {
           res.rows.forEach(item => {
             let obj = {}

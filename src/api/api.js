@@ -10,6 +10,8 @@ let api = {
     addUser: { url: 'users', method: 'post' },
     editUser: { url: 'users/:id', method: 'put' },
     getUserRoles: { url: 'getUserRoles', method: 'get' },
+    getAllRoles: { url: 'getRoles', method: 'get' },
+
     // 角色
     getRoles: { url: 'roles' },
     deleteRole: { url: 'roles/:id', method: 'delete' },

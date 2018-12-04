@@ -48,8 +48,6 @@
       // 关闭全部标签
       closeAll() {
         this.tagsList = [];
-        this.showTags = false;
-        this.$router.push('/');
       },
       // 关闭其他标签
       closeOther() {

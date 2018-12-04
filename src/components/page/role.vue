@@ -67,7 +67,7 @@
             <el-input v-model.trim="addRole.name" placeholder="请输入角色名" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="描述:" prop="remark">
-            <el-input type="textarea" class="inputs" v-model.trim="addRole.remark" placeholder="请输入描述"></el-input>
+            <el-input type="textarea" class="inputs" v-model.trim="addRole.remark" placeholder="请输入描述" maxlength="255"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -83,7 +83,7 @@
           <el-input v-model.trim="editRole.name" placeholder="请输入角色名" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="remark">
-          <el-input type="textarea" :rows="4" v-model.trim="editRole.remark" placeholder="请输入备注"></el-input>
+          <el-input type="textarea" :rows="4" v-model.trim="editRole.remark" placeholder="请输入备注" maxlength="255"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -230,6 +230,22 @@
       //授权方法
       getCheckedKeys() {
         let aclsArr = this.$refs.tree.getCheckedKeys();
+        // 用户新增/修改/删除 选中时，将数组中添加用户查询
+        if(aclsArr.includes(4) || aclsArr.includes(5) || aclsArr.includes(6) || aclsArr.includes(7)) {
+          aclsArr.push(3);
+        }
+        if(aclsArr.includes(10) || aclsArr.includes(11) || aclsArr.includes(12) || aclsArr.includes(13) || aclsArr.includes(14) || aclsArr.includes(15)) {
+          aclsArr.push(9);
+        }
+        if(aclsArr.includes(18) || aclsArr.includes(19) || aclsArr.includes(20) || aclsArr.includes(21) || aclsArr.includes(22) || aclsArr.includes(23) || aclsArr.includes(24)) {
+          aclsArr.push(17);
+        }
+        if(aclsArr.includes(28) || aclsArr.includes(29) || aclsArr.includes(30) || aclsArr.includes(31) || aclsArr.includes(32) || aclsArr.includes(33) || aclsArr.includes(34)) {
+          aclsArr.push(27);
+        }
+        if(aclsArr.includes(37) || aclsArr.includes(38) || aclsArr.includes(39) || aclsArr.includes(40) || aclsArr.includes(41) || aclsArr.includes(42) || aclsArr.includes(43)) {
+          aclsArr.push(36);
+        }
         this.ajax({
           name: 'setAuthorize',
           data: { id: this.idx, acls: aclsArr }
@@ -239,7 +255,6 @@
             this.$message.success('操作成功');
           }
         })
-
       },
       handleSetAuthorize(row, index) {
         this.idx = row.id;
@@ -335,7 +350,6 @@
             name: 'deleteRole',
             id: row.id
           }).then(res => {
-            this.$message.success('操作成功');
             this.getRoles();
           });
         })

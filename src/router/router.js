@@ -45,13 +45,13 @@ let routerArr = [
     {
         path: '/product',
         component: resolve => require(['../components/page/product.vue'], resolve),
-        meta: { title: '产品管理', keepAlive: false, code: 'CPLB' }
+        meta: { title: '产品列表', keepAlive: false, code: 'CPLB' }
     },
     {
         name: 'productDetails',
         path: '/productDetails',
         component: resolve => require(['../components/page/productDetails.vue'], resolve),
-        meta: { title: '产品详情', keepAlive: false, code: 'CPGL' }
+        meta: { title: '产品详情', keepAlive: false, code: 'CPLB' }
     },
     {
         name: 'edition',

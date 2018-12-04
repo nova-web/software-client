@@ -72,6 +72,7 @@
       </el-table>
       <ve-pagination :cur_page="cur_page" :pageSize="pageSize" :count="count" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" @gofist="gofist" @goLast="goLast"></ve-pagination>
     </div>
+
     <el-dialog title="新增版本" :visible.sync="addEditionModele" width="30%" :before-close="closeAdd" :close-on-click-modal="false">
       <div class="add-edition">
         <el-form ref="addEdition" :rules="editionRules" label-width="90px" :model="addEdition" class="demo-ruleForm">
@@ -92,7 +93,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="版本上传:" :rules="[{ required: true} ]">
-            <el-upload class="upload-demo" ref="upload" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+            <el-upload class="upload-demo" ref="upload" action="" :limit="2" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
             <transition name="fade">
@@ -108,6 +109,7 @@
         <el-button @click="addCancel();$refs['addEdition'].resetFields();">取消</el-button>
       </div>
     </el-dialog>
+
     <el-dialog title="修改版本" :visible.sync="modifyModel" width="30%" :before-close="closeEdit" :close-on-click-modal="false">
       <div class="add-edition">
         <el-form ref="changeEdition" :rules="editionRules" label-width="90px" :model="modifyEdition" class="demo-ruleForm">
@@ -165,6 +167,7 @@
           type: '',
         }, //修改版本
         fileList: [{ name: '', url: '' }],
+        addfileLists: [{ name: '', url: '' }],
         editionSearch: {
           name: '',
           version: ''
@@ -475,7 +478,6 @@
       modifyEditionGetFile(file) {
         this.file = file;
         this.$set(this.modifyEdition, 'packages', 1);
-
       },
       // 取消修改
       cancelModifyEdition() {
@@ -498,7 +500,6 @@
           }).then(res => {
             this.delVisible = false;
             this.getEdition();
-            this.$message.success('删除成功');
           })
         })
       },
@@ -593,14 +594,15 @@
       //获取文件
       getFile(file) {
         this.addfile = file;
+        console.log(this.addfile);
         if(this.addfile) {
           this.fileTip = false;
         }
       },
       //上传文件超出限制
-      beyondFile() { },
-
-
+      beyondFile(file) {
+        console.log('aaaa', file);
+      },
       //分页
       handleCurrentChange(val) {
         this.cur_page = val;

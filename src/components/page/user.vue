@@ -167,6 +167,7 @@
             { validator: checkUsername, trigger: 'blur' },
             { required: true, message: '真实姓名不能为空', trigger: 'blur' }],
           code: [{ validator: checkUsername, trigger: 'blur' }],
+          roles: [{ required: true, trigger: 'blur', message: '用户角色不能为空' }],
           password: [
             { max: 30, trigger: 'blur' },
             { required: true, trigger: 'blur', message: '密码不可为空' }],
@@ -407,7 +408,6 @@
             name: 'deleteUser',
             id: row.id
           }).then(res => {
-            this.$message.success('删除成功');
             this.getUsers();
           });
         })

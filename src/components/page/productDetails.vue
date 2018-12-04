@@ -204,6 +204,11 @@
   }
   .right {
     min-width: 750px;
+    height: 648px;
+    .content {
+      height: calc(100% - 46px);
+      overflow-y: scroll;
+    }
   }
 
   .img {

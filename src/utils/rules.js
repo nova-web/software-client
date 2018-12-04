@@ -1,6 +1,6 @@
 // 需求  常规匹配
 export function checkUsername(rule, value, callback) {
-    let reg = /^[a-zA-Z0-9-\.&#_/\u4e00-\u9fa5\s]{1,30}$/; //匹配所有非特殊字符，且长度在0和30之间;
+    let reg = /^[a-zA-Z0-9-\.&#?@!^%+=*&$_/\u4e00-\u9fa5\s]{1,30}$/; //匹配所有非特殊字符，且长度在0和30之间;
     if (!value) {
         callback();
     }

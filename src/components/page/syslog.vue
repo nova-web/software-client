@@ -168,6 +168,7 @@
       },
       handleSizeChange(val) {
         this.pageSize = val;
+        this.gofist();
         this.getLog();
       },
       gofist() {

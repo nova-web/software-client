@@ -70,10 +70,10 @@
           <el-input v-model="editProduct.modelId"></el-input>
         </el-form-item> -->
         <el-form-item label="产品名称:" prop="name">
-          <el-input v-model="editProduct.name"></el-input>
+          <el-input v-model.trim="editProduct.name" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="产品型号:" prop="model">
-          <el-input v-model="editProduct.model"></el-input>
+          <el-input v-model.trim="editProduct.model" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="产品类型:" prop="type">
           <el-select class="inputs" clearable v-model="editProduct.type" @change="editProduct.stage=null">
@@ -101,10 +101,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="项目经理:" prop="projectManager">
-          <el-input v-model="editProduct.projectManager"></el-input>
+          <el-input v-model.trim="editProduct.projectManager" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="产品介绍:" prop="productDesc">
-          <el-input v-model="editProduct.productDesc" type="textarea" :rows="2"></el-input>
+          <el-input v-model.trim="editProduct.productDesc" type="textarea" :rows="2" maxlength="255"></el-input>
         </el-form-item>
         <el-form-item label="示意图:" prop="upload">
           <el-upload class="upload-demo" ref="uploadEdit" :file-list="fileList" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
@@ -125,10 +125,10 @@
             <el-input v-model.trim="addProduct.modelId" placeholder="输入产品ID"></el-input>
           </el-form-item>
           <el-form-item label="产品名称:" prop="name">
-            <el-input v-model.trim="addProduct.name" placeholder="输入产品名称"></el-input>
+            <el-input v-model.trim="addProduct.name" placeholder="输入产品名称" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="产品型号:" prop="model">
-            <el-input v-model.trim="addProduct.model" placeholder="输入产品型号"></el-input>
+            <el-input v-model.trim="addProduct.model" placeholder="输入产品型号" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="产品类型:" prop="type">
             <el-select class="inputs" clearable v-model="addProduct.type" placeholder="请选择产品类型">
@@ -156,10 +156,10 @@
             </el-select>
           </el-form-item>
           <el-form-item label="项目经理:" prop="projectManager">
-            <el-input v-model="addProduct.projectManager" placeholder="输入产品项目经理"></el-input>
+            <el-input v-model="addProduct.projectManager" placeholder="输入产品项目经理" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="产品介绍:" prop="productDesc">
-            <el-input v-model="addProduct.productDesc" type="textarea" :rows="2" placeholder="输入产品介绍说明"></el-input>
+            <el-input v-model="addProduct.productDesc" type="textarea" :rows="2" placeholder="输入产品介绍说明" maxlength="255"></el-input>
           </el-form-item>
           <el-form-item label="示意图:" prop="upload">
             <el-upload class="upload-demo" ref="upload" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
@@ -191,7 +191,16 @@
         tableData: [],
         index: Number,
         editProductModel: false,
-        editProduct: {}, //修改产品
+        editProduct: {
+          name: null,
+          model: null,
+          type: [],
+          stage: [],
+          fitPro: [],
+          area: [],
+          dept: [],
+          projectManager: null,
+        }, //修改产品
         addProductModel: false,
         addProduct: {
           modelId: null,
@@ -254,7 +263,7 @@
     watch: {
       'addProduct.type'(val) {
         if(this.addProduct.stage) {
-          this.addProduct.stage = "";
+          this.addProduct.stage = 'package_01';
         }
         if(val == 'package_01') {
           this.stage = this.getDict.filter(item => item.type === "stage").filter(item => item.code !== "stage_01" && item.code !== "stage_02" && item.code !== "stage_03");
@@ -313,6 +322,7 @@
           this.fitPro = res;
         });
         this.package = this.getDict.filter(item => item.type === "package");
+        console.log(this.package);
         this.stage = this.getDict.filter(item => item.type === "stage");
         this.area = this.getDict.filter(item => item.type === "area");
         this.dept = this.getDict.filter(item => item.type === "dept");
@@ -405,8 +415,7 @@
             name: 'deleteProduct',
             id: row.id
           }).then(res => {
-            this.getEquipment()
-            this.$message.success('删除成功');
+            this.getEquipment();
           })
         }).catch(() => {
           this.$message({

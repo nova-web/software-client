@@ -348,7 +348,7 @@
         }).then(res => {
           this.initData();
           this.delVisible = false;
-          this.$message.success('操作成功');
+          // this.$message.success('操作成功');
         });
       },
       addpeerDiaClose(done) {

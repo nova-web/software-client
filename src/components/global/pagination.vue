@@ -1,10 +1,10 @@
 <template>
   <div class="pagination">
     <div class="pagination-left">
-      {{(cur_page - 1) * pageSize + 1 === 0 ? 1 : (cur_page - 1) * pageSize + 1}}-{{Math.min(cur_page * pageSize, count)}} 共 {{count}}
+      {{(cur_page - 1) * pageSize + 1 === 0 ? 1 : (cur_page - 1) * pageSize + 1}}-{{Math.min(cur_page * pageSize, count)}}&nbsp;&nbsp;共{{count}}条
     </div>
     <div class="pagination-right">
-      <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="sizes,slot ,prev, pager, next" :total="count">
+      <el-pagination background @current-change="handleCurrentChange" :page-size="pageSize" :current-page="cur_page" @size-change="handleSizeChange" layout="sizes,slot ,prev, pager, next" :total="count" :page-sizes="[5, 10, 20, 50]">
         <button type="button" class="btn-next" @click="gofist">
           <i class="el-icon-d-arrow-left"></i>
         </button>

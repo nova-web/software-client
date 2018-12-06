@@ -52,7 +52,7 @@
     </div>
     <!-- 授权对话框 -->
     <el-dialog title="授权" :visible.sync="showAcls" width="30%" :close-on-click-modal="false">
-      <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true">
+      <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true" :check-on-click-node="true" @node-click="handleNodeClick" @check="handleCheck">
       </el-tree>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="getCheckedKeys">确定</el-button>
@@ -165,12 +165,6 @@
     created() {
       this.getRoles(); //获取权限表
       this.getAcls();  //获取权限
-      // this.ajax({
-      //   name: 'getAcls'
-      // }).then(res => {
-      //   this.allaclsTree = this.pageAclsTree(res);
-      //   console.log(1111, 'this.allaclsTree', this.allaclsTree);
-      // })
     },
     computed: {
       ...mapGetters(['getAlcs', 'getAlcsObj'])
@@ -186,8 +180,6 @@
           name: 'getRoles',
           data: { pageNum: this.cur_page, pageSize: this.pageSize, ...this.roleSearch }
         }).then(res => {
-          // this.allaclsTree = res;
-          // console.log(999, this.allaclsTree);
           res.rows.forEach((item, index) => {
             switch(item.status) {
               case 0:
@@ -224,8 +216,6 @@
           name: 'getUserAclTree'
         }).then(res => {
           this.aclsTree = this.pageAclsTree(res);
-          console.log(1111, 'this.aclsTree', this.aclsTree);
-          console.log(333, 'pageAclsTree', this.pageAclsTree(res));
         })
       },
       //配置权限树
@@ -236,8 +226,20 @@
             this.pageAclsTree(item.children);
           }
         });
-        // console.log(222, 'pageAclsTree', data);
         return data;
+      },
+      handleNodeClick(data) {
+        // console.log('数据', data);
+      },
+      handleCheck(data) {
+        // console.log('复选框', data);
+        // 叶子节点  当点击修改删除时将查询功能点击上
+        if(data.parentId != null && !data.children) {
+          let parentId = data.parentId;
+          if(data.id != parentId + 1) {
+            this.$refs.tree.setChecked(parentId + 1, true);
+          }
+        }
       },
       //授权方法
       getCheckedKeys() {

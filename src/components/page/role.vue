@@ -52,7 +52,7 @@
     </div>
     <!-- 授权对话框 -->
     <el-dialog title="授权" :visible.sync="showAcls" width="30%" :close-on-click-modal="false">
-      <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true" :check-on-click-node="true" @node-click="handleNodeClick" @check="handleCheck">
+      <el-tree :data="aclsTree" show-checkbox node-key="id" ref="tree" :default-expand-all="false" :expand-on-click-node="true" :check-on-click-node="true" @node-click="handleNodeClick" @check="handleCheck" @check-change="checkChange">
       </el-tree>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="getCheckedKeys">确定</el-button>
@@ -230,14 +230,22 @@
       },
       handleNodeClick(data) {
         // console.log('数据', data);
+        // this.$refs.tree.getNode();
       },
       handleCheck(data) {
-        // console.log('复选框', data);
         // 叶子节点  当点击修改删除时将查询功能点击上
-        if(data.parentId != null && !data.children) {
-          let parentId = data.parentId;
-          if(data.id != parentId + 1) {
-            this.$refs.tree.setChecked(parentId + 1, true);
+        if(data.parentId && !data.children) {
+          let firstNode = this.$refs.tree.getNode(data.id);
+          while(firstNode.previousSibling) {
+            firstNode = firstNode.previousSibling;
+          }
+
+          let tempNode = firstNode;
+          while(tempNode.nextSibling) {
+            tempNode = tempNode.nextSibling;
+            if(tempNode.checked) {
+              this.$refs.tree.setChecked(firstNode.data.id, true);
+            }
           }
         }
       },
@@ -375,6 +383,9 @@
       goLast() {
         this.cur_page = Math.ceil(this.count / this.pageSize);
         this.getRoles();
+      },
+      checkChange(data, isChecked) {
+        // console.log(data, isChecked);
       }
     }
   }

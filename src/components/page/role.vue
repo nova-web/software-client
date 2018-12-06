@@ -42,7 +42,7 @@
           <template slot-scope="scope">
             <el-button v-if="getAlcsObj.JSXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
             <el-button v-if="getAlcsObj.JSSQ" type="text" size="small" @click="handleSetAuthorize(scope.row, scope.$index)">授权</el-button>
-            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSXG" type="text" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
+            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSSC" type="text" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
             <el-button v-if="scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
             <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="handleEffective(scope.row, scope.$index)">置为有效</el-button>
           </template>
@@ -67,7 +67,7 @@
             <el-input v-model.trim="addRole.name" placeholder="请输入角色名" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="描述:" prop="remark">
-            <el-input type="textarea" class="inputs" v-model.trim="addRole.remark" placeholder="请输入描述" maxlength="255"></el-input>
+            <el-input type="textarea" class="inputs" v-model.trim="addRole.remark" placeholder="请输入描述" maxlength="30"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -83,7 +83,7 @@
           <el-input v-model.trim="editRole.name" placeholder="请输入角色名" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="remark">
-          <el-input type="textarea" :rows="4" v-model.trim="editRole.remark" placeholder="请输入备注" maxlength="255"></el-input>
+          <el-input type="textarea" :rows="4" v-model.trim="editRole.remark" placeholder="请输入备注" maxlength="30"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">

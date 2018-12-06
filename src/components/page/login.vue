@@ -84,7 +84,6 @@
           name: 'getUserAclCodes'
         }).then(res => {
           this.setAlcs(res);
-
         })
         await this.ajax({
           name: 'dict'

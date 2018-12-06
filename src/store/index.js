@@ -15,7 +15,7 @@ export default new Vuex.Store({
         cacheData: getSen('cacheData') || {},
         lang: getLoc('lang') || 'zh',
         productId: getSen('productId') || null,
-        userName: getLoc('userName') || null,
+        userName: getSen('userName') || null,
         Alcs: getSen('Alcs') || {},
         AlcsObj: getSen('AlcsObj') || {},
         dict: getSen('dict') || [],
@@ -51,7 +51,7 @@ export default new Vuex.Store({
         },
         setUserName(state, data) {
             state.userName = data;
-            setLoc('userName', data);
+            setSen('userName', data);
         },
         setAlcs(state, data) {
             let obj = {};

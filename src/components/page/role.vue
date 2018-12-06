@@ -43,7 +43,7 @@
             <el-button v-if="getAlcsObj.JSXG" type="text" size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
             <el-button v-if="getAlcsObj.JSSQ" type="text" size="small" @click="handleSetAuthorize(scope.row, scope.$index)">授权</el-button>
             <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSXG" type="text" size="small" @click="handledeleteRole(scope.row, scope.$index)">删除</el-button>
-            <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
+            <el-button v-if="scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="deleteRole(scope.row, scope.$index)">置为无效</el-button>
             <el-button v-if="!scope.row.isButtonShow && getAlcsObj.JSSZZT" type="text" size="small" @click="handleEffective(scope.row, scope.$index)">置为有效</el-button>
           </template>
         </el-table-column>
@@ -157,6 +157,7 @@
         },
         showAcls: false, //权限树对话框
         aclsTree: [], //权限树
+        allaclsTree: [],
         effectiveVisible: false, //置为无效对话框
         deleteRoleVisible: false //删除对话框
       };
@@ -164,6 +165,12 @@
     created() {
       this.getRoles(); //获取权限表
       this.getAcls();  //获取权限
+      // this.ajax({
+      //   name: 'getAcls'
+      // }).then(res => {
+      //   this.allaclsTree = this.pageAclsTree(res);
+      //   console.log(1111, 'this.allaclsTree', this.allaclsTree);
+      // })
     },
     computed: {
       ...mapGetters(['getAlcs', 'getAlcsObj'])
@@ -179,6 +186,8 @@
           name: 'getRoles',
           data: { pageNum: this.cur_page, pageSize: this.pageSize, ...this.roleSearch }
         }).then(res => {
+          // this.allaclsTree = res;
+          // console.log(999, this.allaclsTree);
           res.rows.forEach((item, index) => {
             switch(item.status) {
               case 0:
@@ -215,6 +224,8 @@
           name: 'getUserAclTree'
         }).then(res => {
           this.aclsTree = this.pageAclsTree(res);
+          console.log(1111, 'this.aclsTree', this.aclsTree);
+          console.log(333, 'pageAclsTree', this.pageAclsTree(res));
         })
       },
       //配置权限树
@@ -225,6 +236,7 @@
             this.pageAclsTree(item.children);
           }
         });
+        // console.log(222, 'pageAclsTree', data);
         return data;
       },
       //授权方法
@@ -263,6 +275,7 @@
           name: 'getRoleAcls',
           data: { id: this.idx }
         }).then(res => {
+          // 当前角色拥有的权限将被点击上
           this.$refs.tree.setCheckedKeys(res);
         });
 

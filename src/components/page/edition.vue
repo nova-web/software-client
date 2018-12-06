@@ -131,7 +131,7 @@
           </el-form-item>
           <el-form-item label="版本上传:" prop="packages">
             <el-input v-show="0" class="inputs" v-model="modifyEdition.packages" placeholder=""></el-input>
-            <el-upload class="upload-demo" ref="uploadEdition" action="" :file-list="fileList" :limit="1" :on-change="modifyEditionGetFile" :on-exceed="beyondFile" :on-remove="removeEditFile" :auto-upload="false">
+            <el-upload class="upload-demo" ref="uploadEdition" action="" :file-list="fileList" :limit="2" :on-change="modifyEditionGetFile" :on-exceed="beyondFile" :on-remove="removeEditFile" :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
           </el-form-item>
@@ -475,7 +475,11 @@
         this.fileList.shift();
       },
       //修改时添加文件
-      modifyEditionGetFile(file) {
+      modifyEditionGetFile(file, fileList) {
+        if(fileList.length > 1) {
+          this.file = fileList[1];
+          fileList.splice(0, 1);
+        }
         this.file = file;
         this.$set(this.modifyEdition, 'packages', 1);
       },
@@ -518,10 +522,6 @@
             this.getEdition();
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消试用'
-          });
         });
       },
       //发布
@@ -539,10 +539,6 @@
             this.getEdition();
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消发布'
-          });
         });
       },
       //撤回
@@ -560,10 +556,6 @@
             this.getEdition();
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消撤回'
-          });
         });
       },
       packageObtained(row) {
@@ -592,7 +584,11 @@
 
       },
       //获取文件
-      getFile(file) {
+      getFile(file, fileList) {
+        if(fileList.length > 1) {
+          this.addfile = fileList[1];
+          fileList.splice(0, 1);
+        }
         this.addfile = file;
         console.log(this.addfile);
         if(this.addfile) {

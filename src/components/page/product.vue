@@ -263,9 +263,10 @@
     watch: {
       'addProduct.type'(val) {
         if(this.addProduct.stage) {
-          this.addProduct.stage = 'package_01';
+          this.addProduct.stage = '';
         }
         if(val == 'package_01') {
+          this.addProduct.stage = 'stage_13';
           this.stage = this.getDict.filter(item => item.type === "stage").filter(item => item.code !== "stage_01" && item.code !== "stage_02" && item.code !== "stage_03");
         }
         if(val == 'package_02') {
@@ -322,7 +323,6 @@
           this.fitPro = res;
         });
         this.package = this.getDict.filter(item => item.type === "package");
-        console.log(this.package);
         this.stage = this.getDict.filter(item => item.type === "stage");
         this.area = this.getDict.filter(item => item.type === "area");
         this.dept = this.getDict.filter(item => item.type === "dept");
@@ -336,7 +336,23 @@
       //新增设备模态框
       addVisible() {
         this.addProductModel = true;
+        let dict = {};
+        this.getDict.forEach(item => {
+          if(!dict[item.type]) {
+            dict[item.type] = {};
+          }
+          dict[item.type][item.name] = item.code;
+        });
+        console.log(this.addProduct);
         this.$nextTick(() => {
+          // this.addProduct = {
+          //   type: dict.package['硬件'],
+          //   area: dict.area['全部'],
+          //   dept: dict.dept['视频产品线'],
+          // };
+          this.$set(this.addProduct, 'type', dict.package['硬件']);
+          this.$set(this.addProduct, 'area', dict.area['全部']);
+          this.$set(this.addProduct, 'dept', dict.dept['视频产品线']);
           this.$refs['upload'].clearFiles();
         })
       },
@@ -418,10 +434,6 @@
             this.getEquipment();
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
         });
       },
 
@@ -463,6 +475,7 @@
           projectManager: row.projectManager,
           productDesc: row.productDesc || ''
         };
+        console.log(11111, this.editProduct);
         fileArr.forEach(item => {
           item.name = row.logo.slice(row.logo.lastIndexOf('/') + 1);
           item.url = row.logo;
@@ -525,10 +538,6 @@
             });
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消试用'
-          });
         });
       },
       //发布
@@ -546,10 +555,6 @@
             this.$message.success('发布成功');
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消发布'
-          });
         });
       },
       //下架
@@ -567,10 +572,6 @@
             this.$message.success('下架成功');
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消下架'
-          });
         });
       },
       //撤回
@@ -588,10 +589,6 @@
             this.$message.success('撤回成功');
           });
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消撤回'
-          });
         });
       },
       handleselect(row, index) {

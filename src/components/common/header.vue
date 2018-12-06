@@ -52,7 +52,7 @@
     },
     computed: {
       username() {
-        let username = localStorage.getItem('userName');
+        let username = sessionStorage.getItem('userName');
         return username ? username : this.name;
       }
     },
@@ -60,7 +60,7 @@
       // 用户名下拉菜单选择事件
       handleCommand(command) {
         if(command == 'loginout') {
-          localStorage.removeItem('userName');
+          sessionStorage.removeItem('userName');
           sessionStorage.removeItem('Alcs');
           sessionStorage.removeItem('common');
           sessionStorage.removeItem('cacheData');

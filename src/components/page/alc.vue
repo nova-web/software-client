@@ -86,13 +86,13 @@
           <el-input v-model.trim="editFunction.name" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="URL" prop="url">
-          <el-input v-model.trim="editFunction.url"></el-input>
+          <el-input v-model.trim="editFunction.url" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="code" prop="code">
-          <el-input v-model.trim="editFunction.code"></el-input>
+          <el-input v-model.trim="editFunction.code" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="remark">
-          <el-input v-model.trim="editFunction.remark"></el-input>
+          <el-input v-model.trim="editFunction.remark" maxlength="255"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -104,16 +104,16 @@
     <el-dialog title="新增同级菜单" :visible.sync="addParentModel" width="30%" :before-close="addpeerDiaClose" :close-on-click-modal="false">
       <el-form ref="addpeer" :model="addParentObj" :rules="AlcRule" label-width="80px">
         <el-form-item label="权限名称" prop="name">
-          <el-input v-model.trim="addParentObj.name"></el-input>
+          <el-input v-model.trim="addParentObj.name" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="URL" prop="url">
-          <el-input v-model.trim="addParentObj.url"></el-input>
+          <el-input v-model.trim="addParentObj.url" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="code" prop="url">
-          <el-input v-model.trim="addParentObj.code"></el-input>
+          <el-input v-model.trim="addParentObj.code" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="remark">
-          <el-input v-model.trim="addParentObj.remark"></el-input>
+          <el-input v-model.trim="addParentObj.remark" maxlength="255"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -125,16 +125,16 @@
     <el-dialog title="新增下级菜单" :visible.sync="addLeaverModel" width="30%" :before-close="addleaverDiaClose" :close-on-click-modal="false">
       <el-form ref="addleaver" :model="addLeaverObj" :rules="AlcRule" label-width="80px">
         <el-form-item label="权限名称" prop="name">
-          <el-input v-model.trim="addLeaverObj.name"></el-input>
+          <el-input v-model.trim="addLeaverObj.name" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="URL" prop="url">
-          <el-input v-model.trim="addLeaverObj.url"></el-input>
+          <el-input v-model.trim="addLeaverObj.url" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="code" prop="url">
-          <el-input v-model.trim="addLeaverObj.code"></el-input>
+          <el-input v-model.trim="addLeaverObj.code" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="remark">
-          <el-input v-model.trim="addLeaverObj.remark"></el-input>
+          <el-input v-model.trim="addLeaverObj.remark" maxlength="255"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

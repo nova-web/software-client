@@ -208,6 +208,7 @@
     .content {
       height: calc(100% - 46px);
       overflow-y: scroll;
+      word-wrap: break-word;
     }
   }
 

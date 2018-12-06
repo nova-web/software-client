@@ -25,13 +25,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="用户名称：">
-            <el-input class="el-input-width" v-model.trim="userSearch.username" @change="search" placeholder="输入用户名称查询" clearable></el-input>
+            <el-input class="el-input-width" v-model.trim="userSearch.username" @change="search" placeholder="输入用户名称查询" clearable maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="真实姓名：">
-            <el-input class="el-input-width" v-model.trim="userSearch.name" @change="search" placeholder="输入用户真实姓名查询" clearable></el-input>
+            <el-input class="el-input-width" v-model.trim="userSearch.name" @change="search" placeholder="输入用户真实姓名查询" clearable maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="工号：">
-            <el-input class="el-input-width" v-model.trim="userSearch.code" @change="search" placeholder="输入工号查询" clearable></el-input>
+            <el-input class="el-input-width" v-model.trim="userSearch.code" @change="search" placeholder="输入工号查询" clearable maxlength="30"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">搜索</el-button>
@@ -75,10 +75,10 @@
           <el-input v-model.trim="editUser.username"></el-input>
         </el-form-item> -->
         <el-form-item label="真实姓名:" prop="name">
-          <el-input v-model="editUser.name"></el-input>
+          <el-input v-model="editUser.name" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="密码:">
-          <el-input v-model="editUser.password"></el-input>
+          <el-input v-model="editUser.password" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="工号:" prop="code">
           <el-input v-model="editUser.code" maxlength="30" clearable></el-input>
@@ -90,10 +90,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="电话:" prop="phone">
-          <el-input v-model.trim="editUser.phone"></el-input>
+          <el-input v-model.trim="editUser.phone" maxlength="11"></el-input>
         </el-form-item>
         <el-form-item label="邮箱:" prop="email">
-          <el-input v-model.trim="editUser.email"></el-input>
+          <el-input v-model.trim="editUser.email" maxlength="30"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -121,13 +121,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="密码:" prop="password">
-          <el-input v-model.trim="addUser.password"></el-input>
+          <el-input v-model.trim="addUser.password" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="电话:" prop="phone">
           <el-input v-model.number="addUser.phone" maxlength="11" clearable></el-input>
         </el-form-item>
         <el-form-item label="邮箱:" prop="email">
-          <el-input v-model.trim="addUser.email" :clearable="true"></el-input>
+          <el-input v-model.trim="addUser.email" :clearable="true" maxlength="30"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

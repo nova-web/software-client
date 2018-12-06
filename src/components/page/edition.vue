@@ -77,7 +77,7 @@
       <div class="add-edition">
         <el-form ref="addEdition" :rules="editionRules" label-width="90px" :model="addEdition" class="demo-ruleForm">
           <el-form-item label="版本名称:" prop="version">
-            <el-input class="inputs" v-model.trim="addEdition.version" placeholder=""></el-input>
+            <el-input class="inputs" v-model.trim="addEdition.version" placeholder="" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="版本类型:" prop="type">
             <el-select class="inputs" clearable v-model="addEdition.type" placeholder="">
@@ -114,7 +114,7 @@
       <div class="add-edition">
         <el-form ref="changeEdition" :rules="editionRules" label-width="90px" :model="modifyEdition" class="demo-ruleForm">
           <el-form-item label="版本名称:" prop="version">
-            <el-input class="inputs" v-model="modifyEdition.version" placeholder="请输入版本名称"></el-input>
+            <el-input class="inputs" v-model="modifyEdition.version" placeholder="请输入版本名称" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="版本类型:" prop="type">
             <el-select class="inputs" clearable v-model="modifyEdition.type" placeholder="">

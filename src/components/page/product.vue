@@ -122,7 +122,7 @@
       <div class="add-product">
         <el-form label-width="90px" :model="addProduct" ref="addpro" :rules="ProRule" class="demo-ruleForm">
           <el-form-item label="Model ID:" prop="modelId">
-            <el-input v-model.trim="addProduct.modelId" placeholder="输入产品ID"></el-input>
+            <el-input v-model.trim="addProduct.modelId" placeholder="输入产品ID" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="产品名称:" prop="name">
             <el-input v-model.trim="addProduct.name" placeholder="输入产品名称" maxlength="30"></el-input>

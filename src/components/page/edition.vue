@@ -93,8 +93,8 @@
             </el-select>
           </el-form-item>
           <el-form-item label="版本上传:" :rules="[{ required: true} ]">
-            <el-upload class="upload-demo" ref="upload" action="" :limit="2" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
-              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-upload class="upload-demo" :class="addBtnDisabled==true?'disabledX':''" ref="upload" action="" :limit="2" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :before-remove="beforeRemove" :auto-upload="false">
+              <el-button slot="trigger" size="small" type="primary" :disabled="selectDisabled">选取文件</el-button>
             </el-upload>
             <transition name="fade">
               <div class="tips" v-show="fileTip">请上传版本包</div>
@@ -131,8 +131,8 @@
           </el-form-item>
           <el-form-item label="版本上传:" prop="packages">
             <el-input v-show="0" class="inputs" v-model="modifyEdition.packages" placeholder=""></el-input>
-            <el-upload class="upload-demo" ref="uploadEdition" action="" :file-list="fileList" :limit="2" :on-change="modifyEditionGetFile" :on-exceed="beyondFile" :on-remove="removeEditFile" :auto-upload="false">
-              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-upload class="upload-demo" :class="editBtnDisabled==true?'disabledXedit':''" ref="uploadEdition" action="" :file-list="fileList" :limit="2" :on-change="modifyEditionGetFile" :on-exceed="beyondFile" :on-remove="removeEditFile" :auto-upload="false">
+              <el-button slot="trigger" size="small" type="primary" :disabled="editselectDisabled">选取文件</el-button>
             </el-upload>
           </el-form-item>
           <el-progress v-show="progressModel" class="progress" :percentage="parseInt(progress)" :status="parseInt(progress)===100?'success':''"></el-progress>
@@ -140,7 +140,7 @@
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveModifyEdition">确定</el-button>
+        <el-button type="primary" @click="saveModifyEdition" :disabled="editBtnDisabled">确定</el-button>
         <el-button @click="cancelModifyEdition">取消</el-button>
       </div>
     </el-dialog>
@@ -166,6 +166,8 @@
           productId: '',
           type: '',
         }, //修改版本
+        editselectDisabled: false,
+        editBtnDisabled: false,
         fileList: [{ name: '', url: '' }],
         addfileLists: [{ name: '', url: '' }],
         editionSearch: {
@@ -178,6 +180,7 @@
           versionLog: null,
           productId: []
         }, //新增版本
+        selectDisabled: false,
         addBtnDisabled: false,
         pro_status: [], // 版本状态
         cur_page: 1,
@@ -279,6 +282,8 @@
       //新增
       addVisible() {
         this.addEditionModele = true;
+        this.addBtnDisabled = false;
+        this.selectDisabled = false;
         this.progressModel = false;
         this.$nextTick(() => {
           this.$refs.upload.clearFiles();
@@ -287,6 +292,7 @@
       //新增确认
       saveAddEdition() {
         this.addBtnDisabled = true;
+        this.selectDisabled = true;
         let formData = new FormData();
         this.$refs.addEdition.validate(valid => {
           if(valid) {
@@ -328,6 +334,7 @@
                     if(res.data.errorCode === 1) {
                       this.progress = 100;
                       this.addBtnDisabled = false;
+                      this.selectDisabled = false;
                       this.$message.success('操作成功');
                       this.progressModel = false;
                       this.addfile = null;
@@ -352,6 +359,7 @@
             }
           } else {
             this.addBtnDisabled = false;
+            this.selectDisabled = false;
             if(!this.addfile) {
               this.fileTip = true;
             }
@@ -359,12 +367,31 @@
           }
         })
       },
+      beforeRemove(file, fileList) {
+        return null
+        // if(this.addBtnDisabled == true) {
+        //  ${file.name}
+        // let ret = this.$confirm(`文件正在上传，无法移除`, '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        //   console.log(222);
+        // }).catch(() => {
+        //   console.log(333);
+        // });
+        // console.log(111, ret);
+        // return this.$confirm(`确定移除 ${file.name}？`);
+        // }
+      },
       //移除文件列表中得文件
       removeFile() {
         this.addfile = null;
       },
       //取消新增
       addCancel() {
+        this.addBtnDisabled = false;
+        this.selectDisabled = false;
         this.$refs.addEdition.resetFields()
         this.$refs.upload.clearFiles();
         this.progressModel = false;
@@ -384,6 +411,8 @@
       },
       //修改版本
       modify(row) {
+        this.editBtnDisabled = false;
+        this.editselectDisabled = false;
         this.progressModel = false;
         let fileArr = [{ name: '', url: '' }];
         this.modifyEdition = {
@@ -404,6 +433,8 @@
       },
       //确认修改
       saveModifyEdition() {
+        this.editBtnDisabled = true;
+        this.editselectDisabled = true;
         let formData = new FormData();
         this.$refs.changeEdition.validate(valid => {
           if(valid) {
@@ -444,6 +475,8 @@
                 }).then(res => {
                   if(res.data.errorCode === 1) {
                     this.progress = 100;
+                    this.editBtnDisabled = false;
+                    this.editselectDisabled = false;
                     this.$message.success('操作成功');
                     this.progressModel = false;
                     this.$refs.uploadEdition.clearFiles()
@@ -458,6 +491,8 @@
                   this.$message.error('操作失败');
                 })
               } else {
+                this.editBtnDisabled = false;
+                this.editselectDisabled = false;
                 this.modifyEdition.packages = 1;
                 this.$message.error(res.data.errorMsg);
               }
@@ -485,6 +520,8 @@
       },
       // 取消修改
       cancelModifyEdition() {
+        this.editBtnDisabled = false;
+        this.editselectDisabled = false;
         this.$refs.changeEdition.resetFields();
         this.modifyModel = false;
         if(typeof cancel === 'function') {
@@ -667,4 +704,25 @@
     opacity: 0;
   }
 </style>
-
+<style lang="less">
+  .edition {
+    .disabledX {
+      .el-upload-list__item .el-icon-close:hover {
+        opacity: 0;
+        display: none;
+      }
+      .el-upload-list__item .el-icon-close {
+        display: none;
+      }
+    }
+    .disabledXedit {
+      .el-upload-list__item .el-icon-close:hover {
+        opacity: 0;
+        display: none;
+      }
+      .el-upload-list__item .el-icon-close {
+        display: none;
+      }
+    }
+  }
+</style>

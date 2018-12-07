@@ -356,6 +356,8 @@
 
             } else {
               this.fileTip = true;
+              this.addBtnDisabled = false;
+              this.selectDisabled = false;
             }
           } else {
             this.addBtnDisabled = false;
@@ -368,21 +370,6 @@
         })
       },
       beforeRemove(file, fileList) {
-        return null
-        // if(this.addBtnDisabled == true) {
-        //  ${file.name}
-        // let ret = this.$confirm(`文件正在上传，无法移除`, '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
-        //   console.log(222);
-        // }).catch(() => {
-        //   console.log(333);
-        // });
-        // console.log(111, ret);
-        // return this.$confirm(`确定移除 ${file.name}？`);
-        // }
       },
       //移除文件列表中得文件
       removeFile() {
@@ -396,6 +383,7 @@
         this.$refs.upload.clearFiles();
         this.progressModel = false;
         this.progress = 0;
+        this.addfile = null;
         this.fileTip = false; //文件提示
         this.addEditionModele = false;
         if(typeof cancel === 'function') {
@@ -489,6 +477,8 @@
                   }
                 }).catch(res => {
                   this.$message.error('操作失败');
+                  this.editBtnDisabled = false;
+                  this.editselectDisabled = false;
                 })
               } else {
                 this.editBtnDisabled = false;
@@ -627,14 +617,12 @@
           fileList.splice(0, 1);
         }
         this.addfile = file;
-        console.log(this.addfile);
         if(this.addfile) {
           this.fileTip = false;
         }
       },
       //上传文件超出限制
       beyondFile(file) {
-        console.log('aaaa', file);
       },
       //分页
       handleCurrentChange(val) {

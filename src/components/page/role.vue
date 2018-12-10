@@ -73,7 +73,7 @@
       </el-form>
       <div slot="footer">
         <el-button type="primary" @click="saveAdd">确定</el-button>
-        <el-button @click="addVisible=false;$refs.addRole.resetFields()">取消</el-button>
+        <el-button @click="cancleAdd">取消</el-button>
       </div>
     </el-dialog>
     <!-- 编辑对话框 -->
@@ -122,7 +122,10 @@
           ]
         },
         addVisible: false,
-        addRole: {},
+        addRole: {
+          name: '',
+          remark: '',
+        },
         editVisible: false,
         editRole: {},
         idx: -1,
@@ -297,6 +300,10 @@
             });
           }
         });
+      },
+      cancleAdd() {
+        this.addVisible = false;
+        this.$refs.addRole.resetFields();
       },
       handleEdit(row, index) {
         this.editVisible = true;

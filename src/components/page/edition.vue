@@ -293,7 +293,6 @@
           }
           dict[item.type][item.name] = item.code;
         });
-        console.log(dict.version['正式版']);
         this.$nextTick(() => {
           this.$set(this.addEdition, 'type', dict.version['体验版']);
           this.$refs.upload.clearFiles();

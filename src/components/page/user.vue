@@ -338,6 +338,7 @@
       },
       //取消 
       cancelAddUser() {
+        this.$refs.addusers.resetFields();
         this.addVisible = false;
       },
       editDiaClose(done) {

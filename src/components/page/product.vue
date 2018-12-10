@@ -343,7 +343,6 @@
           }
           dict[item.type][item.name] = item.code;
         });
-        console.log(this.addProduct);
         this.$nextTick(() => {
           // this.addProduct = {
           //   type: dict.package['硬件'],

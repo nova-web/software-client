@@ -365,7 +365,7 @@
       },
       //移除文件列表中的文件
       removeFile() {
-        this.file = null;
+        this.file = '';
         this.fileList.shift();
       },
       //新增产品确认
@@ -498,6 +498,8 @@
             });
             if(this.file) {
               formData.append("logo", this.file.raw);
+            } else if(this.file === '') {
+              formData.append("logoStatus", "remove");
             }
             axios({
               method: 'put',

@@ -11,7 +11,7 @@
       <div class="header-user-con">
         <!-- 全屏显示 -->
         <div class="btn-fullscreen" @click="handleFullScreen">
-          <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
+          <el-tooltip effect="dark" :content="isFullscreen?`取消全屏`:`全屏`" placement="bottom">
             <i class="el-icon-rank"></i>
           </el-tooltip>
         </div>
@@ -45,9 +45,24 @@
     data() {
       return {
         collapse: false,
-        fullscreen: false,
+        isFullscreen: false,
         name: 'linxin',
         message: 2
+      }
+    },
+    created() {
+      window.onresize = () => {
+        this.isFullscreen = this.checkFull();
+      }
+      document.onkeydown = (e) => {
+        if(e.keyCode == 122) {
+          e.preventDefault();  //阻止F11默认动作
+          if(this.isFullscreen) {
+            this.exitFull();
+          } else {
+            this.fullScreen(document.documentElement);
+          }
+        }
       }
     },
     computed: {
@@ -75,30 +90,46 @@
       },
       // 全屏事件
       handleFullScreen() {
-        let element = document.documentElement;
-        if(this.fullscreen) {
-          if(document.exitFullscreen) {
-            document.exitFullscreen();
-          } else if(document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen();
-          } else if(document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-          } else if(document.msExitFullscreen) {
-            document.msExitFullscreen();
-          }
+        if(this.isFullscreen) {
+          this.exitFull();
         } else {
-          if(element.requestFullscreen) {
-            element.requestFullscreen();
-          } else if(element.webkitRequestFullScreen) {
-            element.webkitRequestFullScreen();
-          } else if(element.mozRequestFullScreen) {
-            element.mozRequestFullScreen();
-          } else if(element.msRequestFullscreen) {
-            // IE11
-            element.msRequestFullscreen();
+          this.fullScreen(document.documentElement);
+        }
+      },
+      fullScreen(element) {
+        var requestMethod = element.requestFullScreen || //W3C
+          element.webkitRequestFullScreen || //FireFox
+          element.mozRequestFullScreen || //Chrome等
+          element.msRequestFullScreen; //IE11
+        if(requestMethod) {
+          requestMethod.call(element);
+        } else if(typeof window.ActiveXObject !== "undefined") { //for Internet Explorer
+          var wscript = new ActiveXObject("WScript.Shell");
+          if(wscript !== null) {
+            wscript.SendKeys("{F11}");
           }
         }
-        this.fullscreen = !this.fullscreen;
+      },
+      exitFull() {
+        // 判断各种浏览器，找到正确的方法
+        var exitMethod = document.exitFullscreen || //W3C
+          document.mozCancelFullScreen || //FireFox
+          document.webkitExitFullscreen || //Chrome等
+          document.webkitExitFullscreen; //IE11
+        if(exitMethod) {
+          exitMethod.call(document);
+        } else if(typeof window.ActiveXObject !== "undefined") { //for Internet Explorer
+          var wscript = new ActiveXObject("WScript.Shell");
+          if(wscript !== null) {
+            wscript.SendKeys("{F11}");
+          }
+        }
+      },
+      checkFull() {
+        var isFull = window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
+        //to fix : false || undefined == undefined
+        if(isFull === undefined) { isFull = false; }
+        return isFull;
       }
     },
     mounted() {

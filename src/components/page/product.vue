@@ -450,6 +450,7 @@
       },
       editDia(callback) {
         this.$refs['editpro'].resetFields();
+        this.fileList = [];
         callback();
       },
       handleEdit(row, index) {
@@ -474,14 +475,16 @@
           projectManager: row.projectManager,
           productDesc: row.productDesc || ''
         };
-        console.log(11111, this.editProduct);
         fileArr.forEach(item => {
           item.name = row.logo.slice(row.logo.lastIndexOf('/') + 1);
           item.url = row.logo;
         });
         if(row.logo) {
           this.fileList = serialize(fileArr);
+        } else {
+          this.fileList = [];
         }
+        console.log(this.fileList);
         this.idx = row.id;
       },
       //确认编辑

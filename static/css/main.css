@@ -208,6 +208,9 @@ a {
 /* 移入框样式 */
 .el-popper {
     max-width: 400px !important;
+    max-height: 500px;
+    overflow-y: scroll;
+    word-wrap: break-word;
 }
 
 /* 确定在前，取消在后样式 */

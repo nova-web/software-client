@@ -107,7 +107,7 @@
           <el-input v-model.trim="editProduct.productDesc" type="textarea" :rows="2"></el-input>
         </el-form-item>
         <el-form-item label="示意图:" prop="upload">
-          <el-upload class="upload-demo" ref="uploadEdit" :file-list="fileList" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+          <el-upload class="upload-demo" ref="uploadEdit" :file-list="fileList" accept="image/jpeg,image/gif,image/png" action="" :limit="2" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
           </el-upload>
         </el-form-item>
@@ -162,7 +162,7 @@
             <el-input v-model="addProduct.productDesc" type="textarea" :rows="2" placeholder="输入产品介绍说明"></el-input>
           </el-form-item>
           <el-form-item label="示意图:" prop="upload">
-            <el-upload class="upload-demo" ref="upload" accept="image/jpeg,image/gif,image/png" action="" :limit="1" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
+            <el-upload class="upload-demo" ref="upload" accept="image/jpeg,image/gif,image/png" action="" :limit="2" :on-change="getFile" :on-exceed="beyondFile" :on-remove="removeFile" :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
           </el-form-item>
@@ -356,10 +356,15 @@
         })
       },
       //获取文件
-      getFile(file) {
+      getFile(file, fileList) {
         if(file.size > (1024 * 1024 * 3)) {
           this.$message.warning('文件超出限制');
         } else {
+
+          if(fileList.length > 1) {
+            this.file = fileList[1];
+            fileList.splice(0, 1);
+          }
           this.file = file;
         }
       },

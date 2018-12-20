@@ -44,7 +44,7 @@
         <el-table-column label="状态" prop="publishStatusName"></el-table-column>
         <el-table-column label="版本描述">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top" popper-class="poper-css">
+            <el-popover trigger="hover" placement="top" popper-class="poper-css" :visible-arrow="false">
               {{scope.row.versionLog}}
               <div slot="reference" class="name-wrapper">
                 {{scope.row.versionLog}}

@@ -56,7 +56,7 @@
         <el-table-column label="操作" width="240px">
           <template slot-scope="scope">
             <el-button size="small" type="text" @click="download(scope.row)">
-              <a class="downloadText" :href="scope.row.url">
+              <a class="downloadText" download :href="scope.row.url">
                 下载
               </a>
             </el-button>

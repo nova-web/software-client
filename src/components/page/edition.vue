@@ -130,7 +130,7 @@
           </el-form-item>
           <el-form-item label="版本上传:" prop="packages">
             <el-input v-show="0" class="inputs" v-model="modifyEdition.packages" placeholder=""></el-input>
-            <el-upload class="upload-demo" :class="editBtnDisabled==true?'disabledXedit':''" ref="uploadEdition" action="" :file-list="fileList" :limit="2" :on-change="modifyEditionGetFile" :on-exceed="beyondFile" :on-remove="removeEditFile" :auto-upload="false">
+            <el-upload class="upload-demo" :class="editBtnDisabled==true?'disabledXedit':''" ref="uploadEdition" action="" :file-list="fileList" :limit="2" :on-change="modifyEditionGetFile" :on-exceed="beyondFile" :on-remove="removeEditFile" :auto-upload="false" :disabled="editselectDisabled">
               <el-button slot="trigger" size="small" type="primary" :disabled="editselectDisabled">选取文件</el-button>
             </el-upload>
           </el-form-item>

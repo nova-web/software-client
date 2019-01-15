@@ -429,11 +429,11 @@
       },
       //确认修改
       saveModifyEdition() {
-        this.editBtnDisabled = true;
-        this.editselectDisabled = true;
         let formData = new FormData();
         this.$refs.changeEdition.validate(valid => {
           if(valid) {
+            this.editBtnDisabled = true;
+            this.editselectDisabled = true;
             delete this.modifyEdition.packages;
             Object.keys(this.modifyEdition).forEach(item => {
               formData.append(item, this.modifyEdition[item]);
@@ -497,6 +497,8 @@
             })
 
           } else {
+            this.editBtnDisabled = false;
+            this.editselectDisabled = false;
             this.fileTip = true;
             return false;
           }
